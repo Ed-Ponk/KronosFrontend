@@ -8,6 +8,7 @@ import PrivateRoute from './routes/PrivateRoutes';
 import AdminRoutes from './routes/AdminRoutes';
 import JuradoRoutes from './routes/JuradoRoutes';
 import { useAuth } from './contexts/AuthContext';
+import Jurado from './pages/Jurado';
 
 const App = () => {
   const { user } = useAuth();
@@ -28,7 +29,12 @@ const App = () => {
             </Route>
           )}
         </Route>
+
+        <Route path="/jurado" element={<Jurado />} />
+
         <Route path="*" element={<NotFound />} />
+
+
       </Routes>
     </div>
   );
