@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axiosInstance from '../../api/axiosConfig';
 import { FormEscuelaProps } from '../../types/Escuela';
+import SelectFacultad from './SelectFacultad';
 
 const MySwal = withReactContent(Swal);
 
@@ -26,7 +27,7 @@ const FormEscuela: React.FC<FormEscuelaProps> = ({ selectedEscuela, setSelectedE
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = selectedEscuela ? '/escuela' : '/escuela/registro-escuela';
+    const endpoint = selectedEscuela ? '/escuela/actualizar-escuela' : '/escuela/registrar-escuela';
     const method = selectedEscuela ? 'PUT' : 'POST';
 
     try {
@@ -87,20 +88,7 @@ const FormEscuela: React.FC<FormEscuelaProps> = ({ selectedEscuela, setSelectedE
             </div>
           </div>
           <div className='flex-1'>
-            <label htmlFor="facultad_id" className="block text-sm font-medium leading-6 text-gray-900">
-              Facultad
-            </label>
-            <div className="mt-2">
-              <input
-                id="facultad_id"
-                name="facultad_id"
-                type="number"
-                required
-                value={facultadId !== null ? facultadId : ''}
-                onChange={(e) => setFacultadId(Number(e.target.value))}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
+            <SelectFacultad value={facultadId} onChange={setFacultadId} />
           </div>
         </div>
 

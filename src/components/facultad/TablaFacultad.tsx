@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import {DataItem, TablaFacultadProps} from '../../types/Facultad';
+import {DataFacultad, TablaFacultadProps} from '../../types/Facultad';
 import axiosInstance from '../../api/axiosConfig';
 
 
@@ -10,7 +10,7 @@ const MySwal = withReactContent(Swal);
 
 
 const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, records, fetchData }) => {
-  const [data, setData] = useState<DataItem[]>([]);
+  const [data, setData] = useState<DataFacultad[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -30,10 +30,10 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
     }
   };
 
-  const handleEdit = (facultad: DataItem) => {
+  const handleEdit = (facultad: DataFacultad) => {
     setSelectedFacultad(facultad);
   };
-  
+
   const handleDelete = (id: number) => {
     MySwal.fire({
       title: '¿Estás seguro?',
@@ -48,15 +48,22 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
         axiosInstance.delete('/facultad/eliminar-facultad', {
           data: JSON.stringify({ facultad_id: id })
         })
-          .then(() => {
+          .then(response => {
+            if(response.data.status){
+              MySwal.fire(
+                'Eliminado!',
+                response.data.message,
+                'success'
+              );
+              fetchData(); 
+            }
             MySwal.fire(
-              'Eliminado!',
-              'La facultad ha sido eliminada.',
-              'success'
+              'Error!',
+              response.data.message,
+              'error'
             );
-            fetchData(); // Actualiza la tabla después de eliminar
           })
-          .catch(error => {
+          .catch(() => {
             MySwal.fire(
               'Error!',
               'Hubo un problema al eliminar la facultad.',
@@ -74,22 +81,22 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
     selectAllRowsItemText: 'Todos',
   };
 
-  const columns: TableColumn<DataItem>[] = [
+  const columns: TableColumn<DataFacultad>[] = [
     {
       name: 'ID',
-      selector: (row: DataItem) => row.facultad_id,
+      selector: (row: DataFacultad) => row.facultad_id,
       sortable: true,
       width: '70px',
     },
     {
       name: 'Nombre',
-      selector: (row: DataItem) => row.nombre,
+      selector: (row: DataFacultad) => row.nombre,
       sortable: true,
       wrap: true,
     },
     {
       name: 'Acciones',
-      cell: (row: DataItem) => (
+      cell: (row: DataFacultad) => (
         <div>
           <button
             className="text-blue-600 hover:text-blue-900 mr-2"
