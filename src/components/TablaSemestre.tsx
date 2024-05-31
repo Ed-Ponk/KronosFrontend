@@ -22,21 +22,21 @@ interface TablaSemestreProps {
 }
 
 const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, records, fetchData }) => {
-  const [data, setData] = useState<DataItem[]>(records);
+  const [data, setData] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setData(records);
+    setData(records || []); // Asegúrate de que records no sea null o undefined
     setLoading(false); // Cambia el estado de carga a falso
   }, [records]);
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLocaleLowerCase();
+    const query = event.target.value.toLowerCase();
     if (query === '') {
       setData(records); // Restablece los datos completos si el input está vacío
     } else {
       const newData = records.filter(row => {
-        return row.nombre_semestres.toLocaleLowerCase().includes(query);
+        return row.nombre_semestres.toLowerCase().includes(query);
       });
       setData(newData);
     }
@@ -58,7 +58,7 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
     }).then((result) => {
       if (result.isConfirmed) {
         // Lógica para eliminar el semestre con el ID proporcionado
-        axios.delete('http://127.0.0.1:5000/semestres', {
+        axios.delete('http://127.0.0.1:5000/semestres/eliminar-semestre', {
           headers: {
             'Content-Type': 'application/json',
           },

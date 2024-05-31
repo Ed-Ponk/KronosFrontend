@@ -44,7 +44,7 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = selectedSemestre ? `http://127.0.0.1:5000/semestres` : `http://127.0.0.1:5000/semestres/registro-semestre`;
+    const endpoint = selectedSemestre ? `http://127.0.0.1:5000/semestres/actualizar-semestre` : `http://127.0.0.1:5000/semestres/registro-semestre`;
     const method = selectedSemestre ? 'PUT' : 'POST';
 
     try {
@@ -58,7 +58,7 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
           nombre_semestre: nombreSemestre,
           fecha_inicio: fechaInicio,
           fecha_fin: fechaFin,
-          vigente: vigente ? 'Activo' : 'Inactivo'
+          vigente: vigente ? 1 : 0
         }),
       });
       console.log(response);
