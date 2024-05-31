@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import AdminPage from './pages/AdminPage';
 import JuradoPage from './pages/JuradoPage';
@@ -7,9 +8,8 @@ import NotFound from './pages/NotFound';
 import PrivateRoute from './routes/PrivateRoutes';
 import AdminRoutes from './routes/AdminRoutes';
 import JuradoRoutes from './routes/JuradoRoutes';
-import { useAuth } from './contexts/AuthContext';
-import Jurado from './pages/Jurado';
 import SemestrePage from './pages/SemestrePage';
+import FacultadPage from './pages/FacultadPage';
 
 const App = () => {
   const { user } = useAuth();
@@ -31,7 +31,8 @@ const App = () => {
           )}
         </Route>
 
-        <Route path="/jurado" element={<Jurado />} />
+        <Route path="/jurado" element={<JuradoPage />} />
+        <Route path="/facultad" element={<FacultadPage />} />
 
         <Route path="*" element={<NotFound />} />
         <Route path="/semestre" element={<SemestrePage />} />

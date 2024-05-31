@@ -25,7 +25,7 @@ const SemestrePage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchData(); // Llama a la función fetchData al montar el componente
+    fetchData(); 
   }, []);
 
   return (
