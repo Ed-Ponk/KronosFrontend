@@ -6,22 +6,22 @@ import withReactContent from 'sweetalert2-react-content';
 
 const MySwal = withReactContent(Swal);
 
-// Define un tipo genérico para tus datos
 type DataItem = {
-  semestre_id: number;
-  nombre_semestres: string;
-  fecha_fin: string;
-  fecha_inicio: string;
-  vigente: string;
+  usuario_id: number;
+  email: string;
+  clave: string;
+  estado: string;
+  jurado_id: string;
+  rol: string;
 };
 
-interface TablaSemestreProps {
-  setSelectedSemestre: React.Dispatch<React.SetStateAction<DataItem | null>>;
+interface TableUsuarioProps {
+  setSelectedUsuario: React.Dispatch<React.SetStateAction<DataItem | null>>;
   records: DataItem[];
   fetchData: () => void;
 }
 
-const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, records, fetchData }) => {
+const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records, fetchData }) => {
   const [data, setData] = useState<DataItem[]>(records);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -36,14 +36,14 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
       setData(records); // Restablece los datos completos si el input está vacío
     } else {
       const newData = records.filter(row => {
-        return row.nombre_semestres.toLocaleLowerCase().includes(query);
+        return row.email.toLocaleLowerCase().includes(query);
       });
       setData(newData);
     }
   };
 
-  const handleEdit = (semestre: DataItem) => {
-    setSelectedSemestre(semestre);
+  const handleEdit = (usuario: DataItem) => {
+    setSelectedUsuario(usuario);
   };
 
   const handleDelete = (id: number) => {
@@ -57,17 +57,17 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
       confirmButtonText: 'Sí, eliminarlo!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Lógica para eliminar el semestre con el ID proporcionado
-        axios.delete('http://127.0.0.1:5000/semestres/eliminar-semestre', {
+        // Lógica para eliminar el usuario con el ID proporcionado
+        axios.delete('http://127.0.0.1:5000/usuarios/eliminar-usuario', {
           headers: {
             'Content-Type': 'application/json',
           },
-          data: JSON.stringify({ semestre_id: id })
+          data: JSON.stringify({ usuario_id: id })
         })
           .then(() => {
             MySwal.fire(
               'Eliminado!',
-              'El semestre ha sido eliminado.',
+              'El usuario ha sido eliminado.',
               'success'
             );
             fetchData(); // Actualiza la tabla después de eliminar
@@ -75,7 +75,7 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
           .catch(error => {
             MySwal.fire(
               'Error!',
-              'Hubo un problema al eliminar el semestre.',
+              'Hubo un problema al eliminar el usuario.',
               'error'
             );
           });
@@ -93,31 +93,37 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
   const columns: TableColumn<DataItem>[] = [
     {
       name: 'ID',
-      selector: (row: DataItem) => row.semestre_id,
+      selector: (row: DataItem) => row.usuario_id,
       sortable: true,
       width: '70px',
     },
     {
-      name: 'Nombre',
-      selector: (row: DataItem) => row.nombre_semestres,
+      name: 'Email',
+      selector: (row: DataItem) => row.email,
       sortable: true,
       wrap: true,
     },
     {
-      name: 'Fecha Inicio',
-      selector: (row: DataItem) => row.fecha_inicio,
+      name: 'Clave',
+      selector: (row: DataItem) => row.clave,
       sortable: true,
       wrap: true,
     },
     {
-      name: 'Fecha Fin',
-      selector: (row: DataItem) => row.fecha_fin,
+      name: 'Estado',
+      selector: (row: DataItem) => row.estado,
       sortable: true,
-      width: '120px',
+      width: '100px',
     },
     {
-      name: 'Vigencia',
-      selector: (row: DataItem) => row.vigente,
+      name: 'Jurado ID',
+      selector: (row: DataItem) => row.jurado_id,
+      sortable: true,
+      width: '100px',
+    },
+    {
+      name: 'Rol',
+      selector: (row: DataItem) => row.rol,
       sortable: true,
       width: '100px',
     },
@@ -133,7 +139,7 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
           </button>
           <button
             className="text-red-600 hover:text-red-900"
-            onClick={() => handleDelete(row.semestre_id)}
+            onClick={() => handleDelete(row.usuario_id)}
           >
             Eliminar
           </button>
@@ -147,14 +153,14 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
 
   return (
     <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Semestres</h1>
+      <h1 className='font-medium'>Lista de Usuarios</h1>
       <hr></hr>
       <div className='mt-3 w-100 flex'>
          <input
           name='buscar'
           onChange={handleFilter}
           className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-          placeholder='Ingresar nombre del semestre'
+          placeholder='Ingresar email del usuario'
           type='search'
         />
       </div>
@@ -177,4 +183,4 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
   );
 };
 
-export default TablaSemestre;
+export default TableUsuario;
