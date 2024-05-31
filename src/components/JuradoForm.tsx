@@ -92,11 +92,70 @@ export const FormJurado: React.FC = () => {
     reader.readAsArrayBuffer(file); // Leer el archivo como ArrayBuffer
   };
 
+  const handleInfoClick = () => {
+    MySwal.fire({
+      title: 'Instrucciones',
+      html: `
+      <p >El formato del archivo Excel debe contar con la siguiente estructura:</p>
+      <table class="table-fixed mt-2 border-collapse border border-gray-400 w-full">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Semestre</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Email</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Apellidos y Nombres</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Dedicación</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Teléfono</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Horas de asesoría semanal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo1@gmail.com</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Ramize Portcarrero Juan</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">8</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo2@gmail.com</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">López Martínez Ana</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">TC</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">3</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo3@gmail.com</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">González Rodríguez María</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">7</td>
+          </tr>
+        </tbody>
+      </table>
+    `,
+      icon: 'info',
+      confirmButtonText: 'Entendido',customClass: {
+        popup: 'w-3/4 max-w-3xl', // Adjust the width of the alert
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-        Registrar Jurado
-      </h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="block font-medium leading-6 text-gray-900">
+          Registrar Jurado
+        </h1>
+        <button onClick={handleInfoClick} className="">
+        <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+  <path d="M9 0C4.029 0 0 4.029 0 9s4.029 9 9 9 9-4.029 9-9-4.029-9-9-9zm1 15h-2V7h2v8zm-1-9.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/>
+</svg>
+
+        </button>
+      </div>
       <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit}>
         <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
           <div className="text-center" onDrop={handleDrop} onDragOver={handleDragOver}>
