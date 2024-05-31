@@ -1,46 +1,109 @@
-
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 const LoginForm: React.FC = () => {
-  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [generalError, setGeneralError] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setEmailError('');
+    setPasswordError('');
+    setGeneralError('');
+    
     try {
-      await login(email, password);
+      const response = await axios.post('http://127.0.0.1:5000/usuarios/validar-login', {
+        email: email,
+        clave: password
+      });
+
+      const data = response.data;
+      if (data.status) {
+        // Aquí puedes manejar la lógica de redirección o guardar tokens
+        console.log('Login successful:', data.message);
+      } else {
+        if (data.message.includes('usuario')) {
+          setEmailError(data.message);
+        } else if (data.message.includes('Contraseña')) {
+          setPasswordError(data.message);
+        } else {
+          setGeneralError(data.message);
+        }
+      }
     } catch (e) {
-      setError('Failed to login. Please check your credentials.');
+      setGeneralError('Error en la comunicación con el servidor. Inténtalo de nuevo más tarde.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col mt-10">
-      <label htmlFor="email" className="block text-gray-700 mb-2">Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+    <div className="w-96 h-auto bg-white rounded-xl shadow-md px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img
+          className="mx-auto h-16 w-auto"
+          src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logo_USAT.png"
+          alt="Your Company"
+        />
+        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Iniciar sesión en su cuenta
+        </h2>
+      </div>
 
-      <label htmlFor="password" className="block text-gray-700 mt-4">Contraseña:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      {error && <div>{error}</div>}
-      <button type="submit" className="w-full py-2 mt-6 text-center bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
-    </form>
+      <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              Correo Electrónico
+            </label>
+            <div className="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder='correo@correo.com'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset ${emailError ? 'ring-red-500' : 'focus:ring-indigo-600'} sm:text-sm sm:leading-6`}
+              />
+              {emailError && <p className="text-red-600 text-sm mt-1">{emailError}</p>}
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+              Contraseña
+            </label>
+            <div className="mt-2">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`block w-full rounded-md p-1 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset ${passwordError ? 'ring-red-500' : 'focus:ring-indigo-600'} sm:text-sm sm:leading-6`}
+              />
+              {passwordError && <p className="text-red-600 text-sm mt-1">{passwordError}</p>}
+            </div>
+          </div>
+
+          <div>
+            {generalError && <p className="text-red-600 text-sm mb-4">{generalError}</p>}
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Iniciar sesión
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

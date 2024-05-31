@@ -9,6 +9,7 @@ import AdminRoutes from './routes/AdminRoutes';
 import JuradoRoutes from './routes/JuradoRoutes';
 import { useAuth } from './contexts/AuthContext';
 import Jurado from './pages/Jurado';
+import SemestrePage from './pages/SemestrePage';
 
 const App = () => {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/jurado" element={<Jurado />} />
 
         <Route path="*" element={<NotFound />} />
+        <Route path="/semestre" element={<SemestrePage />} />
 
 
       </Routes>

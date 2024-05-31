@@ -8,7 +8,7 @@ const Jurado = () => {
  
 
   return (
-    <div className='w-full md:w-auto '>
+    <div className='w-full h-full md:w-auto bg-gray-100 '>
       <FormJurado />
       <TablaJurado  />
     </div>
