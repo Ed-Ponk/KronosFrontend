@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TableUsuario from '../components/TableUsuario';
-import FormUsuario from '../components/FormUsuario';
+import TableUsuario from '../components/Usuario/TableUsuario';
+import FormUsuario from '../components/Usuario/FormUsuario';
 import axios from 'axios';
 
 type DataItem = {

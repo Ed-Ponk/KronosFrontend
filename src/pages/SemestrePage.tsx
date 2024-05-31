@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TablaSemestre from '../components/TablaSemestre';
-import FormSemestre from '../components/FormSemestre';
+import TablaSemestre from '../components/semestre/TablaSemestre';
+import FormSemestre from '../components/semestre/FormSemestre';
 import axios from 'axios';
 
 type DataItem = {

@@ -23,13 +23,13 @@ interface FormUsuarioProps {
 export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSelectedUsuario, fetchData }) => {
   const [email, setEmail] = useState('');
   const [clave, setClave] = useState('');
-  const [estado, setEstado] = useState('Activo');
+  const [estado, setEstado] = useState(false);
 
   useEffect(() => {
     if (selectedUsuario) {
       setEmail(selectedUsuario.email);
       setClave(''); // Clear the password field when editing
-      setEstado(selectedUsuario.estado);
+      setEstado(selectedUsuario.estado === '1');
     }
   }, [selectedUsuario]);
 
@@ -37,7 +37,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
     setSelectedUsuario(null);
     setEmail('');
     setClave('');
-    setEstado('Activo');
+    setEstado(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -56,14 +56,14 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
           usuario_id: selectedUsuario ? selectedUsuario.usuario_id : undefined,
           email: email,
           clave: selectedUsuario ? (clave ? clave : null) : clave, // Send null if password is empty when updating
-          estado: estado ? 0 : 1,
+          estado: estado ? 1 : 0, // 1 for Activo, 0 for Inactivo
           jurado_id: null, // Predeterminado a null
-          rol: 'A' // Predeterminado a Administrador
+          rol: 'Administrador' // Predeterminado a Administrador
         }),
       });
       console.log(response);
       const data = await response.json();
-     
+
       if (data.status) {
         MySwal.fire({
           title: 'Éxito',
@@ -157,20 +157,22 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
           </div>
         </div>
 
-        <div className="flex space-x-4 items-center">
-          <label htmlFor="estado" className="block text-sm font-medium leading-6 text-gray-900">
-            Estado
-          </label>
-          <div className="flex items-center">
-            <input
-              id="estado"
-              name="estado"
-              type="checkbox"
-              checked={estado === 'Activo'}
-              onChange={(e) => setEstado(e.target.checked ? 'Activo' : 'Inactivo')}
-              className="rounded-md border-0 text-indigo-600 shadow-sm focus:ring-2 focus:ring-indigo-600"
-            />
-            <span className="ml-2 text-sm text-gray-900">Activo</span>
+        <div className='flex items-center space-x-4'>
+          <div className='flex-1'>
+            <label htmlFor="estado" className="block text-sm font-medium leading-6 text-gray-900">
+              Estado
+            </label>
+            <div className="mt-2 flex items-center">
+              <input
+                id="estado"
+                name="estado"
+                type="checkbox"
+                checked={estado}
+                onChange={(e) => setEstado(e.target.checked)}
+                className="rounded-md border-0 text-indigo-600 shadow-sm focus:ring-2 focus:ring-indigo-600"
+              />
+              <span className="ml-2 text-sm text-gray-900">Activo</span>
+            </div>
           </div>
         </div>
 
