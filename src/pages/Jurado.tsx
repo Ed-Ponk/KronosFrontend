@@ -8,7 +8,7 @@ const Jurado = () => {
  
 
   return (
-    <div>
+    <div className='w-full md:w-auto '>
       <FormJurado />
       <TablaJurado  />
     </div>
