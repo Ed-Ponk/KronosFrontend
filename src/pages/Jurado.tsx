@@ -9,7 +9,6 @@ const Jurado = () => {
 
   return (
     <div>
-     
       <FormJurado />
       <TablaJurado  />
     </div>

@@ -16,7 +16,10 @@
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "react-table": "^7.8.0"
+    "react-sweetalert2": "^0.6.0",
+    "react-table": "^7.8.0",
+    "sweetalert2": "^11.11.0",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
