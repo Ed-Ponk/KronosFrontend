@@ -16,7 +16,7 @@ const DataTable: React.FC<TableProps> = ({ columns, data }) => {
   } = useTable({ columns, data });
 
   return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+    <table className='table' {...getTableProps()} style={{ border: 'solid 1px blue' }}>
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
