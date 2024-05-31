@@ -6,9 +6,11 @@ import axios from 'axios';
 const JuradoPage = () =>{
   
   return (
-    <div className='w-full h-full md:w-auto bg-gray-100 '>
-      <FormJurado />
-      <TablaJurado  />
+    <div className='min-h-screen flex flex-col bg-gray-100'>
+      <div className='flex-1 flex flex-col'>
+        <FormJurado />
+        <TablaJurado />
+      </div>
     </div>
   );
 }
