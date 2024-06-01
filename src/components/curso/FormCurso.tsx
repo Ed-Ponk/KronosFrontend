@@ -2,54 +2,51 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axiosInstance from '../../api/axiosConfig';
-import SelectFacultad from './SelectFacultad';
-import { FormEscuelaProps } from '../../types/Escuela';
-import { DataFacultad } from '../../types/Facultad';
+import { FormCursoProps } from '../../types/Curso';
 
 const MySwal = withReactContent(Swal);
 
-const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[] }> = ({
-  selectedEscuela,
-  setSelectedEscuela,
-  fetchData,
-  facultadRecords
-}) => {
+const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, fetchData }) => {
   const [nombre, setNombre] = useState('');
-  const [facultadId, setFacultadId] = useState<number | null>(null);
+  const [vigente, setVigente] = useState<boolean>(true);
 
   useEffect(() => {
-    if (selectedEscuela) {
-      setNombre(selectedEscuela.escuela);
-      setFacultadId(selectedEscuela.facultad_id);
+    if (selectedCurso) {
+      setNombre(selectedCurso.curso);
+      setVigente(selectedCurso.vigente === 1);  // Actualiza el estado como booleano
     }
-  }, [selectedEscuela]);
+  }, [selectedCurso]);
 
   const handleCancel = () => {
-    setSelectedEscuela(null);
+    setSelectedCurso(null);
     setNombre('');
-    setFacultadId(null);
+    setVigente(true);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = selectedEscuela ? '/escuela/actualizar-escuela' : '/escuela/registrar-escuela';
-    const method = selectedEscuela ? 'PUT' : 'POST';
+    const payload = {
+      curso_id: selectedCurso ? selectedCurso.curso_id : undefined,
+      nombre: nombre,
+      vigente: vigente ? 1 : 0  // Convierte el estado booleano a 1 o 0
+    };
+
+    console.log('Payload:', payload);  // Log para verificar los datos antes de enviarlos
+
+    const endpoint = selectedCurso ? '/curso/actualizar-curso' : '/curso/registrar-curso';
+    const method = selectedCurso ? 'PUT' : 'POST';
 
     try {
       const response = await axiosInstance({
         method: method,
         url: endpoint,
-        data: {
-          escuela_id: selectedEscuela ? selectedEscuela.escuela_id : undefined,
-          nombre: nombre,
-          facultad_id: facultadId
-        },
+        data: payload,
       });
       if (response.data.status) {
         MySwal.fire({
           title: 'Éxito',
-          text: selectedEscuela ? 'Escuela actualizada con éxito' : 'Escuela registrada con éxito',
+          text: selectedCurso ? 'Curso actualizado con éxito' : 'Curso registrado con éxito',
           icon: 'success',
         });
         handleCancel();
@@ -61,10 +58,11 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
           icon: 'error',
         });
       }
-    } catch (e) {
+    } catch (error) {
+      console.error('Error al registrar el curso:', error);
       MySwal.fire({
         title: 'Error',
-        text: 'Error al registrar la escuela. Inténtalo de nuevo más tarde.',
+        text: 'Error al registrar el curso. Inténtalo de nuevo más tarde.',
         icon: 'error',
       });
     }
@@ -73,13 +71,13 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
   return (
     <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
       <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-        {selectedEscuela ? 'Editar Escuela' : 'Registrar Escuela'}
+        {selectedCurso ? 'Editar Curso' : 'Registrar Curso'}
       </h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className='flex space-x-4'>
           <div className='flex-1'>
             <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900">
-              Nombre de la Escuela
+              Nombre del Curso
             </label>
             <div className="mt-2">
               <input
@@ -94,7 +92,19 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
             </div>
           </div>
           <div className='flex-1'>
-            <SelectFacultad value={facultadId} onChange={setFacultadId} facultades={facultadRecords} />
+            <label htmlFor="vigente" className="block text-sm font-medium leading-6 text-gray-900">
+              Vigente
+            </label>
+            <div className="mt-2 flex items-center">
+              <input
+                id="vigente"
+                name="vigente"
+                type="checkbox"
+                checked={vigente}
+                onChange={(e) => setVigente(e.target.checked)}
+                className="rounded-md border-0 text-indigo-600 shadow-sm focus:ring-2 focus:ring-indigo-600"
+              />
+            </div>
           </div>
         </div>
 
@@ -103,9 +113,9 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
             type="submit"
             className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            {selectedEscuela ? 'Actualizar Escuela' : 'Registrar Escuela'}
+            {selectedCurso ? 'Actualizar Curso' : 'Registrar Curso'}
           </button>
-          {selectedEscuela && (
+          {selectedCurso && (
             <button
               type="button"
               onClick={handleCancel}
@@ -120,4 +130,4 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
   );
 };
 
-export default FormEscuela;
+export default FormCurso;

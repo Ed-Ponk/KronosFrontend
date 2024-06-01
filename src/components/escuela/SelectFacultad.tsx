@@ -1,39 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../api/axiosConfig';
+import React from 'react';
 import { DataFacultad } from '../../types/Facultad';
-
 
 interface SelectFacultadProps {
   value: number | null;
   onChange: (value: number) => void;
+  facultades: DataFacultad[];
 }
 
-const SelectFacultad: React.FC<SelectFacultadProps> = ({ value, onChange }) => {
-  const [facultades, setFacultades] = useState<DataFacultad[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchFacultades = async () => {
-      try {
-        const response = await axiosInstance.get('/facultad');
-        setFacultades(response.data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching facultades:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchFacultades();
-  }, []);
-
+const SelectFacultad: React.FC<SelectFacultadProps> = ({ value, onChange, facultades }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(Number(event.target.value));
   };
-
-  if (loading) {
-    return <p>Cargando facultades...</p>;
-  }
 
   return (
     <div>

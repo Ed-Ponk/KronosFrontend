@@ -56,6 +56,7 @@ const FacultadPage: React.FC = () => {
             selectedEscuela={selectedEscuela}
             setSelectedEscuela={setSelectedEscuela}
             fetchData={fetchEscuelaData}
+            facultadRecords={facultadRecords} // Pasar el estado de las facultades
           />
           <TablaEscuela
             setSelectedEscuela={setSelectedEscuela}
