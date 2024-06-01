@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TablaSemestre from '../components/TablaSemestre';
-import FormSemestre from '../components/FormSemestre';
+import TablaSemestre from '../components/semestre/TablaSemestre';
+import FormSemestre from '../components/semestre/FormSemestre';
 import axios from 'axios';
 
 type DataItem = {
@@ -29,7 +29,7 @@ const SemestrePage: React.FC = () => {
   }, []);
 
   return (
-    <div className='w-full h-full md:w-auto bg-gray-100 '>
+    <div className='w-full overflow-auto h-full md:w-auto bg-gray-100  dark:bg-slate-900'>
       <FormSemestre selectedSemestre={selectedSemestre} setSelectedSemestre={setSelectedSemestre} fetchData={fetchData} />
       <TablaSemestre setSelectedSemestre={setSelectedSemestre} records={records} fetchData={fetchData} />
     </div>

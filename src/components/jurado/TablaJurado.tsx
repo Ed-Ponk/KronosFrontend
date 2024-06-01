@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import axios from 'axios';
-import SelectSemestre from './SelectSemestre';
+import SelectSemestre from '../semestre/SelectSemestre';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 

@@ -32,6 +32,7 @@ const App = () => {
           )}
         </Route>
 
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="/jurado" element={<JuradoPage />} />
         <Route path="/facultad" element={<FacultadPage />} />
 

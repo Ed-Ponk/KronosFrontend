@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FormJurado } from '../components/JuradoForm';
-import TablaJurado from '../components/TablaJurado';
+import { FormJurado } from '../components/jurado/JuradoForm';
+import TablaJurado from '../components/jurado/TablaJurado';
 import axios from 'axios';
 
 const JuradoPage = () =>{

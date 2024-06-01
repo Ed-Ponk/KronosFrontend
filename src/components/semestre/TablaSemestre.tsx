@@ -146,29 +146,29 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Semestres</h1>
-      <hr></hr>
-      <div className='mt-3 w-100 flex'>
-         <input
-          name='buscar'
+    <div className="mt-5 mb-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="font-medium text-gray-900 dark:text-gray-200">Lista de Semestres</h1>
+      <hr className="border-gray-300 dark:border-gray-700" />
+      <div className="mt-3 mb-3 w-100 flex">
+        <input
+          name="buscar"
           onChange={handleFilter}
-          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-          placeholder='Ingresar nombre del semestre'
-          type='search'
+          className="block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          placeholder="Ingresar nombre del semestre"
+          type="search"
         />
       </div>
       {loading ? (
-        <p>Cargando...</p>
+        <p className="text-gray-900 dark:text-gray-200">Cargando...</p>
       ) : (
         <DataTable
-          className='text-color-black'
+          className="text-gray-900 dark:text-gray-200"
           columns={columns}
           data={data}
           fixedHeader
           pagination
           paginationComponentOptions={paginationOptions}
-          noDataComponent={<p>No hay registros para mostrar</p>}
+          noDataComponent={<p className="text-gray-900 dark:text-gray-200">No hay registros para mostrar</p>}
           responsive
           fixedHeaderScrollHeight="400px"
         />
