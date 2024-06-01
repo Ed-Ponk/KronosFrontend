@@ -29,7 +29,7 @@ const SemestrePage: React.FC = () => {
   }, []);
 
   return (
-    <div className='w-full h-full md:w-auto bg-gray-100 '>
+    <div className='w-full overflow-auto h-full md:w-auto bg-gray-100  dark:bg-slate-900'>
       <FormSemestre selectedSemestre={selectedSemestre} setSelectedSemestre={setSelectedSemestre} fetchData={fetchData} />
       <TablaSemestre setSelectedSemestre={setSelectedSemestre} records={records} fetchData={fetchData} />
     </div>

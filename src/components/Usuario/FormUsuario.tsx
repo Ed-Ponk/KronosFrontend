@@ -116,14 +116,14 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
   };
 
   return (
-    <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="block font-medium leading-6 text-gray-900 mb-4">
+    <div className="flex mt-3 flex-col w-1/2 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200 mb-4">
         {selectedUsuario ? 'Editar Usuario' : 'Registrar Usuario Administrador'}
       </h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="flex space-x-4">
           <div className="flex-1">
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
               Email
             </label>
             <div className="mt-2">
@@ -134,13 +134,13 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full dark:bg-gray-700 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 p-1 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
 
           <div className="flex-1">
-            <label htmlFor="clave" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="clave" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
               Clave
             </label>
             <div className="mt-2">
@@ -150,7 +150,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
                 type="password"
                 value={clave}
                 onChange={(e) => setClave(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 dark:bg-gray-700 py-1.5 text-gray-900 dark:text-gray-200 p-1 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 required={!selectedUsuario} // Required only if not editing
               />
             </div>
@@ -159,7 +159,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
 
         <div className='flex items-center space-x-4'>
           <div className='flex-1'>
-            <label htmlFor="estado" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="estado" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
               Estado
             </label>
             <div className="mt-2 flex items-center">
@@ -169,9 +169,9 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
                 type="checkbox"
                 checked={estado}
                 onChange={(e) => setEstado(e.target.checked)}
-                className="rounded-md border-0 text-indigo-600 shadow-sm focus:ring-2 focus:ring-indigo-600"
+                className="rounded-md border-0 text-indigo-600  dark:text-indigo-400 shadow-sm focus:ring-2 focus:ring-indigo-600"
               />
-              <span className="ml-2 text-sm text-gray-900">Activo</span>
+              <span className="ml-2 text-sm text-gray-900 dark:text-gray-200">Activo</span>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
       </form>
 
       <div className="mt-6 flex justify-between items-center">
-        <h2 className="text-lg font-medium text-gray-900">Asignar Usuarios a Jurados</h2>
+        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-200">Asignar Usuarios a Jurados</h2>
         <button
           type="button"
           onClick={handleAsignarUsuarios}
@@ -207,6 +207,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
       </div>
     </div>
   );
+
 };
 
 export default FormUsuario;

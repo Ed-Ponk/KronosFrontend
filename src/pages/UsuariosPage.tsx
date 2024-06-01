@@ -30,8 +30,10 @@ const UsuariosPage: React.FC = () => {
   }, []);
 
   return (
-    <div className='w-full h-full md:w-auto bg-gray-100 '>
-       <FormUsuario selectedUsuario={selectedUsuario} setSelectedUsuario={setSelectedUsuario} fetchData={fetchData} />
+
+    
+    <div className='w-full  overflow-auto h-full md:w-auto bg-gray-100 dark:bg-slate-900 '>
+      <FormUsuario selectedUsuario={selectedUsuario} setSelectedUsuario={setSelectedUsuario} fetchData={fetchData} />
       <TableUsuario setSelectedUsuario={setSelectedUsuario} records={records} fetchData={fetchData} />
      
     </div>
