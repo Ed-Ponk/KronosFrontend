@@ -160,8 +160,12 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
         }
     };
 
+    const cargarDatosFormulario = () => {
+        setSelectedGrupo(selectedData?.curso);
+    }
+
     useEffect(() => {
-        console.log(selectedData);
+        cargarDatosFormulario();
     }, [selectedData]);
 
     useEffect(() => {
