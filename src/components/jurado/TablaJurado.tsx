@@ -133,11 +133,11 @@ const TablaJurado: React.FC = () => {
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Jurados</h1>
+    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
+      <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de Jurados</h1>
       <hr />
       <div className="sm:col-span-3 mt-2">
-        <label className="block text-sm font-medium leading-6 text-gray-900">Semestres</label>
+        <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Semestres</label>
         <div className='flex'>
           <div className="mt-2 w-1/2">
             <SelectSemestre onChange={handleSemestreChange} />
@@ -157,7 +157,7 @@ const TablaJurado: React.FC = () => {
 
       {showTable && (
         <>
-          <div className='w-100 mt-5 flex '>
+          <div className='w-100 mt-5 mb-2 flex '>
             <input
               name='buscar'
               onChange={handleFilter}

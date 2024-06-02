@@ -8,7 +8,7 @@ export const FormJurado: React.FC = () => {
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLFormElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setSelectedFileName(file.name);
@@ -19,7 +19,7 @@ export const FormJurado: React.FC = () => {
     }
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (event: React.DragEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
@@ -96,16 +96,16 @@ export const FormJurado: React.FC = () => {
     MySwal.fire({
       title: 'Instrucciones',
       html: `
-      <p >El formato del archivo Excel debe contar con la siguiente estructura:</p>
+      <p>El formato del archivo Excel debe contar con la siguiente estructura:</p>
       <table class="table-fixed mt-2 border-collapse border border-gray-400 w-full">
         <thead>
           <tr>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Semestre</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Email</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Apellidos y Nombres</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Dedicación</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Teléfono</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Horas de asesoría semanal</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">semestre</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">email</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">apellidos y nombres</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">dedicacion</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">telefono</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">horas de asesoria semanal</th>
           </tr>
         </thead>
         <tbody>
@@ -137,29 +137,29 @@ export const FormJurado: React.FC = () => {
       </table>
     `,
       icon: 'info',
-      confirmButtonText: 'Entendido',customClass: {
+      confirmButtonText: 'Entendido',
+      customClass: {
         popup: 'w-3/4 max-w-3xl', // Adjust the width of the alert
       },
     });
   };
 
   return (
-    <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col mt-2 w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="block font-medium leading-6 text-gray-900">
+        <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
           Registrar Jurado
         </h1>
         <button onClick={handleInfoClick} className="">
-        <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-  <path d="M9 0C4.029 0 0 4.029 0 9s4.029 9 9 9 9-4.029 9-9-4.029-9-9-9zm1 15h-2V7h2v8zm-1-9.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/>
-</svg>
-
+          <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+            <path d="M9 0C4.029 0 0 4.029 0 9s4.029 9 9 9 9-4.029 9-9-4.029-9-9-9zm1 15h-2V7h2v8zm-1-9.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/>
+          </svg>
         </button>
       </div>
-      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit}>
-        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
-          <div className="text-center" onDrop={handleDrop} onDragOver={handleDragOver}>
-            <div className="mt-4 flex text-sm leading-6 text-gray-600">
+      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit} onDrop={handleDrop} onDragOver={handleDragOver}>
+        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2 dark:border-white">
+          <div className="text-center">
+            <div className="mt-4 flex text-sm leading-6 text-gray-600 ">
               <label
                 htmlFor="file-upload"
                 className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -175,13 +175,13 @@ export const FormJurado: React.FC = () => {
                   onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name || "")}
                 />
               </label>
-              <p className="pl-1">o arrastrar y soltar</p>
+              <p className="pl-1 dark:text-gray-200">o arrastrar y soltar</p>
             </div>
-            <p className="text-xs leading-5 text-gray-600">.xlsx , .xls hasta 10MB</p>
+            <p className="text-xs leading-5 text-gray-600 dark:text-gray-200">.xlsx , .xls hasta 10MB</p>
           </div>
         </div>
         {selectedFileName && (
-          <p className="text-sm text-gray-700 mt-2">Archivo seleccionado: {selectedFileName}</p>
+          <p className="text-sm text-gray-700 mt-2 dark:text-gray-200">Archivo seleccionado: {selectedFileName}</p>
         )}
         <div className='mt-5 w-100 flex-auto flex justify-end'>
           <button

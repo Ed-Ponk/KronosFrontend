@@ -1,38 +1,26 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import UsuariosPage from './UsuariosPage';
 import SemestrePage from './SemestrePage'; // Importa tu otra página aquí
-import httpClient from '../hooks/httpClient';
-import { User } from '../types/User';
+import { useUser } from '../contexts/UserContext';
+import JuradoComponent from '../components/jurado/JuradoComponent';
 
-const AdminPage = () => {
-  const [user, setUser] = useState<User | null>(null);
+const AdminPage: React.FC = () => {
+  const { user } = useUser();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState('Usuarios'); // Estado para controlar la página actual
+  const [currentPage, setCurrentPage] = useState<string>(() => localStorage.getItem('currentPage') || 'Home');
+
+  const changePage = (page: string) => {
+    setCurrentPage(page);
+    localStorage.setItem('currentPage', page);
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        
-        const resp = await httpClient.get("http://127.0.0.1:5000/usuarios/session", { withCredentials: true });
-        console.log(resp)
-        setUser(resp.data.data);
-        console.log(user)
-      } catch (error) {
-        console.log("Not authenticated");
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    const listarCookies = () => {
-      
-      console.log("++++"+ document.cookie);
-      
-    };
-  
-    listarCookies();
+    const savedPage = localStorage.getItem('currentPage');
+    if (savedPage) {
+      setCurrentPage(savedPage);
+    }
   }, []);
 
   const toggleSideMenu = () => {
@@ -45,6 +33,8 @@ const AdminPage = () => {
         return <UsuariosPage />;
       case 'Semestres':
         return <SemestrePage />;
+      case 'Jurado':
+        return <JuradoComponent />;
       default:
         return <UsuariosPage />;
     }
@@ -58,7 +48,6 @@ const AdminPage = () => {
           <a href="/login">
             <button>Login</button>
           </a>
-         
         </div>
       </div>
     );
@@ -77,10 +66,10 @@ const AdminPage = () => {
       <Sidebar 
         isSideMenuOpen={isSideMenuOpen} 
         toggleSideMenu={toggleSideMenu} 
-        setCurrentPage={setCurrentPage} 
+        setCurrentPage={changePage} // Usa la función changePage aquí
         currentPage={currentPage} // Pasa la página actual
       />
-      <div className='flex flex-col  flex-1 w-full'>
+      <div className='flex flex-col flex-1 w-full'>
         <Navbar toggleSideMenu={toggleSideMenu} />
         <div className='flex-1 overflow-auto h-full'>
           {renderPage()}

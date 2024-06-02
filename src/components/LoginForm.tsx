@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import httpClient from '../hooks/httpClient';
+import { useUser } from '../contexts/UserContext';
 import { User } from '../types/User';
 
 const LoginForm: React.FC = () => {
- 
+  const { setUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -13,7 +14,14 @@ const LoginForm: React.FC = () => {
   const [generalError, setGeneralError] = useState('');
   const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    // Verificar si hay una sesión activa y redirigir al usuario si es necesario
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      const userData: User = JSON.parse(storedUser);
+      navigate(userData.rol === 'Administrador' ? '/admin' : '/jurado');
+    }
+  }, [navigate]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     
@@ -27,13 +35,24 @@ const LoginForm: React.FC = () => {
         email,
         password,
       },{ withCredentials: true });
-      console.log(resp)
+      console.log(resp.data)
+
+      const userData: User = {
+        id: resp.data.usuario_id,
+        email: resp.data.email,
+        rol: resp.data.rol
+      };
+      setUser(userData);
+      sessionStorage.setItem('user', JSON.stringify(userData));
       navigate(resp.data.rol === 'Administrador' ? '/admin' : '/jurado');
 
+      
     } catch (error) {
       setGeneralError('Error en la comunicación con el servidor. Inténtalo de nuevo más tarde.');
     }
   };
+
+  
 
   return (
     <div className="w-96 h-auto bg-white rounded-xl shadow-md px-6 py-12 lg:px-8">
