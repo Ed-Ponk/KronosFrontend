@@ -11,6 +11,7 @@ import JuradoRoutes from './routes/JuradoRoutes';
 import SemestrePage from './pages/SemestrePage';
 import FacultadPage from './pages/FacultadPage';
 import UsuariosPage from './pages/UsuariosPage';
+import GrupoPage from './pages/GrupoPage';
 
 const App = () => {
   const { user } = useAuth();
@@ -39,6 +40,8 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/semestre" element={<SemestrePage />} />
         <Route path="/usuario" element={<UsuariosPage />} />
+        <Route path="/grupo" element={<GrupoPage />} />
+
 
 
       </Routes>
