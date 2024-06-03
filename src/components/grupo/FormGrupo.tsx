@@ -10,10 +10,10 @@ import { Option, DataGrupo } from '../../types/Grupo';
 
 const MySwal = withReactContent(Swal);
 
-const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: DataGrupo|null,  setSelectedData:(data: DataGrupo) => void , fetchData: () => void}) => {
+const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedData: DataGrupo | null, setSelectedData: (data: DataGrupo) => void, fetchData: () => void }) => {
 
     const [typeSubmit, setTypeSubmit] = useState(true); //True: Registrar, False: Editar
-    const [idGrupoHorario, setIdGrupoHorario] = useState();
+    const [idGrupoHorario, setIdGrupoHorario] = useState(0);
 
     //Estado para los grupos actuales para la tabla
     const [dataGrupos, setDataGrupos] = useState([]);
@@ -120,7 +120,7 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        const endpoint = typeSubmit ? '/grupos/registrar' : '/grupo/actualizar';
+        const endpoint = typeSubmit ? '/grupos/registrar' : '/grupos/actualizar';
         const method = typeSubmit ? 'POST' : 'PUT';
 
         try {
@@ -139,10 +139,10 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
             if (response.data.status) {
                 MySwal.fire({
                     title: 'Éxito',
-                    text: !typeSubmit ? 'Escuela actualizada con éxito' : 'Escuela registrada con éxito',
+                    text: !typeSubmit ? 'Grupo horario actualizado con éxito' : 'Grupo horario registrado con éxito',
                     icon: 'success',
                 });
-                //handleCancel();
+                handleCancel();
                 fetchData();
             } else {
                 MySwal.fire({
@@ -154,14 +154,33 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
         } catch (e) {
             MySwal.fire({
                 title: 'Error',
-                text: 'Error al registrar la escuela. Inténtalo de nuevo más tarde.',
+                text: 'Error al registrar la grupo horario. Inténtalo de nuevo más tarde.',
                 icon: 'error',
             });
         }
     };
 
     const cargarDatosFormulario = () => {
-        setSelectedGrupo(selectedData?.curso);
+        if (selectedData) {
+            setIdGrupoHorario(selectedData?.grupo_curso_id); //si no tiene dato entonces 0
+
+            setTypeSubmit(false);
+        } else {
+            setTypeSubmit(true);
+            setIdGrupoHorario(0);
+        }
+        setSelectedGrupo(selectedData?.grupo);
+        setSelectedSemestre(selectedData?.nombre_semestre);
+        setSelectedEscuela(selectedData?.escuela);
+        setSelectedCurso(selectedData?.curso);
+        setSelectedDocente(selectedData?.docente);
+    }
+
+    const handleCancel = () => {
+        setTypeSubmit(true);
+        setIdGrupoHorario(0);
+
+        setSelectedData(null)
     }
 
     useEffect(() => {
@@ -180,9 +199,7 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
     return (
         <div className="flex flex-col w-11/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
             <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-                Registrar Escuela
-                {//selectedEscuela ? 'Editar Escuela' : 'Registrar Escuela'
-                }
+                {!typeSubmit ? 'Editar Escuela' : 'Registrar Escuela'}
             </h1>
             <form className="space-y-3 " onSubmit={handleSubmit}>
                 <div className='flex space-x-4'>
@@ -230,8 +247,17 @@ const FormEscuela = ({selectedData, setSelectedData, fetchData}: {selectedData: 
                         type="submit"
                         className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        Registrar Grupo Horario
+                        {typeSubmit ? 'Registrar' : 'Actualizar'} Grupo Horario
                     </button>
+                    {typeSubmit || (
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="ml-4 flex justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                        >
+                            Cancelar
+                        </button>
+                    )}
                 </div>
             </form>
         </div>

@@ -3,6 +3,8 @@ import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import UsuariosPage from './UsuariosPage';
 import SemestrePage from './SemestrePage'; // Importa tu otra página aquí
+import GrupoPage from './GrupoPage';
+
 import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
 
@@ -35,6 +37,9 @@ const AdminPage: React.FC = () => {
         return <SemestrePage />;
       case 'Jurado':
         return <JuradoComponent />;
+      case 'Grupo':
+        return <GrupoPage />;
+
       default:
         return <UsuariosPage />;
     }
