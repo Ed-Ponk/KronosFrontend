@@ -12,14 +12,14 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setData(records || []); // Asegúrate de que records no sea null o undefined
-    setLoading(false); // Cambia el estado de carga a falso
+    setData(records || []); 
+    setLoading(false); 
   }, [records]);
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     if (query === '') {
-      setData(records); // Restablece los datos completos si el input está vacío
+      setData(records); 
     } else {
       const newData = records.filter(row => {
         return row.escuela.toLowerCase().includes(query);
@@ -53,7 +53,7 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
             'La escuela ha sido eliminada.',
             'success'
           );
-          fetchData(); // Actualiza la tabla después de eliminar
+          fetchData();
         })
         .catch(error => {
           MySwal.fire(
@@ -117,7 +117,7 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 flex flex-col w-4/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium'>Lista de Escuelas</h1>
       <hr></hr>
       <div className='mt-3 w-100 flex'>

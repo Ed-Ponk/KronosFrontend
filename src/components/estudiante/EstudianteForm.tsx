@@ -2,13 +2,16 @@ import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+import axiosInstance from '../../api/axiosConfig';
+
+
 const MySwal = withReactContent(Swal);
 
-export const FormJurado: React.FC = () => {
+export const FormEstudiante: React.FC = () => {
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDrop = (event: React.DragEvent<HTMLFormElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setSelectedFileName(file.name);
@@ -19,7 +22,7 @@ export const FormJurado: React.FC = () => {
     }
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLFormElement>) => {
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
 
@@ -53,8 +56,10 @@ export const FormJurado: React.FC = () => {
     reader.onload = (event) => {
       const data = event.target?.result;
 
+
+      const urlBase = axiosInstance.defaults.baseURL
       // Enviar los datos del archivo al servidor
-      fetch('http://127.0.0.1:5000/jurados/registro-jurado', {
+      fetch(`${urlBase}/estudiantes/registro-estudiantes`, {
         method: 'POST',
         body: data as ArrayBuffer, // Enviar los datos del archivo en bruto
         headers: {
@@ -100,38 +105,62 @@ export const FormJurado: React.FC = () => {
       <table class="table-fixed mt-2 border-collapse border border-gray-400 w-full">
         <thead>
           <tr>
-            <th class="border border-gray-300 px-4 py-2 text-xs">semestre</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">email</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">apellidos y nombres</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">dedicacion</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">telefono</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">horas de asesoria semanal</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Semestre</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Código Universitario</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Apellidos y Nombres</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Email</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Teléfono</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 1</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 2</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 3</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Título de Tesis</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Grupo</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Curso</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">Escuela</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo1@gmail.com</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">201VP00835</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">Ramize Portcarrero Juan</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo1@gmail.com</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">8</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs"></td>
+            <td class="border border-gray-300 px-4 py-2 text-xs"></td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Reyes Burgos Karla Cecilia</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Sistema web con IA</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">A</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Proyecto de investigación</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Ingeniería civil ambiental</td>
           </tr>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">201VP01835</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Mendoza Crespo Ivan</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo2@gmail.com</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">López Martínez Ana</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">TC</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">3</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">946123446</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Mera Montenegro Huilder Juanito</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Reyes Burgos Karla Cecilia</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Del Castillo Castro Consuelo</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Sistema web con IA</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">A</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Seminario de tesis I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Ingeniería civil ambiental</td>
           </tr>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">201VP01335</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Tejada Torres Erika</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo3@gmail.com</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">González Rodríguez María</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">946123456</td>
-            <td class="border border-gray-300 px-4 py-2 text-xs">7</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">941123450</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Zelada Valdivieso Hector Miguel</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Imán Espinoza Ricardo David</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Castillo Zumaran Segundo</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Sistema web con IA</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">B</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Proyecto de investigación</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">Ingeniería civil ambiental</td>
           </tr>
         </tbody>
       </table>
@@ -145,10 +174,10 @@ export const FormJurado: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col mt-2 w-3/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
+    <div className="flex flex-col w-9/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
-          Registrar Jurado
+        <h1 className="block font-medium leading-6 text-gray-900">
+          Registrar Estudiantes
         </h1>
         <button onClick={handleInfoClick} className="">
           <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
@@ -156,10 +185,10 @@ export const FormJurado: React.FC = () => {
           </svg>
         </button>
       </div>
-      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit} onDrop={handleDrop} onDragOver={handleDragOver}>
-        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2 dark:border-white">
-          <div className="text-center">
-            <div className="mt-4 flex text-sm leading-6 text-gray-600 ">
+      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit}>
+        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
+          <div className="text-center" onDrop={handleDrop} onDragOver={handleDragOver}>
+            <div className="mt-4 flex text-sm leading-6 text-gray-600">
               <label
                 htmlFor="file-upload"
                 className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -175,13 +204,13 @@ export const FormJurado: React.FC = () => {
                   onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name || "")}
                 />
               </label>
-              <p className="pl-1 dark:text-gray-200">o arrastrar y soltar</p>
+              <p className="pl-1">o arrastrar y soltar</p>
             </div>
-            <p className="text-xs leading-5 text-gray-600 dark:text-gray-200">.xlsx , .xls hasta 10MB</p>
+            <p className="text-xs leading-5 text-gray-600">.xlsx , .xls hasta 10MB</p>
           </div>
         </div>
         {selectedFileName && (
-          <p className="text-sm text-gray-700 mt-2 dark:text-gray-200">Archivo seleccionado: {selectedFileName}</p>
+          <p className="text-sm text-gray-700 mt-2">Archivo seleccionado: {selectedFileName}</p>
         )}
         <div className='mt-5 w-100 flex-auto flex justify-end'>
           <button
@@ -196,4 +225,4 @@ export const FormJurado: React.FC = () => {
   );
 };
 
-export default FormJurado;
+export default FormEstudiante;

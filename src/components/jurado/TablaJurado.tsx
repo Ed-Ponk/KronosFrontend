@@ -133,7 +133,7 @@ const TablaJurado: React.FC = () => {
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 flex flex-col w-3/5 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de Jurados</h1>
       <hr />
       <div className="sm:col-span-3 mt-2">

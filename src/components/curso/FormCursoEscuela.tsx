@@ -1,11 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import axiosInstance from '../../api/axiosConfig';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import { DataCurso } from '../../types/Curso';
 import { DataEscuela } from '../../types/Escuela';
 import { DataFacultad } from '../../types/Facultad';
+
+const MySwal = withReactContent(Swal);
 
 const FormCursoEscuela: React.FC = () => {
   const [cursos, setCursos] = useState<DataCurso[]>([]);
@@ -20,7 +23,7 @@ const FormCursoEscuela: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cursosResponse = await axiosInstance.get('/curso');
+        const cursosResponse = await axiosInstance.get('/curso/cursos-activos');
         setCursos(cursosResponse.data.data);
 
         const escuelasResponse = await axiosInstance.get('/escuela');
@@ -28,6 +31,7 @@ const FormCursoEscuela: React.FC = () => {
 
         const facultadesResponse = await axiosInstance.get('/facultad');
         setFacultades(facultadesResponse.data.data);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -45,7 +49,9 @@ const FormCursoEscuela: React.FC = () => {
   }, [allCursosChecked, cursos]);
 
   useEffect(() => {
-    const relatedEscuelas = escuelas.filter(escuela => escuela.facultad_id === selectedFacultad);
+    const relatedEscuelas = selectedFacultad
+      ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad)
+      : escuelas;
     if (allEscuelasChecked) {
       setSelectedEscuelas(new Set(relatedEscuelas.map(escuela => escuela.escuela_id)));
     } else {
@@ -53,8 +59,11 @@ const FormCursoEscuela: React.FC = () => {
     }
   }, [allEscuelasChecked, escuelas, selectedFacultad]);
 
+
   const handleFacultadChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFacultad(Number(event.target.value));
+    setAllEscuelasChecked(false);
+    setSelectedEscuelas(new Set());
   };
 
   const handleCursoCheckboxChange = (cursoId: number) => {
@@ -81,6 +90,7 @@ const FormCursoEscuela: React.FC = () => {
     });
   };
 
+
   const filteredEscuelas = selectedFacultad
     ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad)
     : escuelas;
@@ -88,48 +98,44 @@ const FormCursoEscuela: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axiosInstance.post('/relacion-curso-escuela', {
-        cursos: Array.from(selectedCursos),
-        escuelas: Array.from(selectedEscuelas),
+      const response = await axiosInstance.post('/curso/registrar-escuela-curso', {
+        curso_id: Array.from(selectedCursos),
+        escuela_id: Array.from(selectedEscuelas)
       });
-      console.log('Relación creada con éxito:', response.data);
+      
+      if (response.data.status) {
+        MySwal.fire({
+          title: 'Éxito',
+          text: 'Relación creada con éxito',
+          icon: 'success',
+        });
+        // Opcional: resetear los estados después de guardar
+        setSelectedFacultad(null);
+        setSelectedCursos(new Set());
+        setSelectedEscuelas(new Set());
+        setAllCursosChecked(false);
+        setAllEscuelasChecked(false);
+      } else {
+        MySwal.fire({
+          title: 'Error',
+          text: response.data.message,
+          icon: 'error',
+        });
+      }
     } catch (error) {
       console.error('Error creando la relación:', error);
+      MySwal.fire({
+        title: 'Error',
+        text: 'Error al crear la relación. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
     }
   };
 
   return (
     <div className="p-4 bg-white shadow-md rounded-md">
-      <h1 className="text-xl font-semibold mb-4">Relacionar Cursos con Escuelas</h1>
+      <h1 className="text-xl font-semibold mb-4">Relacionar Cursos con Escuelas y Grupos</h1>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Filtrar por Facultad</label>
-          <select
-            value={selectedFacultad ?? ''}
-            onChange={handleFacultadChange}
-            className="mt-2 block w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option value="">Selecciona una facultad</option>
-            {facultades.map(facultad => (
-              <option key={facultad.facultad_id} value={facultad.facultad_id}>
-                {facultad.nombre}
-              </option>
-            ))}
-          </select>
-          {selectedFacultad && (
-            <div className="mt-2">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={allEscuelasChecked}
-                  onChange={() => setAllEscuelasChecked(!allEscuelasChecked)}
-                  className="mr-2"
-                />
-                Seleccionar todas las escuelas relacionadas
-              </label>
-            </div>
-          )}
-        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Disclosure>
@@ -184,6 +190,30 @@ const FormCursoEscuela: React.FC = () => {
                     )}
                   </Disclosure.Button>
                   <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                    <div className="mb-2">
+                      <label className="block text-sm font-medium text-gray-700">Selecciona una facultad</label>
+                      <select
+                        value={selectedFacultad ?? ''}
+                        onChange={handleFacultadChange}
+                        className="mt-2 block w-full p-2 border border-gray-300 rounded-md"
+                      >
+                        <option value="">Selecciona una facultad</option>
+                        {facultades.map(facultad => (
+                          <option key={facultad.facultad_id} value={facultad.facultad_id}>
+                            {facultad.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <label className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        checked={allEscuelasChecked}
+                        onChange={() => setAllEscuelasChecked(!allEscuelasChecked)}
+                        className="mr-2"
+                      />
+                      Seleccionar todas las escuelas relacionadas
+                    </label>
                     <ul className="max-h-64 overflow-y-auto border border-gray-300 rounded-md p-2">
                       {filteredEscuelas.map(escuela => (
                         <li key={escuela.escuela_id} className="flex items-center mb-2">
@@ -206,7 +236,7 @@ const FormCursoEscuela: React.FC = () => {
         <div className="mt-4">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Guardar Relación
           </button>

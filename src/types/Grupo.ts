@@ -1,3 +1,8 @@
+export type DataGrupos = {
+  grupo_id: number;
+  nombre: string;
+};
+
 export interface Option {
     id: number;
     name: string;

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
 import SidebarJurado from '../components/SidebarJurado';
+import HorarioSeleccionMultiple from '../components/jurado/HorarioSeleccionMultiple ';
 
 
 
@@ -34,7 +35,7 @@ const JuradoPage = () =>{
   const renderPage = () => {
     switch (currentPage) {
       case 'Horario Jurado':
-        return <JuradoComponent />;
+        return <HorarioSeleccionMultiple />;
         case 'Reportes':
           return <JuradoComponent />;
       default:
@@ -65,7 +66,7 @@ const JuradoPage = () =>{
   }
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex  h-screen'>
       <SidebarJurado 
         isSideMenuOpen={isSideMenuOpen} 
         toggleSideMenu={toggleSideMenu} 
@@ -74,7 +75,7 @@ const JuradoPage = () =>{
       />
       <div className='flex flex-col  flex-1 w-full'>
         <Navbar toggleSideMenu={toggleSideMenu} />
-        <div className='flex-1 overflow-auto h-full'>
+        <div className='flex-1 dark:bg-slate-900   bg-gray-100 overflow-auto h-full'>
           {renderPage()}
         </div>
       </div>
