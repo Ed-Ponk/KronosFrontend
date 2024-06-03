@@ -29,10 +29,10 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
     const payload = {
       curso_id: selectedCurso ? selectedCurso.curso_id : undefined,
       nombre: nombre,
-      vigente: vigente ? 1 : 0  // Convierte el estado booleano a 1 o 0
+      vigente: vigente ? 1 : 0 
     };
 
-    console.log('Payload:', payload);  // Log para verificar los datos antes de enviarlos
+    console.log('Payload:', payload);
 
     const endpoint = selectedCurso ? '/curso/actualizar-curso' : '/curso/registrar-curso';
     const method = selectedCurso ? 'PUT' : 'POST';
