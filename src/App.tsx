@@ -41,7 +41,6 @@ const App = () => {
         <Route path="/grupo" element={<GrupoPage />} />
 
 
-
       </Routes>
     </div>
   );

@@ -174,10 +174,10 @@ export const FormEstudiante: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col w-9/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
       <div className="flex justify-between items-center mb-4">
         <h1 className="block font-medium leading-6 text-gray-900">
-          Registrar Estudiante
+          Registrar Estudiantes
         </h1>
         <button onClick={handleInfoClick} className="">
           <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">

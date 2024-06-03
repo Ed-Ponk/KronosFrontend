@@ -197,7 +197,7 @@ const TablaEstudiante: React.FC = () => {
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 flex flex-col w-11/12  mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium'>Lista de Estudiantes</h1>
       <hr />
       <div className="sm:col-span-3 mt-2">

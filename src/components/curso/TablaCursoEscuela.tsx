@@ -138,7 +138,7 @@ const TablaCursoEscuela: React.FC<TablaCursoEscuelaProps> = ({ setSelectedCursoE
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 flex flex-col mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium'>Lista de Relaciones Curso-Escuela</h1>
       <hr></hr>
       <div className='mt-3 w-100 flex'>

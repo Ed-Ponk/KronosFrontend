@@ -69,7 +69,7 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
   };
 
   return (
-    <div className="flex flex-col w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
       <h1 className="block font-medium leading-6 text-gray-900 mb-4">
         {selectedCurso ? 'Editar Curso' : 'Registrar Curso'}
       </h1>
