@@ -89,13 +89,14 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
 
     const fetchCursos = async () => {
         try {
-            //TODO: cambiar la api para obtener los cursos segun la escuela
-            const response = await axiosInstance.get('curso');
+            const response = await axiosInstance.get('curso/lista-escuela-cursos');
             let data: Option[] = [];
             //Damos el formato
             for (const item of response.data.data) {
-                let newItem: Option = { id: item.curso_id, name: item.curso, }
-                data.push(newItem);
+                if (item.vigente == 'Activo' && selectedEscuela?.id == item.escuela_id) {
+                    let newItem: Option = { id: item.curso_id, name: item.curso, }
+                    data.push(newItem);
+                }
             }
             setDataCurso(data);
         } catch (error) {
@@ -184,6 +185,11 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     }
 
     useEffect(() => {
+        setSelectedCurso(null);
+        fetchCursos();
+    }, [selectedEscuela])
+
+    useEffect(() => {
         cargarDatosFormulario();
     }, [selectedData]);
 
@@ -192,7 +198,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
         fetchLetrasGrupos();
         fetchSemestres();
         fetchEscuelas();
-        fetchCursos();
         fetchDocentes();
     }, []);
 
