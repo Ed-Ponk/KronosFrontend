@@ -37,14 +37,27 @@ const LoginForm: React.FC = () => {
       },{ withCredentials: true });
       console.log(resp.data)
 
-      const userData: User = {
-        id: resp.data.usuario_id,
-        email: resp.data.email,
-        rol: resp.data.rol
-      };
-      setUser(userData);
-      sessionStorage.setItem('user', JSON.stringify(userData));
-      navigate(resp.data.rol === 'Administrador' ? '/admin' : '/jurado');
+      if(resp.data.status == false){
+        
+        if (resp.data.message === 'El usuario no existe') {
+          setEmailError('El usuario no existe');
+        } else if (resp.data.message === 'Contraseña incorrecta') {
+          setPasswordError('Contraseña incorrecta');
+        } else {
+          setGeneralError(resp.data.message);
+        }
+       
+      }else{
+        const userData: User = {
+          id: resp.data.usuario_id,
+          email: resp.data.email,
+          rol: resp.data.rol
+        };
+        setUser(userData);
+        sessionStorage.setItem('user', JSON.stringify(userData));
+        navigate(resp.data.rol === 'Administrador' ? '/admin' : '/jurado');
+       
+      }
 
       
     } catch (error) {
