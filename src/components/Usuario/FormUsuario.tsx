@@ -90,6 +90,14 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
   };
 
   const handleAsignarUsuarios = async () => {
+    MySwal.fire({
+      title: 'Asignando',
+      text: 'Asignando jurado, por favor espera...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        MySwal.showLoading();
+      }
+    });
     try {
       const response = await axios.get('http://127.0.0.1:5000/usuarios/asignar-jurado');
       if (response.data.status) {
