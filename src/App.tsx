@@ -4,6 +4,14 @@ import { Routes, Route,Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminPage from './pages/AdminPage';
 import JuradoPage from './pages/JuradoPage';
+import NotFound from './pages/NotFound';
+import PrivateRoute from './routes/PrivateRoutes';
+import AdminRoutes from './routes/AdminRoutes';
+import JuradoRoutes from './routes/JuradoRoutes';
+import SemestrePage from './pages/SemestrePage';
+import FacultadPage from './pages/FacultadPage';
+import UsuariosPage from './pages/UsuariosPage';
+import GrupoPage from './pages/GrupoPage';
 
 import { UserProvider,useUser } from './contexts/UserContext';
 
@@ -25,6 +33,15 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/jurado" element={<JuradoPage />} />
+        <Route path="/facultad" element={<FacultadPage />} />
+
+        <Route path="*" element={<NotFound />} />
+        <Route path="/semestre" element={<SemestrePage />} />
+        <Route path="/usuario" element={<UsuariosPage />} />
+        <Route path="/grupo" element={<GrupoPage />} />
+
+
+
       </Routes>
     </div>
   );
