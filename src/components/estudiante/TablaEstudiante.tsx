@@ -9,7 +9,7 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import { Estudiante } from '../../types/Estudiante';
 import { DataFacultad } from '../../types/Facultad';
 import { DataEscuela } from '../../types/Escuela';
-import { DataCurso } from '../../types/Curso'; // Importa el tipo de Curso
+import { DataCurso } from '../../types/Curso';
 
 const MySwal = withReactContent(Swal);
 
@@ -20,10 +20,10 @@ const TablaEstudiante: React.FC = () => {
   const [selectedSemestre, setSelectedSemestre] = useState<number | null>(null);
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
-  const [selectedCurso, setSelectedCurso] = useState<number | null>(null); // Cambia a number
+  const [selectedCurso, setSelectedCurso] = useState<number | null>(null); 
   const [facultades, setFacultades] = useState<DataFacultad[]>([]);
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
-  const [cursos, setCursos] = useState<DataCurso[]>([]); // Estado para los cursos
+  const [cursos, setCursos] = useState<DataCurso[]>([]); 
   const [showTable, setShowTable] = useState<boolean>(false);
 
   const fetchFacultades = async () => {
@@ -56,7 +56,7 @@ const TablaEstudiante: React.FC = () => {
   useEffect(() => {
     fetchFacultades();
     fetchEscuelas();
-    fetchCursos(); // Llamar a la función para obtener los cursos
+    fetchCursos(); 
   }, []);
 
   const fetchData = async (semestreId: number, escuelaId: number | null, cursoId: number | null) => {

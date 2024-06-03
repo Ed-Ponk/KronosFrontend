@@ -1,42 +1,71 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState ,useEffect} from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import httpClient from '../hooks/httpClient';
+import { useUser } from '../contexts/UserContext';
+import { User } from '../types/User';
 
 const LoginForm: React.FC = () => {
+  const { setUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [generalError, setGeneralError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Verificar si hay una sesión activa y redirigir al usuario si es necesario
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      const userData: User = JSON.parse(storedUser);
+      navigate(userData.rol === 'Administrador' ? '/admin' : '/jurado');
+    }
+  }, [navigate]);
 
   const handleSubmit = async (event: React.FormEvent) => {
+    
     event.preventDefault();
     setEmailError('');
     setPasswordError('');
     setGeneralError('');
-    
-    try {
-      const response = await axios.post('http://127.0.0.1:5000/usuarios/validar-login', {
-        email: email,
-        clave: password
-      });
 
-      const data = response.data;
-      if (data.status) {
-        // Aquí puedes manejar la lógica de redirección o guardar tokens
-        console.log('Login successful:', data.message);
-      } else {
-        if (data.message.includes('usuario')) {
-          setEmailError(data.message);
-        } else if (data.message.includes('Contraseña')) {
-          setPasswordError(data.message);
+    try {
+      const resp = await httpClient.post("http://127.0.0.1:5000/usuarios/validar-login", {
+        email,
+        password,
+      },{ withCredentials: true });
+      console.log(resp.data)
+
+      if(resp.data.status == false){
+        
+        if (resp.data.message === 'El usuario no existe') {
+          setEmailError('El usuario no existe');
+        } else if (resp.data.message === 'Contraseña incorrecta') {
+          setPasswordError('Contraseña incorrecta');
         } else {
-          setGeneralError(data.message);
+          setGeneralError(resp.data.message);
         }
+       
+      }else{
+        const userData: User = {
+          id: resp.data.usuario_id,
+          email: resp.data.email,
+          rol: resp.data.rol
+        };
+        setUser(userData);
+        sessionStorage.setItem('user', JSON.stringify(userData));
+        navigate(resp.data.rol === 'Administrador' ? '/admin' : '/jurado');
+       
       }
-    } catch (e) {
+
+      
+    } catch (error) {
       setGeneralError('Error en la comunicación con el servidor. Inténtalo de nuevo más tarde.');
     }
   };
+
+  
 
   return (
     <div className="w-96 h-auto bg-white rounded-xl shadow-md px-6 py-12 lg:px-8">

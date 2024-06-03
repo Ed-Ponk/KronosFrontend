@@ -1,7 +1,7 @@
 export type DataEscuela = {
   escuela_id: number;
   escuela: string;
-  facultad?: string;
+  facultad: string;
   facultad_id:number; 
 };
 
