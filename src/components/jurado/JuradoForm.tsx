@@ -145,7 +145,7 @@ export const FormJurado: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col mt-2 w-1/2 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
+    <div className="flex flex-col mt-2 w-3/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
       <div className="flex justify-between items-center mb-4">
         <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
           Registrar Jurado

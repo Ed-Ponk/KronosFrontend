@@ -124,7 +124,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
   };
 
   return (
-    <div className="flex mt-3 flex-col w-1/2 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex mt-3 flex-col w-3/4 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
       <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200 mb-4">
         {selectedUsuario ? 'Editar Usuario' : 'Registrar Usuario Administrador'}
       </h1>

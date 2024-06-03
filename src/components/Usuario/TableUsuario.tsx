@@ -102,12 +102,14 @@ const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records
       selector: (row: DataItem) => row.email,
       sortable: true,
       wrap: true,
+      width: '160px',
     },
     {
       name: 'Clave',
       selector: (row: DataItem) => row.clave,
       sortable: true,
       wrap: true,
+      width: '150px',
     },
     {
       name: 'Estado',
@@ -119,13 +121,13 @@ const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records
       name: 'Jurado ID',
       selector: (row: DataItem) => row.jurado_id,
       sortable: true,
-      width: '100px',
+      
     },
     {
       name: 'Rol',
       selector: (row: DataItem) => row.rol,
       sortable: true,
-      width: '100px',
+      width: '150px',
     },
     {
       name: 'Acciones',
@@ -152,7 +154,7 @@ const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records
   ];
 
   return (
-    <div className='mt-5 mb-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 mb-5 flex flex-col w-3/4 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de Usuarios</h1>
       <hr className='border-gray-300 dark:border-gray-700' />
       <div className='mt-3 w-full flex'>
