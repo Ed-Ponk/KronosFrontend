@@ -11,37 +11,46 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             selector: (row: DataGrupo) => row.grupo_curso_id,
             sortable: true,
             width: '70px',
+            center: true,
         },
         {
             name: 'Semestre',
             selector: (row: DataGrupo) => row.nombre_semestre.name,
             sortable: true,
             wrap: true,
+            width:'100px',
+            center: true,
         },
         {
             name: 'Curso',
             selector: (row: DataGrupo) => row.curso.name,
             sortable: true,
             wrap: true,
+            center: true,
         },
         {
             name: 'Grupo',
             selector: (row: DataGrupo) => row.grupo.name,
             sortable: true,
             wrap: true,
+            width: '90px',
+            center: true,
         },
         {
             name: 'Docente',
             selector: (row: DataGrupo) => row.docente.name,
             sortable: true,
             wrap: true,
+            center: true,
         },
-        {
-            name: 'Escuela',
-            selector: (row: DataGrupo) => row.escuela.name,
-            sortable: true,
-            wrap: true,
-        },
+        // {
+        //     name: 'Escuela',
+        //     selector: (row: DataGrupo) => row.escuela.name,
+        //     sortable: true,
+        //     wrap: true,
+        //     center: true,
+            
+        // },
         {
             name: 'Acciones',
             cell: (row: DataGrupo) => (

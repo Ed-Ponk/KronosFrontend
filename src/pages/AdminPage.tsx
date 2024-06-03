@@ -6,6 +6,8 @@ import SemestrePage from './SemestrePage';
 import EstudiantePage from './EstudiantePage';
 import CursoPage from './CursoPage';
 import FacultadPage from './FacultadPage';// Importa tu otra página aquí
+import GrupoPage from './GrupoPage';
+
 import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
 
@@ -45,6 +47,9 @@ const AdminPage: React.FC = () => {
         return <CursoPage />;
       case 'Facultad':
         return <FacultadPage />;
+      case 'Grupo':
+        return <GrupoPage />;
+
       default:
         return <UsuariosPage />;
     }
