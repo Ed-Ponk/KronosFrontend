@@ -2,6 +2,7 @@ import React from 'react';
 import TablaGenerica from '../common/DataTable';
 import { TableColumn } from 'react-data-table-component';
 import { DataGrupo } from '../../types/Grupo';
+import axiosInstance from '../../api/axiosConfig';
 
 
 const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: (record: DataGrupo) => void, records: DataGrupo[], fetchData: () => void }) => {
@@ -74,6 +75,11 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             button: true,
         }
     ];
+
+    const handleDelete = (idGrupoCurso: number) => {
+        alert(idGrupoCurso);
+        //TODO: Implementar el llamado a la api para eliminar el grupo
+    }
 
     return (
         <TablaGenerica<DataGrupo>
