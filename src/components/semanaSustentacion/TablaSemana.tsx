@@ -30,7 +30,7 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
       setData(records); // Restablece los datos completos si el input está vacío
     } else {
       const newData = records.filter(row => {
-        return row.escuela_curso_id.curso.nombre.toLowerCase().includes(query);
+        return row.escuela_curso_id.curso.name.toLowerCase().includes(query);
       });
       setData(newData);
     }
@@ -51,7 +51,7 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
       confirmButtonText: 'Sí, eliminarlo!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Lógica para eliminar el semana_sustentacion con el ID proporcionado
+        // TODO: Lógica para eliminar el semana_sustentacion con el ID proporcionado
         axios.delete('http://127.0.0.1:5000/semana_sustentacions/eliminar-semana_sustentacion', {
           headers: {
             'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
           .then(() => {
             MySwal.fire(
               'Eliminado!',
-              'El semana_sustentacion ha sido eliminado.',
+              'Se ha eliminado corectamente.',
               'success'
             );
             fetchData(); // Actualiza la tabla después de eliminar
@@ -69,7 +69,7 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
           .catch(error => {
             MySwal.fire(
               'Error!',
-              'Hubo un problema al eliminar el semana_sustentacion.',
+              'Hubo un problema al eliminar.',
               'error'
             );
           });
@@ -93,7 +93,7 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
     },
     {
       name: 'Tipo',
-      selector: (row: DataItem) => row.tipo_sustentacion.nombre,
+      selector: (row: DataItem) => row.tipo_sustentacion.name,
       sortable: true,
       wrap: true,
     },
@@ -117,19 +117,19 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
     },
     {
         name: 'Compensasión',
-        selector: (row: DataItem) => row.compensacion_docente.nombre,
+        selector: (row: DataItem) => row.compensacion_docente.name,
         sortable: true,
         width: '100px',
       },
       {
         name: 'Curso',
-        selector: (row: DataItem) => row.escuela_curso_id.curso.nombre,
+        selector: (row: DataItem) => row.escuela_curso_id.curso.name,
         sortable: true,
         width: '100px',
       },
       {
         name: 'Escuela',
-        selector: (row: DataItem) => row.escuela_curso_id.escuela.nombre,
+        selector: (row: DataItem) => row.escuela_curso_id.escuela.name,
         sortable: true,
         width: '100px',
       },
@@ -158,8 +158,8 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
   ];
 
   return (
-    <div className="mt-5 mb-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="font-medium text-gray-900 dark:text-gray-200">Lista de SemanaSustentacions</h1>
+    <div className="mt-5 mb-5 flex flex-col w-11/12 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="font-medium text-gray-900 dark:text-gray-200">Lista de semanas de sustentaciones</h1>
       <hr className="border-gray-300 dark:border-gray-700" />
       <div className="mt-3 mb-3 w-100 flex">
         <input

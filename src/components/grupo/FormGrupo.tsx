@@ -185,7 +185,8 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     }
 
     useEffect(() => {
-        setSelectedCurso(null);
+        if (typeSubmit)
+            setSelectedCurso(null);
         fetchCursos();
     }, [selectedEscuela])
 

@@ -18,26 +18,26 @@ const SemanasSustentacionPage: React.FC = () => {
                 datosFormateados.push({
                     rango_fecha_sustentacion_id: item.rango_fecha_sustentacion_id,
                     tipo_sustentacion: {
-                        valor: item.tipo_sustentacion == 'Parcial' ? 0 : 1, 
-                        nombre: item.tipo_sustentacion,
+                        id: item.tipo_sustentacion == 'Parcial' ? 0 : 1, 
+                        name: item.tipo_sustentacion,
                     },
                     semanas: item.semanas,
                     fecha_fin: item.fecha_fin,
                     fecha_inicio: item.fecha_inicio,
                     duracion_sustentacion: item.duracion_sustentacion,
                     compensacion_docente: {
-                        valor: item.compensacion_docente == 'No' ? 0 : 1, 
-                        nombre: item.compensacion_docente,
+                        id: item.compensacion_docente == 'No' ? 0 : 1, 
+                        name: item.compensacion_docente,
                     },
                     escuela_curso_id: {
                         id: item.escuela_curso_id,
                         escuela: {
                             id: item.escuela_id,
-                            nombre: item.escuela,
+                            name: item.escuela,
                         },
                         curso: {
                             id: item.curso_id,
-                            nombre: item.curso,
+                            name: item.curso,
                         },
                     }
                 
