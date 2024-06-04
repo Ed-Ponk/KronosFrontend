@@ -58,7 +58,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
           clave: selectedUsuario ? (clave ? clave : null) : clave, // Send null if password is empty when updating
           estado: estado ? 1 : 0, // 1 for Activo, 0 for Inactivo
           jurado_id: null, // Predeterminado a null
-          rol: 'ADMINISTRADOR' // Predeterminado a Administrador
+          rol: 'A' // Predeterminado a Administrador
         }),
       });
       console.log(response);

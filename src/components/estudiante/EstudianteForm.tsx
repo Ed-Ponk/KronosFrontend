@@ -1,9 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
 import axiosInstance from '../../api/axiosConfig';
-
 
 const MySwal = withReactContent(Swal);
 
@@ -11,7 +9,7 @@ export const FormEstudiante: React.FC = () => {
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLFormElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setSelectedFileName(file.name);
@@ -22,7 +20,7 @@ export const FormEstudiante: React.FC = () => {
     }
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (event: React.DragEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
@@ -56,8 +54,7 @@ export const FormEstudiante: React.FC = () => {
     reader.onload = (event) => {
       const data = event.target?.result;
 
-
-      const urlBase = axiosInstance.defaults.baseURL
+      const urlBase = axiosInstance.defaults.baseURL;
       // Enviar los datos del archivo al servidor
       fetch(`${urlBase}/estudiantes/registro-estudiantes`, {
         method: 'POST',
@@ -185,9 +182,9 @@ export const FormEstudiante: React.FC = () => {
           </svg>
         </button>
       </div>
-      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit}>
+      <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit} onDrop={handleDrop} onDragOver={handleDragOver}>
         <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
-          <div className="text-center" onDrop={handleDrop} onDragOver={handleDragOver}>
+          <div className="text-center">
             <div className="mt-4 flex text-sm leading-6 text-gray-600">
               <label
                 htmlFor="file-upload"

@@ -49,19 +49,22 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
           data: JSON.stringify({ facultad_id: id })
         })
           .then(response => {
+            console.log(response.data.status)
             if(response.data.status){
+              console.log("entró")
               MySwal.fire(
                 'Eliminado!',
                 response.data.message,
                 'success'
               );
               fetchData(); 
+            }else{
+              MySwal.fire(
+                'Error!',
+                response.data.message,
+                'error'
+              );
             }
-            MySwal.fire(
-              'Error!',
-              response.data.message,
-              'error'
-            );
           })
           .catch(() => {
             MySwal.fire(
