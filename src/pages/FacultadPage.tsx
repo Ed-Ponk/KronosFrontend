@@ -16,7 +16,12 @@ const FacultadPage: React.FC = () => {
   const fetchFacultadData = async () => {
     try {
       const response = await axiosInstance.get('facultad');
-      setFacultadRecords(response.data.data);
+      if (response.data && response.data.data) {
+        setFacultadRecords(response.data.data);
+      } else {
+        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+        setFacultadRecords([]); // Establecer a un arreglo vacío si no hay datos
+      }
     } catch (error) {
       console.error('Error fetching facultad data:', error);
     }

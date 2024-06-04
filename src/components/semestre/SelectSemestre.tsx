@@ -21,8 +21,13 @@ const SelectSemestre: React.FC<SelectSemestreProps> = ({ onChange }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:5000/semestres');
-        
-        setData(response.data.data);
+        // Asegurarse de que data no sea null antes de establecerlo
+        if (response.data && response.data.data) {
+          setData(response.data.data);
+        } else {
+          // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+          setData([]); // Establecer a un arreglo vacío si no hay datos
+        }
         setLoading(false); // Cambia el estado de carga a falso
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -34,15 +39,19 @@ const SelectSemestre: React.FC<SelectSemestreProps> = ({ onChange }) => {
 
   return (
     <select id="semestres" name="semestres" onChange={onChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-      <option value="0" selected disabled >Seleccionar Semestre</option>
+      <option value="0" selected disabled>Seleccionar Semestre</option>
       {loading ? (
         <option>Cargando...</option>
       ) : (
-        data.map((semestre) => (
-          <option key={semestre.semestre_id} value={semestre.semestre_id}>
-            {semestre.nombre_semestres}
-          </option>
-        ))
+        data.length > 0 ? (
+          data.map((semestre) => (
+            <option key={semestre.semestre_id} value={semestre.semestre_id}>
+              {semestre.nombre_semestres}
+            </option>
+          ))
+        ) : (
+          <option disabled>No hay datos disponibles</option>
+        )
       )}
     </select>
   );

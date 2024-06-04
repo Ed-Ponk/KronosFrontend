@@ -29,7 +29,12 @@ const TablaEstudiante: React.FC = () => {
   const fetchFacultades = async () => {
     try {
       const response = await axiosInstance.get('/facultad');
-      setFacultades(response.data.data);
+      if (response.data && response.data.data) {
+        setFacultades(response.data.data);
+      } else {
+        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+        setFacultades([]); // Establecer a un arreglo vacío si no hay datos
+      }
     } catch (error) {
       console.error('Error fetching facultades:', error);
     }
@@ -38,7 +43,12 @@ const TablaEstudiante: React.FC = () => {
   const fetchEscuelas = async () => {
     try {
       const response = await axiosInstance.get('/escuela');
-      setEscuelas(response.data.data);
+      if (response.data && response.data.data) {
+        setEscuelas(response.data.data);
+      } else {
+        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+        setEscuelas([]); // Establecer a un arreglo vacío si no hay datos
+      }
     } catch (error) {
       console.error('Error fetching escuelas:', error);
     }
@@ -47,7 +57,12 @@ const TablaEstudiante: React.FC = () => {
   const fetchCursos = async () => {
     try {
       const response = await axiosInstance.get('/curso');
-      setCursos(response.data.data);
+      if (response.data && response.data.data) {
+        setCursos(response.data.data);
+      } else {
+        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+        setCursos([]); // Establecer a un arreglo vacío si no hay datos
+      }
     } catch (error) {
       console.error('Error fetching cursos:', error);
     }
