@@ -39,9 +39,9 @@ const FormCursoEscuela: React.FC = () => {
 
         const facultadesResponse = await axiosInstance.get('/facultad');
         if (facultadesResponse.data && facultadesResponse.data.data) {
-          setEscuelas(facultadesResponse.data.data);
+          setFacultades(facultadesResponse.data.data);
         } else {
-          setEscuelas([]); 
+          setFacultades([]); 
         }
         
 

@@ -29,7 +29,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
     if (selectedUsuario) {
       setEmail(selectedUsuario.email);
       setClave(''); // Clear the password field when editing
-      setEstado(selectedUsuario.estado === '1');
+      setEstado(selectedUsuario.estado === 'VIGENTE');
     }
   }, [selectedUsuario]);
 
@@ -58,7 +58,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
           clave: selectedUsuario ? (clave ? clave : null) : clave, // Send null if password is empty when updating
           estado: estado ? 1 : 0, // 1 for Activo, 0 for Inactivo
           jurado_id: null, // Predeterminado a null
-          rol: 'Administrador' // Predeterminado a Administrador
+          rol: 'ADMINISTRADOR' // Predeterminado a Administrador
         }),
       });
       console.log(response);
@@ -179,7 +179,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
                 onChange={(e) => setEstado(e.target.checked)}
                 className="rounded-md border-0 text-indigo-600  dark:text-indigo-400 shadow-sm focus:ring-2 focus:ring-indigo-600"
               />
-              <span className="ml-2 text-sm text-gray-900 dark:text-gray-200">Activo</span>
+              <span className="ml-2 text-sm text-gray-900 dark:text-gray-200">VIGENTE</span>
             </div>
           </div>
         </div>

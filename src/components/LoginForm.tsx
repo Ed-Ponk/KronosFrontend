@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
     const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       const userData: User = JSON.parse(storedUser);
-      navigate(userData.rol === 'Administrador' ? '/admin' : '/jurado');
+      navigate(userData.rol === 'ADMINISTRADOR' ? '/admin' : '/jurado');
     }
   }, [navigate]);
 
@@ -55,7 +55,7 @@ const LoginForm: React.FC = () => {
         };
         setUser(userData);
         sessionStorage.setItem('user', JSON.stringify(userData));
-        navigate(resp.data.rol === 'Administrador' ? '/admin' : '/jurado');
+        navigate(resp.data.rol === 'ADMINISTRADOR' ? '/admin' : '/jurado');
        
       }
 

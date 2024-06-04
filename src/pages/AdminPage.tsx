@@ -68,7 +68,7 @@ const AdminPage: React.FC = () => {
     );
   }
 
-  if (user.rol !== 'Administrador') {
+  if (user.rol !== 'ADMINISTRADOR') {
     return (
       <div>
         <p>No tiene permisos para acceder a esta página.</p>

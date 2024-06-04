@@ -102,7 +102,7 @@ const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records
       selector: (row: DataItem) => row.email,
       sortable: true,
       wrap: true,
-      width: '160px',
+      width: '190px',
     },
     {
       name: 'Clave',
@@ -118,7 +118,7 @@ const TableUsuario: React.FC<TableUsuarioProps> = ({ setSelectedUsuario, records
       width: '100px',
     },
     {
-      name: 'Jurado ID',
+      name: 'Jurado',
       selector: (row: DataItem) => row.jurado_id,
       sortable: true,
       
