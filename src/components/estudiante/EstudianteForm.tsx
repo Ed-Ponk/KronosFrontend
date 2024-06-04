@@ -105,18 +105,18 @@ export const FormEstudiante: React.FC = () => {
       <table class="table-fixed mt-2 border-collapse border border-gray-400 w-full">
         <thead>
           <tr>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Semestre</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Código Universitario</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Apellidos y Nombres</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Email</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Teléfono</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 1</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 2</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Jurado 3</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Título de Tesis</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Grupo</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Curso</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">Escuela</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">SEMESTRE</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">CODIGO UNIVERSITARIO</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">APELLIDOS Y NOMBRES</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">EMAIL</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">TELEFONO</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">JURADO 1</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">JURADO 2</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">JURADO 3</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">TITULO DE TESIS</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">GRUPO</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">CURSO</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">ESCUELA</th>
           </tr>
         </thead>
         <tbody>
@@ -168,13 +168,13 @@ export const FormEstudiante: React.FC = () => {
       icon: 'info',
       confirmButtonText: 'Entendido',
       customClass: {
-        popup: 'w-3/4 max-w-3xl', // Adjust the width of the alert
+        popup: 'w-3/4 max-w-7xl', // Adjust the width of the alert
       },
     });
   };
 
   return (
-    <div className="flex flex-col w-9/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col mt-3 w-9/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
       <div className="flex justify-between items-center mb-4">
         <h1 className="block font-medium leading-6 text-gray-900">
           Registrar Estudiantes

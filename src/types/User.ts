@@ -2,7 +2,7 @@
 export interface User {
   id: number;
   email: string;
-  rol: 'Administrador' | 'Jurado';
+  rol: 'ADMINISTRADOR' | 'JURADO';
 }
 
 export interface LoginResponse {

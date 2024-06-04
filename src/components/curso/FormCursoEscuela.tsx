@@ -24,13 +24,26 @@ const FormCursoEscuela: React.FC = () => {
     const fetchData = async () => {
       try {
         const cursosResponse = await axiosInstance.get('/curso/cursos-activos');
-        setCursos(cursosResponse.data.data);
+        if (cursosResponse.data && cursosResponse.data.data) {
+          setCursos(cursosResponse.data.data);
+        } else {
+          setCursos([]); 
+        }
 
         const escuelasResponse = await axiosInstance.get('/escuela');
-        setEscuelas(escuelasResponse.data.data);
+        if (escuelasResponse.data && escuelasResponse.data.data) {
+          setEscuelas(escuelasResponse.data.data);
+        } else {
+          setEscuelas([]); 
+        }
 
         const facultadesResponse = await axiosInstance.get('/facultad');
-        setFacultades(facultadesResponse.data.data);
+        if (facultadesResponse.data && facultadesResponse.data.data) {
+          setFacultades(facultadesResponse.data.data);
+        } else {
+          setFacultades([]); 
+        }
+        
 
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -16,7 +16,14 @@ const CursoPage: React.FC = () => {
   const fetchCursoData = async () => {
     try {
       const response = await axiosInstance.get('/curso');
-      setCursoRecords(response.data.data);
+      console.log(response)
+      if (response.data && response.data.data) {
+        setCursoRecords(response.data.data);
+      } else {
+        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
+        setCursoRecords([]); // Establecer a un arreglo vacío si no hay datos
+      }
+     
     } catch (error) {
       console.error('Error fetching curso data:', error);
     }
@@ -25,7 +32,13 @@ const CursoPage: React.FC = () => {
   const fetchCursoEscuelaData = async () => {
     try {
       const response = await axiosInstance.get('/curso/lista-escuela-cursos');
-      setCursoEscuelaRecords(response.data.data);
+      console.log(response)
+
+      if (response.data && response.data.data) {
+        setCursoEscuelaRecords(response.data.data);
+      } else {
+        setCursoEscuelaRecords([]); 
+      }
     } catch (error) {
       console.error('Error fetching curso-escuela data:', error);
     }

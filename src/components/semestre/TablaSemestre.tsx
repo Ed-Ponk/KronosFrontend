@@ -119,7 +119,7 @@ const TablaSemestre: React.FC<TablaSemestreProps> = ({ setSelectedSemestre, reco
       name: 'Vigencia',
       selector: (row: DataItem) => row.vigente,
       sortable: true,
-      width: '100px',
+      width: '130px',
     },
     {
       name: 'Acciones',

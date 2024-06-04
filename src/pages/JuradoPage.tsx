@@ -57,7 +57,7 @@ const JuradoPage = () =>{
     );
   }
 
-  if (user.rol !== 'Jurado') {
+  if (user.rol !== 'JURADO') {
     return (
       <div>
         <p>No tiene permisos para acceder a esta página.</p>

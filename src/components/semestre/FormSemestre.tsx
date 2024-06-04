@@ -29,7 +29,7 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
       setNombreSemestre(selectedSemestre.nombre_semestres);
       setFechaInicio(selectedSemestre.fecha_inicio);
       setFechaFin(selectedSemestre.fecha_fin);
-      setVigente(selectedSemestre.vigente === 'Activo');
+      setVigente(selectedSemestre.vigente === 'VIGENTE');
     }
   }, [selectedSemestre]);
 
@@ -162,7 +162,7 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
               onChange={(e) => setVigente(e.target.checked)}
               className="rounded-md border-0 text-indigo-600 dark:bg-gray-700 shadow-sm focus:ring-2 focus:ring-indigo-600"
             />
-            <span className="ml-2 text-sm text-gray-900 dark:text-gray-200">Activo</span>
+            <span className="ml-2 text-sm text-gray-900 dark:text-gray-200">VIGENTE</span>
           </div>
         </div>
       </div>

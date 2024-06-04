@@ -100,17 +100,19 @@ export const FormJurado: React.FC = () => {
       <table class="table-fixed mt-2 border-collapse border border-gray-400 w-full">
         <thead>
           <tr>
-            <th class="border border-gray-300 px-4 py-2 text-xs">semestre</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">email</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">apellidos y nombres</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">dedicacion</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">telefono</th>
-            <th class="border border-gray-300 px-4 py-2 text-xs">horas de asesoria semanal</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">SEMESTRE</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">ESCUELA</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">EMAIL</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">APELLIDOS Y NOMBRES</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">DEDICACION</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">TELEFONO</th>
+            <th class="border border-gray-300 px-4 py-2 text-xs">HORAS DE ASESORIA SEMANAL</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">INGENIERÍA DE SISTEMAS Y COMPUTACIÓN</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo1@gmail.com</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">Ramize Portcarrero Juan</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
@@ -119,6 +121,7 @@ export const FormJurado: React.FC = () => {
           </tr>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">INGENIERÍA CIVIL AMBIENTAL</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo2@gmail.com</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">López Martínez Ana</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">TC</td>
@@ -127,6 +130,7 @@ export const FormJurado: React.FC = () => {
           </tr>
           <tr>
             <td class="border border-gray-300 px-4 py-2 text-xs">2024-I</td>
+            <td class="border border-gray-300 px-4 py-2 text-xs">INGENIERÍA DE SISTEMAS Y COMPUTACIÓN</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">ejemplo3@gmail.com</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">González Rodríguez María</td>
             <td class="border border-gray-300 px-4 py-2 text-xs">TP</td>
@@ -139,7 +143,7 @@ export const FormJurado: React.FC = () => {
       icon: 'info',
       confirmButtonText: 'Entendido',
       customClass: {
-        popup: 'w-3/4 max-w-3xl', // Adjust the width of the alert
+        popup: 'w-3/4 max-w-4xl', // Adjust the width of the alert
       },
     });
   };
