@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosConfig';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { DataItem } from '../../types/SemanaSustentacion';
@@ -51,25 +51,29 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
       confirmButtonText: 'Sí, eliminarlo!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // TODO: Lógica para eliminar el semana_sustentacion con el ID proporcionado
-        axios.delete('http://127.0.0.1:5000/semana_sustentacions/eliminar-semana_sustentacion', {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: JSON.stringify({ semana_sustentacion_id: id })
+        axiosInstance.delete('/semana/eliminar', {
+          data: JSON.stringify({ rango_fecha_sustentacion_id: id })
         })
-          .then(() => {
-            MySwal.fire(
-              'Eliminado!',
-              'Se ha eliminado corectamente.',
-              'success'
-            );
-            fetchData(); // Actualiza la tabla después de eliminar
+          .then(response => {
+            if (response.data.status) {
+              MySwal.fire(
+                'Eliminado!',
+                response.data.message,
+                'success'
+              );
+              fetchData();
+            } else {
+              MySwal.fire(
+                'Error!',
+                response.data.message,
+                'error'
+              );
+            }
           })
-          .catch(error => {
+          .catch(() => {
             MySwal.fire(
               'Error!',
-              'Hubo un problema al eliminar.',
+              'Hubo un problema al eliminar la fechas de sustentación.',
               'error'
             );
           });
@@ -116,23 +120,23 @@ const TablaSemanaSustentacion: React.FC<TablaSemanaSustentacionProps> = ({ setSe
       width: '100px',
     },
     {
-        name: 'Compensasión',
-        selector: (row: DataItem) => row.compensacion_docente.name,
-        sortable: true,
-        width: '100px',
-      },
-      {
-        name: 'Curso',
-        selector: (row: DataItem) => row.escuela_curso_id.curso.name,
-        sortable: true,
-        width: '100px',
-      },
-      {
-        name: 'Escuela',
-        selector: (row: DataItem) => row.escuela_curso_id.escuela.name,
-        sortable: true,
-        width: '100px',
-      },
+      name: 'Compensasión',
+      selector: (row: DataItem) => row.compensacion_docente.name,
+      sortable: true,
+      width: '100px',
+    },
+    {
+      name: 'Curso',
+      selector: (row: DataItem) => row.escuela_curso_id.curso.name,
+      sortable: true,
+      width: '100px',
+    },
+    {
+      name: 'Escuela',
+      selector: (row: DataItem) => row.escuela_curso_id.escuela.name,
+      sortable: true,
+      width: '100px',
+    },
     {
       name: 'Acciones',
       cell: (row: DataItem) => (

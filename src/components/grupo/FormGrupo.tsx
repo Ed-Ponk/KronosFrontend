@@ -161,27 +161,16 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
         }
     };
 
-    const cargarDatosFormulario = () => {
-        if (selectedData) {
-            setIdGrupoHorario(selectedData?.grupo_curso_id); //si no tiene dato entonces 0
-
-            setTypeSubmit(false);
-        } else {
-            setTypeSubmit(true);
-            setIdGrupoHorario(0);
-        }
-        setSelectedGrupo(selectedData?.grupo);
-        setSelectedSemestre(selectedData?.nombre_semestre);
-        setSelectedEscuela(selectedData?.escuela);
-        setSelectedCurso(selectedData?.curso);
-        setSelectedDocente(selectedData?.docente);
-    }
-
     const handleCancel = () => {
+        setSelectedData(null)
+
         setTypeSubmit(true);
         setIdGrupoHorario(0);
-
-        setSelectedData(null)
+        setSelectedGrupo(null);
+        setSelectedSemestre(null);
+        setSelectedEscuela(null);
+        setSelectedCurso(null);
+        setSelectedDocente(null);
     }
 
     useEffect(() => {
@@ -191,7 +180,23 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     }, [selectedEscuela])
 
     useEffect(() => {
-        cargarDatosFormulario();
+        if (selectedData) {
+            setTypeSubmit(false);
+            setIdGrupoHorario(selectedData?.grupo_curso_id); //si no tiene dato entonces 0
+            setSelectedGrupo(selectedData?.grupo);
+            setSelectedSemestre(selectedData?.nombre_semestre);
+            setSelectedEscuela(selectedData?.escuela);
+            setSelectedCurso(selectedData?.curso);
+            setSelectedDocente(selectedData?.docente);
+        } else {
+            setTypeSubmit(true);
+            setIdGrupoHorario(0);
+            setSelectedGrupo(null);
+            setSelectedSemestre(null);
+            setSelectedEscuela(null);
+            setSelectedCurso(null);
+            setSelectedDocente(null);
+        }
     }, [selectedData]);
 
     useEffect(() => {
@@ -205,7 +210,7 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     return (
         <div className="flex flex-col w-11/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
             <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-                {!typeSubmit ? 'Editar Escuela' : 'Registrar Escuela'}
+                {!typeSubmit ? 'Editar Grupo Horario' : 'Registrar Grupo Horario'}
             </h1>
             <form className="space-y-3 " onSubmit={handleSubmit}>
                 <div className='flex space-x-4'>
@@ -213,7 +218,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                         Grupo:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataLetras} data={selectedGrupo} setData={setSelectedGrupo} />
-                    <ButtonPlus className='w-1/12' action={() => console.log('go to ', selectedGrupo)} />
                 </div>
 
                 <div className='flex space-x-4'>
@@ -221,7 +225,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                         Semestre:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataSemestre} data={selectedSemestre} setData={setSelectedSemestre} />
-                    <ButtonPlus className='w-1/12' action={() => console.log('go to ', selectedSemestre)} />
                 </div>
 
                 <div className='flex space-x-4'>
@@ -229,7 +232,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                         Escuela:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataEscuela} data={selectedEscuela} setData={setSelectedEscuela} />
-                    <ButtonPlus className='w-1/12' action={() => console.log('go to ', selectedEscuela)} />
                 </div>
 
                 <div className='flex space-x-4'>
@@ -237,7 +239,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                         Curso:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataCurso} data={selectedCurso} setData={setSelectedCurso} />
-                    <ButtonPlus className='w-1/12' action={() => console.log('go to ', selectedCurso)} />
                 </div>
 
                 <div className='flex space-x-4'>
@@ -245,7 +246,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                         Docente:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataDocente} data={selectedDocente} setData={setSelectedDocente} />
-                    <ButtonPlus className='w-1/12' action={() => console.log('go to ', selectedDocente)} />
                 </div>
 
                 <div className="flex justify-between items-center">
