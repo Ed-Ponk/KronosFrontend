@@ -99,8 +99,8 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
             setCompensasion({ id: 0, name: 'No' });
             setFechaInicio('');
             setFechaFin('');
-            setEscuela();
-            setCurso();
+            setEscuela(null);
+            setCurso(null);
             setDuracion(30);
         }
 
@@ -108,12 +108,19 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
 
     const handleCancel = () => {
         setTypeSubmit(true);
-        //TODO: Modificar
         setSelectedSemanaSustentacion(null);
+
+        setIdFechaSustentacion(0)
+        setTipoSustentacion({ id: 0, name: 'Parcial' });
+        setCompensasion({ id: 0, name: 'No' });
+        setFechaInicio('');
+        setFechaFin('');
+        setEscuela(null);
+        setCurso(null);
+        setDuracion(30);
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-        //TODO: Modificar
         event.preventDefault();
 
         const endpoint = typeSubmit ? `semana/registrar` : `semana/actualizar`;
@@ -126,9 +133,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
                 url: endpoint,
                 data: {
                     rango_fecha_sustentacion_id: !typeSubmit ? idFechaSustentacion : undefined,
-                    tipo_sustentacion: tipoSustentacion?.id,
-                    //TODO: calcular las semanas pero en el backend 
-                    //semanas:, 
+                    tipo_sustentacion: tipoSustentacion?.id, 
                     fecha_inicio: fechaInicio,
                     fecha_fin: fechaFin,
                     duracion_sustentacion: duracion,

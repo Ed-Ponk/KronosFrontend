@@ -1,8 +1,12 @@
 import React from 'react';
 import TablaGenerica from '../common/DataTable';
 import { TableColumn } from 'react-data-table-component';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import { DataGrupo } from '../../types/Grupo';
+import axiosInstance from '../../api/axiosConfig';
 
+const MySwal = withReactContent(Swal);
 
 const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: (record: DataGrupo) => void, records: DataGrupo[], fetchData: () => void }) => {
     const columns: TableColumn<DataGrupo>[] = [
@@ -18,7 +22,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             selector: (row: DataGrupo) => row.nombre_semestre.name,
             sortable: true,
             wrap: true,
-            width:'100px',
+            width: '100px',
             center: true,
         },
         {
@@ -49,7 +53,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
         //     sortable: true,
         //     wrap: true,
         //     center: true,
-            
+
         // },
         {
             name: 'Acciones',
@@ -74,6 +78,47 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             button: true,
         }
     ];
+
+    const handleDelete = (id: number) => {
+        MySwal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminarlo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosInstance.delete('/grupos/eliminar', {
+                    data: JSON.stringify({ grupo_curso_id: id })
+                })
+                    .then(response => {
+                        if (response.data.status) {
+                            MySwal.fire(
+                                'Eliminado!',
+                                response.data.message,
+                                'success'
+                            );
+                            fetchData();
+                        } else {
+                            MySwal.fire(
+                                'Error!',
+                                response.data.message,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(() => {
+                        MySwal.fire(
+                            'Error!',
+                            'Hubo un problema al eliminar el grupo horario.',
+                            'error'
+                        );
+                    });
+            }
+        });
+    };
 
     return (
         <TablaGenerica<DataGrupo>
