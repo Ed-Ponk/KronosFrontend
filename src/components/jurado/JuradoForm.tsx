@@ -152,7 +152,7 @@ export const FormJurado: React.FC = () => {
     <div className="flex flex-col mt-2 w-3/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
       <div className="flex justify-between items-center mb-4">
         <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
-          Registrar Jurado
+          Registrar jurado
         </h1>
         <button onClick={handleInfoClick} className="">
           <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
@@ -166,7 +166,7 @@ export const FormJurado: React.FC = () => {
             <div className="mt-4 flex text-sm leading-6 text-gray-600 ">
               <label
                 htmlFor="file-upload"
-                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                className="relative cursor-pointer rounded-md bg-white dark:bg-gray-800 font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
               >
                 <span>Ingresa tu archivo</span>
                 <input

@@ -47,13 +47,22 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
         axiosInstance.delete('/escuela/eliminar-escuela', {
           data: { escuela_id: id }
         })
-        .then(() => {
-          MySwal.fire(
-            'Eliminado!',
-            'La escuela ha sido eliminada.',
-            'success'
-          );
-          fetchData();
+        .then( response => {
+          console.log(response.data)
+          if(response.data.status){
+            MySwal.fire(
+              'Eliminado!',
+              'La escuela ha sido eliminada.',
+              'success'
+            );
+            fetchData();
+          }else{
+            MySwal.fire(
+              'Error!',
+              response.data.message,
+              'error'
+            );
+          }
         })
         .catch(error => {
           MySwal.fire(

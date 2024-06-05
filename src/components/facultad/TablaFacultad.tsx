@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import {DataFacultad, TablaFacultadProps} from '../../types/Facultad';
+import { DataFacultad, TablaFacultadProps } from '../../types/Facultad';
 import axiosInstance from '../../api/axiosConfig';
 
-
 const MySwal = withReactContent(Swal);
-
 
 const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, records, fetchData }) => {
   const [data, setData] = useState<DataFacultad[]>([]);
@@ -49,16 +47,14 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
           data: JSON.stringify({ facultad_id: id })
         })
           .then(response => {
-            console.log(response.data.status)
-            if(response.data.status){
-              console.log("entró")
+            if (response.data.status) {
               MySwal.fire(
                 'Eliminado!',
                 response.data.message,
                 'success'
               );
-              fetchData(); 
-            }else{
+              fetchData();
+            } else {
               MySwal.fire(
                 'Error!',
                 response.data.message,
@@ -102,13 +98,13 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
       cell: (row: DataFacultad) => (
         <div>
           <button
-            className="text-blue-600 hover:text-blue-900 mr-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-700 mr-2"
             onClick={() => handleEdit(row)}
           >
             Editar
           </button>
           <button
-            className="text-red-600 hover:text-red-900"
+            className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-700"
             onClick={() => handleDelete(row.facultad_id)}
           >
             Eliminar
@@ -122,31 +118,58 @@ const TablaFacultad: React.FC<TablaFacultadProps> = ({ setSelectedFacultad, reco
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-4/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Facultades</h1>
-      <hr></hr>
-      <div className='mt-3 w-100 flex'>
+    <div className='mt-5 flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5'>
+      <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de Facultades</h1>
+      <hr className='border-gray-300 dark:border-gray-700' />
+      <div className='my-3 w-100 flex'>
          <input
           name='buscar'
           onChange={handleFilter}
-          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
           placeholder='Ingresar nombre de la facultad'
           type='search'
         />
       </div>
       {loading ? (
-        <p>Cargando...</p>
+        <p className='text-gray-900 dark:text-gray-200'>Cargando...</p>
       ) : (
         <DataTable
-          className='text-color-black'
+          className='text-gray-900 dark:text-gray-200'
           columns={columns}
           data={data}
           fixedHeader
           pagination
           paginationComponentOptions={paginationOptions}
-          noDataComponent={<p>No hay registros para mostrar</p>}
+          noDataComponent={<p className='text-gray-900 dark:text-gray-200'>No hay registros para mostrar</p>}
           responsive
           fixedHeaderScrollHeight="400px"
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: 'var(--color-bg-head)',
+                color: 'var(--color-text-head)',
+              },
+            },
+            cells: {
+              style: {
+                backgroundColor: 'var(--color-bg-cell)',
+                color: 'var(--color-text-cell)',
+              },
+            },
+            rows: {
+              style: {
+                '&:nth-child(even)': {
+                  backgroundColor: 'var(--color-bg-row)',
+                },
+              },
+            },
+            pagination: {
+              style: {
+                backgroundColor: 'var(--color-bg-pagination)',
+                color: 'var(--color-text-pagination)',
+              },
+            },
+          }}
         />
       )}
     </div>

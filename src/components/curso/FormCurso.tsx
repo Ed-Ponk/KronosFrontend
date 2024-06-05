@@ -32,8 +32,6 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
       vigente: vigente ? 1 : 0 
     };
 
-    console.log('Payload:', payload);
-
     const endpoint = selectedCurso ? '/curso/actualizar-curso' : '/curso/registrar-curso';
     const method = selectedCurso ? 'PUT' : 'POST';
 

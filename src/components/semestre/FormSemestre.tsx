@@ -44,6 +44,29 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    const startDate = new Date(fechaInicio);
+    const endDate = new Date(fechaFin);
+
+    // Validar que fechaInicio sea menor que fechaFin
+    if (startDate > endDate) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'La fecha de inicio debe ser menor que la fecha de fin.',
+        icon: 'error',
+      });
+      return;
+    }
+
+    // Validar que fechaInicio no sea igual que fechaFin
+    if (startDate.getTime() === endDate.getTime()) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'La fecha de inicio no puede ser igual que la fecha de fin.',
+        icon: 'error',
+      });
+      return;
+    }
+
     const endpoint = selectedSemestre ? `http://127.0.0.1:5000/semestres/actualizar-semestre` : `http://127.0.0.1:5000/semestres/registro-semestre`;
     const method = selectedSemestre ? 'PUT' : 'POST';
 
@@ -61,7 +84,6 @@ export const FormSemestre: React.FC<FormSemestreProps> = ({ selectedSemestre, se
           vigente: vigente ? 1 : 0
         }),
       });
-      console.log(response);
       const data = await response.json();
      
       if (data.status) {

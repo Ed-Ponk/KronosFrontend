@@ -5,9 +5,11 @@ import UsuariosPage from './UsuariosPage';
 import SemestrePage from './SemestrePage'; 
 import EstudiantePage from './EstudiantePage';
 import CursoPage from './CursoPage';
-import FacultadPage from './FacultadPage';// Importa tu otra página aquí
+import FacultadPage from './FacultadPage';
 import GrupoPage from './GrupoPage';
 import SemanasSustentacionPage from './SemanasSustentacionPage';
+import SustenacionPage from './SustentacionPage';
+import HomePage from './HomePage';
 
 import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
@@ -38,8 +40,12 @@ const AdminPage: React.FC = () => {
     switch (currentPage) {
       case 'Usuarios':
         return <UsuariosPage />;
+      case 'Sustentacion':
+        return <SustenacionPage />;
       case 'Semestres':
         return <SemestrePage />;
+      case 'Home':
+        return <HomePage />;
       case 'Jurado':
         return <JuradoComponent />;
       case 'Estudiante':
