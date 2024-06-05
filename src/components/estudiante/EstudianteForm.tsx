@@ -171,10 +171,10 @@ export const FormEstudiante: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col mt-3 w-9/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col mt-3 w-9/12 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="block font-medium leading-6 text-gray-900">
-          Registrar Estudiantes
+        <h1 className="block font-medium leading-6 text-gray-900 dark:text-gray-200">
+          Registrar estudiantes
         </h1>
         <button onClick={handleInfoClick} className="">
           <svg className="w-6 h-6 text-yellow-500 dark:text-gray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
@@ -183,12 +183,12 @@ export const FormEstudiante: React.FC = () => {
         </button>
       </div>
       <form className="flex-none md:flex-1 p-5" id="uploadForm" onSubmit={handleSubmit} onDrop={handleDrop} onDragOver={handleDragOver}>
-        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
+        <div className="flex-auto mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2 dark:border-white">
           <div className="text-center">
             <div className="mt-4 flex text-sm leading-6 text-gray-600">
               <label
                 htmlFor="file-upload"
-                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                className="relative cursor-pointer rounded-md bg-white dark:bg-gray-800 font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
               >
                 <span>Ingresa tu archivo</span>
                 <input
@@ -201,9 +201,9 @@ export const FormEstudiante: React.FC = () => {
                   onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name || "")}
                 />
               </label>
-              <p className="pl-1">o arrastrar y soltar</p>
+              <p className="pl-1 dark:text-gray-200">o arrastrar y soltar</p>
             </div>
-            <p className="text-xs leading-5 text-gray-600">.xlsx , .xls hasta 10MB</p>
+            <p className="text-xs leading-5 text-gray-600 dark:text-gray-200">.xlsx , .xls hasta 10MB</p>
           </div>
         </div>
         {selectedFileName && (

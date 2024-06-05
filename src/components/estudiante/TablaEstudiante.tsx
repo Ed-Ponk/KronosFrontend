@@ -212,11 +212,11 @@ const TablaEstudiante: React.FC = () => {
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-11/12  mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Estudiantes</h1>
+    <div className='mt-5 flex flex-col w-11/12  mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
+      <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de estudiantes</h1>
       <hr />
-      <div className="sm:col-span-3 mt-2">
-        <label className="block text-sm font-medium leading-6 text-gray-900">Semestres</label>
+      <div className="sm:col-span-3 mt-2 mb-2">
+        <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Selecciona el semestres</label>
         <div className='flex'>
           <div className="mt-2 w-1/2">
             <SelectSemestre onChange={handleSemestreChange} />
@@ -246,7 +246,7 @@ const TablaEstudiante: React.FC = () => {
             </Disclosure.Button>
             <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
               <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Selecciona una facultad</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Selecciona una facultad</label>
                 <select
                   value={selectedFacultad ?? ''}
                   onChange={handleFacultadChange}
@@ -261,7 +261,7 @@ const TablaEstudiante: React.FC = () => {
                 </select>
               </div>
               <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Selecciona una escuela</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Selecciona una escuela</label>
                 <select
                   value={selectedEscuela ?? ''}
                   onChange={handleEscuelaChange}
@@ -276,7 +276,7 @@ const TablaEstudiante: React.FC = () => {
                 </select>
               </div>
               <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Curso</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Curso</label>
                 <select
                   value={selectedCurso ?? ''}
                   onChange={handleCursoChange}

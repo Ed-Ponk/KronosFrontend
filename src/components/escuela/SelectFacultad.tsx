@@ -14,7 +14,7 @@ const SelectFacultad: React.FC<SelectFacultadProps> = ({ value, onChange, facult
 
   return (
     <div>
-      <label htmlFor="facultad_id" className="block text-sm font-medium leading-6 text-gray-900">
+      <label htmlFor="facultad_id" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
         Facultad
       </label>
       <div className="mt-2">

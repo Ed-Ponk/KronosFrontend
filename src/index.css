@@ -2,3 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg-head: #ffffff;
+  --color-text-head: #374151;
+  --color-bg-cell: #ffffff;
+  --color-text-cell: #374151;
+  --color-bg-row: #ffffff;
+  --color-bg-pagination: #ffffff;
+  --color-text-pagination: #374151;
+}
+
+.dark {
+  --color-bg-head: #1e293b;
+  --color-text-head: #D1D5DB;
+  --color-bg-cell: #1e293b;
+  --color-text-cell: #D1D5DB;
+  --color-bg-row: #1e293b;
+  --color-bg-pagination: #1e293b;
+  --color-text-pagination: #D1D5DB;
+}

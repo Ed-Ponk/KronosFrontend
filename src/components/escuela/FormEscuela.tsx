@@ -71,15 +71,15 @@ const FormEscuela: React.FC<FormEscuelaProps & { facultadRecords: DataFacultad[]
   };
 
   return (
-    <div className="flex flex-col w-4/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-        {selectedEscuela ? 'Editar Escuela' : 'Registrar Escuela'}
+    <div className="flex flex-col w-4/5 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="block font-medium leading-6 text-gray-900 mb-4 dark:text-gray-200">
+        {selectedEscuela ? 'Editar escuela' : 'Registrar escuela'}
       </h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className='flex space-x-4'>
           <div className='flex-1'>
-            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900">
-              Nombre de la Escuela
+            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Nombre de la escuela
             </label>
             <div className="mt-2">
               <input

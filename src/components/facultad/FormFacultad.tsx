@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axiosInstance from '../../api/axiosConfig';
-import {FormFacultadProps} from '../../types/Facultad';
+import { FormFacultadProps } from '../../types/Facultad';
 
 const MySwal = withReactContent(Swal);
-
 
 const FormFacultad: React.FC<FormFacultadProps> = ({ selectedFacultad, setSelectedFacultad, fetchData }) => {
   const [nombre, setNombre] = useState('');
@@ -13,6 +12,8 @@ const FormFacultad: React.FC<FormFacultadProps> = ({ selectedFacultad, setSelect
   useEffect(() => {
     if (selectedFacultad) {
       setNombre(selectedFacultad.nombre);
+    } else {
+      setNombre('');
     }
   }, [selectedFacultad]);
 
@@ -61,15 +62,15 @@ const FormFacultad: React.FC<FormFacultadProps> = ({ selectedFacultad, setSelect
   };
 
   return (
-    <div className="flex flex-col w-4/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-        {selectedFacultad ? 'Editar Facultad' : 'Registrar Facultad'}
+    <div className="flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="block font-medium leading-6 text-gray-900 mb-4 dark:text-gray-200">
+        {selectedFacultad ? 'Editar Facultad' : 'Registrar facultad'}
       </h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className='flex space-x-4'>
           <div className='flex-1'>
-            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900">
-              Nombre de la Facultad
+            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Nombre de la facultad
             </label>
             <div className="mt-2">
               <input
@@ -79,7 +80,7 @@ const FormFacultad: React.FC<FormFacultadProps> = ({ selectedFacultad, setSelect
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full dark:bg-gray-700 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 p-1 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
@@ -88,9 +89,9 @@ const FormFacultad: React.FC<FormFacultadProps> = ({ selectedFacultad, setSelect
         <div className="flex justify-between items-center">
           <button
             type="submit"
-            className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="flex justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            {selectedFacultad ? 'Actualizar Facultad' : 'Registrar Facultad'}
+            {selectedFacultad ? 'Actualizar Facultad' : 'Registrar facultad'}
           </button>
           {selectedFacultad && (
             <button
