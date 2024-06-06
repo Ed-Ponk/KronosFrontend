@@ -15,10 +15,52 @@ const HorarioSeleccionMultiple = () => {
     console.log(selectedCells)
   }, [selectedCells])
 
+  const fetchHorasDisponibles = async (semana: number) => {
+    try {
+      const response = await axiosInstance({
+        method: 'POST',
+        url: 'disponibilidadHoraria/obtener',
+        data: {
+          user: window.sessionStorage.getItem('user'),
+          semana: semana
+        },
+      });
+      if (response.data.status) {
+        let horarioArray = response.data.data;
+        if (horarioArray[0] == 'v') return setSelectedCells([])
 
+        if (horarioArray.length != 6) console.log('distinto')
+
+        let horasDisponibles = []
+        horarioArray.forEach((dia, index) => {
+          horasDisponibles.push(...Object.keys(dia)
+            .filter(key => key.startsWith('hora_') && dia[key] === 'D')
+            .map(key => (Number.parseInt(key.replace('hora_', '')) - 7) + '-' + (index+1)));
+        });
+
+        console.log(horasDisponibles);
+        setSelectedCells(horasDisponibles)
+
+      } else {
+        MySwal.fire({
+          title: 'Error',
+          text: response.data.message,
+          icon: 'error',
+        });
+      }
+    } catch (e) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Error al obtener las horas disponibles para la semana. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
+    }
+  };
 
   const handleSemestreChange1 = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSemana(Number.parseInt(event.target.value));
+
+    fetchHorasDisponibles(Number.parseInt(event.target.value));
   };
 
   const handleGuardar = async () => {
@@ -41,6 +83,7 @@ const HorarioSeleccionMultiple = () => {
         method: 'POST',
         url: 'disponibilidadHoraria/guardar',
         data: {
+          user: window.sessionStorage.getItem('user'),
           semana: selectedSemana,
           disponibilidad: horasSeleccionadas,
         },
