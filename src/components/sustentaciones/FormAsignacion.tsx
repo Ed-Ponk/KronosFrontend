@@ -15,7 +15,6 @@ const FormAsignacion: React.FC = () => {
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
   const [selectedCurso, setSelectedCurso] = useState<number | null>(null);
-  const [selectedCurso, setSelectedCurso] = useState<number | null>(null); 
   const [selectedTipo, setSelectedTipo] = useState<string | null>(null); 
   const [facultades, setFacultades] = useState<DataFacultad[]>([]);
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
@@ -94,7 +93,7 @@ const FormAsignacion: React.FC = () => {
   const fetchDatosSustentacion = async () => {
     if (selectedEscuela && selectedCurso) {
       try {
-        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}`);
+        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustitucion=${selectedTipo}`);
         console.log(response.data.data)
         if (response.data && response.data.data) {
           const fechas = response.data.data.fecha_inicio+" - "+response.data.data.fecha_fin;
@@ -247,16 +246,8 @@ const FormAsignacion: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <button
-                  type="button"
-                  onClick={fetchDatosSustentacion}
-                  className="flex justify-center float-end rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Filtrar
-                </button>
-
                 <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Curso</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Tipo de sustentación</label>
                   <select
                     value={selectedTipo ?? ''}
                     onChange={(e) => setSelectedTipo(e.target.value)}
@@ -270,6 +261,13 @@ const FormAsignacion: React.FC = () => {
                     ))}
                   </select>
                 </div>
+                <button
+                  type="button"
+                  onClick={fetchDatosSustentacion}
+                  className="flex justify-center float-end rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Filtrar
+                </button>                
               </Disclosure.Panel>
             </>
           )}
