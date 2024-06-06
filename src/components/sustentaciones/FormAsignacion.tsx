@@ -14,12 +14,19 @@ const MySwal = withReactContent(Swal);
 const FormAsignacion: React.FC = () => {
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
+  const [selectedCurso, setSelectedCurso] = useState<number | null>(null);
   const [selectedCurso, setSelectedCurso] = useState<number | null>(null); 
   const [selectedTipo, setSelectedTipo] = useState<string | null>(null); 
   const [facultades, setFacultades] = useState<DataFacultad[]>([]);
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
-  const [cursos, setCursos] = useState<DataCurso[]>([]); 
-  const [semestre, setSemestre] = useState<DataSemestre | null>(null); 
+  const [cursos, setCursos] = useState<DataCurso[]>([]);
+  const [semestre, setSemestre] = useState<DataSemestre | null>(null);
+
+  const [tipoSustentacion, setTipoSustentacion] = useState<string>('');
+  const [semanas, setSemanas] = useState<string>('');
+  const [rangoFechas, setRangoFechas] = useState<string>('');
+  const [duracion, setDuracion] = useState<number>(0);
+  const [compensacion, setCompensacion] = useState<string>('');
 
   useEffect(() => {
     const fetchSemestre = async () => {
@@ -28,11 +35,11 @@ const FormAsignacion: React.FC = () => {
         if (response.data.status) {
           setSemestre(response.data.data);
         } else {
-          setSemestre(null); // Asegurar que semestre es null si no hay datos
+          setSemestre(null);
         }
       } catch (error) {
         console.error('Error fetching semestre data:', error);
-        setSemestre(null); // Asegurar que semestre es null en caso de error
+        setSemestre(null);
       }
     };
 
@@ -42,11 +49,11 @@ const FormAsignacion: React.FC = () => {
         if (response.data && response.data.data) {
           setFacultades(response.data.data);
         } else {
-          setFacultades([]); // Establecer a un arreglo vacío si no hay datos
+          setFacultades([]);
         }
       } catch (error) {
         console.error('Error fetching facultades:', error);
-        setFacultades([]); // Asegurar que facultades es un arreglo vacío en caso de error
+        setFacultades([]);
       }
     };
 
@@ -56,11 +63,11 @@ const FormAsignacion: React.FC = () => {
         if (response.data && response.data.data) {
           setEscuelas(response.data.data);
         } else {
-          setEscuelas([]); 
+          setEscuelas([]);
         }
       } catch (error) {
         console.error('Error fetching escuelas:', error);
-        setEscuelas([]); // Asegurar que escuelas es un arreglo vacío en caso de error
+        setEscuelas([]);
       }
     };
 
@@ -70,19 +77,42 @@ const FormAsignacion: React.FC = () => {
         if (response.data && response.data.data) {
           setCursos(response.data.data);
         } else {
-          setCursos([]); 
+          setCursos([]);
         }
       } catch (error) {
         console.error('Error fetching cursos:', error);
-        setCursos([]); // Asegurar que cursos es un arreglo vacío en caso de error
+        setCursos([]);
       }
     };
 
     fetchSemestre();
     fetchFacultades();
     fetchEscuelas();
-    fetchCursos(); 
+    fetchCursos();
   }, []);
+
+  const fetchDatosSustentacion = async () => {
+    if (selectedEscuela && selectedCurso) {
+      try {
+        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}`);
+        console.log(response.data.data)
+        if (response.data && response.data.data) {
+          const fechas = response.data.data.fecha_inicio+" - "+response.data.data.fecha_fin;
+
+          console.log(response.data.data.compensacion_docente);
+          setTipoSustentacion(response.data.data.tipo_sustentacion);
+          setSemanas(response.data.data.semanas);
+          setRangoFechas(fechas);
+          setDuracion(response.data.data.duracion_sustentacion);
+          setCompensacion(response.data.data.compensacion_docente);
+        } else {
+          // manejar el caso en que no hay datos
+        }
+      } catch (error) {
+        console.error('Error fetching datos de sustentacion:', error);
+      }
+    }
+  };
 
   const handleFacultadChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const facultadId = Number(event.target.value);
@@ -112,22 +142,27 @@ const FormAsignacion: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = ""
+      const endpoint = "/sustentacion/obtener_estructura_data";  // Actualiza con tu endpoint real
 
     try {
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
         data: {
+          escuela_id: selectedEscuela,
+          curso_id: selectedCurso,
+          tipo_sustentacion: tipoSustentacion,
+          rango_fechas: rangoFechas,
+          duracion_sustentacion: duracion,
+          compensacion_docente: compensacion
         },
       });
       if (response.data.status) {
         MySwal.fire({
           title: 'Éxito',
-          text: selectedFacultad ? 'Facultad actualizada con éxito' : 'Facultad registrada con éxito',
+          text: 'Horario de sustentaciones generado con éxito',
           icon: 'success',
         });
-        //fetchData();
       } else {
         MySwal.fire({
           title: 'Error',
@@ -142,11 +177,10 @@ const FormAsignacion: React.FC = () => {
         icon: 'error',
       });
     }
-
   }
 
   return (
-    <div className="flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+    <div className="flex flex-col w-2/3 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
       <div className='flex justify-between'>
         <h2 className="block font-medium text-lg leading-6 text-gray-900 mb-4 dark:text-gray-200">
           Asignación de sustentaciones
@@ -194,7 +228,7 @@ const FormAsignacion: React.FC = () => {
                     {filteredEscuelas.map(escuela => (
                       <option key={escuela.escuela_id} value={escuela.escuela_id}>
                         {escuela.escuela}
-                      </option>
+                        </option>
                     ))}
                   </select>
                 </div>
@@ -213,6 +247,13 @@ const FormAsignacion: React.FC = () => {
                     ))}
                   </select>
                 </div>
+                <button
+                  type="button"
+                  onClick={fetchDatosSustentacion}
+                  className="flex justify-center float-end rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Filtrar
+                </button>
 
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Curso</label>
@@ -233,6 +274,41 @@ const FormAsignacion: React.FC = () => {
             </>
           )}
         </Disclosure>
+        <div className="bg-gray-100 dark:bg-slate-700 p-4 rounded-lg shadow-md">
+          <h2 className="block font-medium text-lg leading-6 text-gray-900 mb-4 dark:text-gray-200">
+            Datos de la semana de sustentaciones
+          </h2>
+          <div className="mb-2">
+            <label htmlFor="tipo_sustentacion" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Tipo de sustentación
+            </label>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{tipoSustentacion}</p>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="semanas" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Semanas
+            </label>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{semanas}</p>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="rango_fechas" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Rango fechas
+            </label>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{rangoFechas}</p>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="duracion" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Duración por sustentación (minutos)
+            </label>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{duracion}</p>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="compensacion" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+              Se compensa esas horas a los profesores
+            </label>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{compensacion}</p>
+          </div>
+        </div>
         <button
             type="submit"
             className="flex justify-center float-end rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
