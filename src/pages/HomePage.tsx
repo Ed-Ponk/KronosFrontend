@@ -1,4 +1,4 @@
-import FormHomeWSP from "../components/Home/FormHomeWSP";
+import FormHomeWSP from "../components/home/FormHomeWSP";
 
 
 

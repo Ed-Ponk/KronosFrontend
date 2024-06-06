@@ -146,8 +146,8 @@ const FormCursoEscuela: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-md">
-      <h1 className="text-xl font-semibold mb-4">Relacionar Cursos con Escuelas y Grupos</h1>
+    <div className="p-4 bg-white dark:bg-gray-800 shadow-md rounded-md">
+      <h1 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">Relacionar Cursos con Escuelas y Grupos</h1>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
