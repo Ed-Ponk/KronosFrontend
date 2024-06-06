@@ -12,14 +12,14 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setData(records || []); 
-    setLoading(false); 
+    setData(records || []);
+    setLoading(false);
   }, [records]);
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     if (query === '') {
-      setData(records); 
+      setData(records);
     } else {
       const newData = records.filter(row => {
         return row.escuela.toLowerCase().includes(query);
@@ -47,30 +47,30 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
         axiosInstance.delete('/escuela/eliminar-escuela', {
           data: { escuela_id: id }
         })
-        .then( response => {
-          console.log(response.data)
-          if(response.data.status){
-            MySwal.fire(
-              'Eliminado!',
-              'La escuela ha sido eliminada.',
-              'success'
-            );
-            fetchData();
-          }else{
+          .then(response => {
+            console.log(response.data)
+            if (response.data.status) {
+              MySwal.fire(
+                'Eliminado!',
+                'La escuela ha sido eliminada.',
+                'success'
+              );
+              fetchData();
+            } else {
+              MySwal.fire(
+                'Error!',
+                response.data.message,
+                'error'
+              );
+            }
+          })
+          .catch(error => {
             MySwal.fire(
               'Error!',
-              response.data.message,
+              'Hubo un problema al eliminar la escuela.',
               'error'
             );
-          }
-        })
-        .catch(error => {
-          MySwal.fire(
-            'Error!',
-            'Hubo un problema al eliminar la escuela.',
-            'error'
-          );
-        });
+          });
       }
     });
   };
@@ -126,34 +126,72 @@ const TablaEscuela: React.FC<TablaEscuelaProps> = ({ setSelectedEscuela, records
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-4/5 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Escuelas</h1>
-      <hr></hr>
-      <div className='mt-3 w-100 flex'>
-         <input
-          name='buscar'
+    <div className="mt-5 flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="font-medium text-gray-900 dark:text-gray-100">Lista de Escuelas</h1>
+      <hr />
+      <div className="mt-3 w-full flex">
+        <input
+          name="buscar"
           onChange={handleFilter}
-          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-          placeholder='Ingresar nombre de la escuela'
-          type='search'
+          className="block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-slate-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          placeholder="Ingresar nombre de la escuela"
+          type="search"
         />
       </div>
       {loading ? (
-        <p>Cargando...</p>
+        <p className="text-gray-900 dark:text-gray-100">Cargando...</p>
       ) : (
         <DataTable
-          className='text-color-black'
+          className="text-gray-900 dark:text-gray-100"
           columns={columns}
           data={data}
           fixedHeader
           pagination
           paginationComponentOptions={paginationOptions}
-          noDataComponent={<p>No hay registros para mostrar</p>}
+          noDataComponent={<p className="text-gray-900 dark:text-gray-100">No hay registros para mostrar</p>}
           responsive
           fixedHeaderScrollHeight="400px"
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: 'var(--color-bg-head)',
+                color: 'var(--color-text-head)',
+              },
+            },
+            cells: {
+              style: {
+                backgroundColor: 'var(--color-bg-cell)',
+                color: 'var(--color-text-cell)',
+              },
+            },
+            rows: {
+              style: {
+                '&:nth-child(even)': {
+                  backgroundColor: 'var(--color-bg-row)',
+                },
+              },
+            },
+            pagination: {
+              style: {
+                backgroundColor: 'var(--color-bg-pagination)',
+                color: 'var(--color-text-pagination)',
+              },
+              pageButtonsStyle: {
+                fill: 'var(--color-text-pagination)', // Cambia el color de las flechas de navegación
+                '&:hover:not(:disabled)': {
+                  backgroundColor: 'var(--color-bg-pagination-hover)',
+                },
+                '&:focus': {
+                  outline: 'none',
+                  backgroundColor: 'var(--color-bg-pagination-hover)',
+                },
+              },
+            },
+          }}
         />
       )}
     </div>
+
   );
 };
 

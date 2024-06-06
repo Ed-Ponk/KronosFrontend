@@ -32,7 +32,7 @@ const HorarioSeleccionMultiple = () => {
         if (horarioArray.length != 6) console.log('distinto')
 
         let horasDisponibles = []
-        horarioArray.forEach((dia, index) => {
+        horarioArray.forEach((dia, index:number) => {
           horasDisponibles.push(...Object.keys(dia)
             .filter(key => key.startsWith('hora_') && dia[key] === 'D')
             .map(key => (Number.parseInt(key.replace('hora_', '')) - 7) + '-' + (index+1)));

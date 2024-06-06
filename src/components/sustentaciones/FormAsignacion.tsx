@@ -15,6 +15,7 @@ const FormAsignacion: React.FC = () => {
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
   const [selectedCurso, setSelectedCurso] = useState<number | null>(null); 
+  const [selectedTipo, setSelectedTipo] = useState<string | null>(null); 
   const [facultades, setFacultades] = useState<DataFacultad[]>([]);
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
   const [cursos, setCursos] = useState<DataCurso[]>([]); 
@@ -208,6 +209,22 @@ const FormAsignacion: React.FC = () => {
                     {cursos.map(curso => (
                       <option key={curso.curso_id} value={curso.curso_id}>
                         {curso.curso}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Curso</label>
+                  <select
+                    value={selectedTipo ?? ''}
+                    onChange={(e) => setSelectedTipo(e.target.value)}
+                    className="mt-2 block w-full p-2 border border-gray-300 rounded-md text-gray-700"
+                  >
+                    <option value="">Selecciona el tipo de sustentación</option>
+                    {['PARCIAL', 'FINAL'].map(curso => (
+                      <option key={curso} value={curso}>
+                        {curso}
                       </option>
                     ))}
                   </select>
