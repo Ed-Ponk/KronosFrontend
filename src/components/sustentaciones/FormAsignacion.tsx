@@ -8,12 +8,12 @@ import { DataCurso } from '../../types/Curso';
 import { DataSemestre } from '../../types/Semestre';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useData } from '../../contexts/DataContextProps ';// Importa el hook useData
+import { useData } from '../../contexts/DataContextProps ';
 
 const MySwal = withReactContent(Swal);
 
 const FormAsignacion: React.FC = () => {
-  const { setAsignaciones } = useData(); // Obtiene la función setAsignaciones del contexto
+  const { setAsignaciones } = useData();
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
   const [selectedCurso, setSelectedCurso] = useState<number | null>(null);
@@ -93,9 +93,9 @@ const FormAsignacion: React.FC = () => {
   }, []);
 
   const fetchDatosSustentacion = async () => {
-    if (selectedEscuela && selectedCurso) {
+    if (selectedEscuela && selectedCurso && selectedTipo) {
       try {
-        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustitucion=${selectedTipo}`);
+        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustentacion=${selectedTipo}`);
         if (response.data && response.data.data) {
           const fechas = response.data.data.fecha_inicio + " - " + response.data.data.fecha_fin;
           setTipoSustentacion(response.data.data.tipo_sustentacion);
@@ -147,6 +147,7 @@ const FormAsignacion: React.FC = () => {
     const endpoint = "/sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
 
     try {
+  
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
@@ -159,7 +160,9 @@ const FormAsignacion: React.FC = () => {
           compensacion_docente: compensacion
         },
       });
+    
       if (response.data) {
+        
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
