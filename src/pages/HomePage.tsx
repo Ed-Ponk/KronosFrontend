@@ -4,6 +4,7 @@ import FormHomeWSP from '../components/Home/FormHomeWSP';
 import axios from 'axios';
 import DashboardCard from '../components/Home/DashBoardCard';
 import TablaReportes from '../components/TablaReportes';
+import FilteredTablaReportes from '../components/FilteredTablaReportes';
 
 const HomePage: React.FC = () => {
   const [juradosVigentes, setJuradosVigentes] = useState<number>(0);
@@ -106,7 +107,7 @@ const HomePage: React.FC = () => {
         )}
       </div>
       <FormHomeWSP />
-      <TablaReportes />
+      <FilteredTablaReportes />
     </div>
   );
 };

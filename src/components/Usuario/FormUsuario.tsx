@@ -204,7 +204,7 @@ export const FormUsuario: React.FC<FormUsuarioProps> = ({ selectedUsuario, setSe
       </form>
 
       <div className="mt-6 flex justify-between items-center">
-        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-200">Asignar Usuarios a Jurados</h2>
+        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-200">Generar Usuarios a Jurados</h2>
         <button
           type="button"
           onClick={handleAsignarUsuarios}
