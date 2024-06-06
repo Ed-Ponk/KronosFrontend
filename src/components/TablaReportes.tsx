@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import axiosInstance from '../api/axiosConfig';
+import ComboboxCustom2 from './common/Combobox2';
 
 const MySwal = withReactContent(Swal);
 
@@ -350,6 +352,24 @@ const jsonData = {
 
 const TablaReportes: React.FC = () => {
     const [data, setData] = useState<any[]>(jsonData.data);
+    const [dataJurados, setDataJurados] = useState<any[]>([]);
+  
+    useEffect(() => {
+      const fetchJurados = async () => {
+        try {
+          const response = await axiosInstance.get('jurados');
+          const juradosData = response.data.data.map((item: any) => ({
+            id: item.jurado_id,
+            name: item.nombre_completo
+          }));
+          setDataJurados(juradosData);
+        } catch (error) {
+          console.error('Error fetching jurado data:', error);
+        }
+      };
+  
+      fetchJurados();
+    }, []);
   
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {
       const newData = [...data];
@@ -357,13 +377,13 @@ const TablaReportes: React.FC = () => {
       setData(newData);
     };
   
-    const handleJuradosChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, juradoIndex: number) => {
+    const handleJuradosChange = (selectedOption: any, rowIndex: number, juradoIndex: number) => {
       const newData = [...data];
       const jurados = [...newData[rowIndex].jurados_asignados];
       if (jurados[juradoIndex]) {
-        jurados[juradoIndex].nombre = e.target.value;
+        jurados[juradoIndex].nombre = selectedOption.name;
       } else {
-        jurados[juradoIndex] = { nombre: e.target.value, semestre_jurado_id: null };
+        jurados[juradoIndex] = { nombre: selectedOption.name, semestre_jurado_id: selectedOption.id };
       }
       newData[rowIndex].jurados_asignados = jurados;
       setData(newData);
@@ -429,11 +449,11 @@ const TablaReportes: React.FC = () => {
         name: 'Jurado 1',
         selector: row => row.jurados_asignados[0]?.nombre || '',
         cell: (row, rowIndex) => (
-          <input
-            type="text"
-            value={row.jurados_asignados[0]?.nombre || ''}
-            onChange={(e) => handleJuradosChange(e, rowIndex, 0)}
-            className="w-full p-1 border border-gray-300 rounded"
+          <ComboboxCustom2
+          className="w-full"
+            data_options={dataJurados}
+            data={{ id: row.jurados_asignados[0]?.semestre_jurado_id, name: row.jurados_asignados[0]?.nombre }}
+            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 0)}
           />
         ),
         sortable: true,
@@ -443,11 +463,11 @@ const TablaReportes: React.FC = () => {
         name: 'Jurado 2',
         selector: row => row.jurados_asignados[1]?.nombre || '',
         cell: (row, rowIndex) => (
-          <input
-            type="text"
-            value={row.jurados_asignados[1]?.nombre || ''}
-            onChange={(e) => handleJuradosChange(e, rowIndex, 1)}
-            className="w-full p-1 border border-gray-300 rounded"
+          <ComboboxCustom2
+          className="w-full"
+            data_options={dataJurados}
+            data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
+            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
           />
         ),
         sortable: true,
@@ -457,11 +477,11 @@ const TablaReportes: React.FC = () => {
         name: 'Asesor',
         selector: row => row.jurados_asignados[2]?.nombre || row.asesor,
         cell: (row, rowIndex) => (
-          <input
-            type="text"
-            value={row.jurados_asignados[2]?.nombre || row.asesor}
-            onChange={(e) => handleJuradosChange(e, rowIndex, 2)}
-            className="w-full p-1 border border-gray-300 rounded"
+          <ComboboxCustom2
+          className="w-full"
+            data_options={dataJurados}
+            data={{ id: row.jurados_asignados[2]?.semestre_jurado_id, name: row.jurados_asignados[2]?.nombre || row.asesor }}
+            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 2)}
           />
         ),
         sortable: true,
@@ -529,14 +549,13 @@ const TablaReportes: React.FC = () => {
           }}
         />
         <div className='flex justify-end'>
-        <button
-          onClick={handleSave}
-          className="mt-3 w-1/4 p-2 bg-green-500 text-white rounded hover:bg-green-700"
-        >
-          Guardar y Descargar
-        </button>
+          <button
+            onClick={handleSave}
+            className="mt-3 w-1/4 p-2 bg-green-500 text-white rounded hover:bg-green-700"
+          >
+            Guardar y Descargar
+          </button>
         </div>
-       
       </div>
     );
   };
