@@ -8,7 +8,7 @@ import { DataCurso } from '../../types/Curso';
 import { DataSemestre } from '../../types/Semestre';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useData } from '../../contexts/DataContextProps ';
+import { useData } from '../../contexts/DataContextProps '; // Importa el hook useData
 
 const MySwal = withReactContent(Swal);
 
@@ -144,7 +144,7 @@ const FormAsignacion: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = "/sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
+    const endpoint = "/obtener_asignación";  // Actualiza con tu endpoint real
 
     try {
       const response = await axiosInstance({
@@ -160,7 +160,7 @@ const FormAsignacion: React.FC = () => {
         },
       });
       if (response.data) {
-        setAsignaciones(response.data);  // Asigna los datos a la variable de estado
+        setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
           text: 'Horario de sustentaciones generado con éxito',
