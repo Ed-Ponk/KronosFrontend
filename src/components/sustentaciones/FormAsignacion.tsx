@@ -95,7 +95,7 @@ const FormAsignacion: React.FC = () => {
   const fetchDatosSustentacion = async () => {
     if (selectedEscuela && selectedCurso) {
       try {
-        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustitucion=${selectedTipo}`);
+        const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustentacion=${selectedTipo}`);
         if (response.data && response.data.data) {
           const fechas = response.data.data.fecha_inicio + " - " + response.data.data.fecha_fin;
           setTipoSustentacion(response.data.data.tipo_sustentacion);
@@ -160,7 +160,7 @@ const FormAsignacion: React.FC = () => {
         },
       });
       if (response.data) {
-        setAsignaciones(response.data);  // Asigna los datos a la variable de estado
+        setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
           text: 'Horario de sustentaciones generado con éxito',
