@@ -4,354 +4,13 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axiosInstance from '../api/axiosConfig';
 import ComboboxCustom2 from './common/Combobox2';
+import { useData } from '../contexts/DataContextProps '; // Importa el hook useData
 
 const MySwal = withReactContent(Swal);
 
-const jsonData = {
-  "data": [
-    
-    {
-        "alumno_nombre": "STEVE WILLIAMS",
-        "asesor": "JUAN PÉREZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 31,
-        "sustentacion_id": 7
-    },
-    {
-        "alumno_nombre": "SUSAN WAGNER",
-        "asesor": "ANA GARCÍA",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 32,
-        "sustentacion_id": 8
-    },
-    {
-        "alumno_nombre": "STEPHANIE COLLINS",
-        "asesor": "CARLOS SÁNCHEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 33,
-        "sustentacion_id": 9
-    },
-    {
-        "alumno_nombre": "EUGENE BOWMAN",
-        "asesor": "MARÍA RODRÍGUEZ",
-        "horario": "2024-06-11 20:00",
-        "jurados_asignados": [
-            {
-                "nombre": "MARÍA RODRÍGUEZ",
-                "semestre_jurado_id": 34
-            },
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            }
-        ],
-        "semestre_jurado_id": 34,
-        "sustentacion_id": 10
-    },
-    {
-        "alumno_nombre": "KIMBERLY SMITH",
-        "asesor": "LUIS FERNÁNDEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 35,
-        "sustentacion_id": 11
-    },
-    {
-        "alumno_nombre": "SAMANTHA COOK",
-        "asesor": "LUCÍA GÓMEZ",
-        "horario": "2024-06-14 22:00",
-        "jurados_asignados": [
-            {
-                "nombre": "LUCÍA GÓMEZ",
-                "semestre_jurado_id": 36
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "MARÍA RODRÍGUEZ",
-                "semestre_jurado_id": 34
-            }
-        ],
-        "semestre_jurado_id": 36,
-        "sustentacion_id": 12
-    },
-    {
-        "alumno_nombre": "LESLIE HERRING",
-        "asesor": "FRANCISCO TORRES",
-        "horario": "2024-06-15 15:00",
-        "jurados_asignados": [
-            {
-                "nombre": "FRANCISCO TORRES",
-                "semestre_jurado_id": 43
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "LUIS FERNÁNDEZ",
-                "semestre_jurado_id": 35
-            }
-        ],
-        "semestre_jurado_id": 43,
-        "sustentacion_id": 19
-    },
-    {
-        "alumno_nombre": "MADISON ZUNIGA",
-        "asesor": "ISABEL MORALES",
-        "horario": "2024-06-11 20:00",
-        "jurados_asignados": [
-            {
-                "nombre": "ISABEL MORALES",
-                "semestre_jurado_id": 44
-            },
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            }
-        ],
-        "semestre_jurado_id": 44,
-        "sustentacion_id": 20
-    },
-    {
-        "alumno_nombre": "PAMELA JONES",
-        "asesor": "LUIS FERNÁNDEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 35,
-        "sustentacion_id": 26
-    },
-    {
-        "alumno_nombre": "BRAD GARCIA",
-        "asesor": "JAVIER MARTÍNEZ",
-        "horario": "2024-06-14 20:00",
-        "jurados_asignados": [
-            {
-                "nombre": "JAVIER MARTÍNEZ",
-                "semestre_jurado_id": 37
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            },
-            {
-                "nombre": "MARÍA RODRÍGUEZ",
-                "semestre_jurado_id": 34
-            }
-        ],
-        "semestre_jurado_id": 37,
-        "sustentacion_id": 28
-    },
-    {
-        "alumno_nombre": "SHAWN LAMB",
-        "asesor": "MARTA LÓPEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 38,
-        "sustentacion_id": 29
-    },
-    {
-        "alumno_nombre": "SABRINA OSBORNE",
-        "asesor": "ALBERTO HERRERA",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 41,
-        "sustentacion_id": 32
-    },
-    {
-        "alumno_nombre": "EBONY WILSON",
-        "asesor": "ANA GARCÍA",
-        "horario": "2024-06-10 17:00",
-        "jurados_asignados": [
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            }
-        ],
-        "semestre_jurado_id": 32,
-        "sustentacion_id": 38
-    },
-    {
-        "alumno_nombre": "FRANK WARREN",
-        "asesor": "ANA GARCÍA",
-        "horario": "2024-06-10 17:00",
-        "jurados_asignados": [
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            }
-        ],
-        "semestre_jurado_id": 32,
-        "sustentacion_id": 23
-    },
-    {
-        "alumno_nombre": "BRENDA FORD",
-        "asesor": "MARÍA RODRÍGUEZ",
-        "horario": "2024-06-15 16:00",
-        "jurados_asignados": [
-            {
-                "nombre": "MARÍA RODRÍGUEZ",
-                "semestre_jurado_id": 34
-            },
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "LUIS FERNÁNDEZ",
-                "semestre_jurado_id": 35
-            }
-        ],
-        "semestre_jurado_id": 34,
-        "sustentacion_id": 25
-    },
-    {
-        "alumno_nombre": "ANDREW OLIVER",
-        "asesor": "LUCÍA GÓMEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 36,
-        "sustentacion_id": 27
-    },
-    {
-        "alumno_nombre": "MELISSA FORD",
-        "asesor": "SERGIO JIMÉNEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 39,
-        "sustentacion_id": 30
-    },
-    {
-        "alumno_nombre": "ALEXA VELASQUEZ",
-        "asesor": "ELENA RUIZ",
-        "horario": "2024-06-12 18:00",
-        "jurados_asignados": [
-            {
-                "nombre": "ELENA RUIZ",
-                "semestre_jurado_id": 40
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "MARÍA RODRÍGUEZ",
-                "semestre_jurado_id": 34
-            }
-        ],
-        "semestre_jurado_id": 40,
-        "sustentacion_id": 31
-    },
-    {
-        "alumno_nombre": "TIFFANY JOHNSON",
-        "asesor": "CARMEN DÍAZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 42,
-        "sustentacion_id": 33
-    },
-    {
-        "alumno_nombre": "JEFFREY FLEMING",
-        "asesor": "ISABEL MORALES",
-        "horario": "2024-06-15 18:00",
-        "jurados_asignados": [
-            {
-                "nombre": "ISABEL MORALES",
-                "semestre_jurado_id": 44
-            },
-            {
-                "nombre": "JUAN PÉREZ",
-                "semestre_jurado_id": 31
-            },
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            }
-        ],
-        "semestre_jurado_id": 44,
-        "sustentacion_id": 35
-    },
-    {
-        "alumno_nombre": "BRIAN BERGER",
-        "asesor": "PEDRO ROMERO",
-        "horario": "2024-06-11 17:00",
-        "jurados_asignados": [
-            {
-                "nombre": "PEDRO ROMERO",
-                "semestre_jurado_id": 45
-            },
-            {
-                "nombre": "ANA GARCÍA",
-                "semestre_jurado_id": 32
-            },
-            {
-                "nombre": "CARLOS SÁNCHEZ",
-                "semestre_jurado_id": 33
-            }
-        ],
-        "semestre_jurado_id": 45,
-        "sustentacion_id": 36
-    },
-    {
-        "alumno_nombre": "DILLON CRUZ",
-        "asesor": "JUAN PÉREZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 31,
-        "sustentacion_id": 37
-    },
-    {
-        "alumno_nombre": "ERIC THOMAS",
-        "asesor": "MARÍA RODRÍGUEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 34,
-        "sustentacion_id": 40
-    },
-    {
-        "alumno_nombre": "ADAM MITCHELL",
-        "asesor": "LUCÍA GÓMEZ",
-        "horario": "",
-        "jurados_asignados": [],
-        "semestre_jurado_id": 36,
-        "sustentacion_id": 42
-    }
-  ],
-  "message": "Prueba",
-  "status": true
-};
-
 const TablaReportes: React.FC = () => {
-    const [data, setData] = useState<any[]>(jsonData.data);
+    const { asignaciones } = useData(); // Obtiene los datos de asignaciones del contexto
+    const [data, setData] = useState<any[]>(asignaciones);
     const [dataJurados, setDataJurados] = useState<any[]>([]);
   
     useEffect(() => {
@@ -371,6 +30,10 @@ const TablaReportes: React.FC = () => {
       fetchJurados();
     }, []);
   
+    useEffect(() => {
+      setData(asignaciones);
+    }, [asignaciones]);
+  
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {
       const newData = [...data];
       newData[rowIndex][column] = e.target.value;
@@ -388,11 +51,36 @@ const TablaReportes: React.FC = () => {
       newData[rowIndex].jurados_asignados = jurados;
       setData(newData);
     };
+
+    const handleSave = async () => {
+      try {
+          console.log('Datos guardados:', data);
+
+          const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', data);
+
+          if (response.data.status) {
+              MySwal.fire({
+                  title: 'Éxito',
+                  text: 'Datos guardados y descargados correctamente',
+                  icon: 'success',
+              });
+          } else {
+              MySwal.fire({
+                  title: 'Error',
+                  text: response.data.message,
+                  icon: 'error',
+              });
+          }
+      } catch (error) {
+          MySwal.fire({
+              title: 'Error',
+              text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
+              icon: 'error',
+          });
+      }
+  };
   
-    const handleSave = () => {
-      console.log('Datos guardados:', data);
-      // Aquí puedes manejar la lógica para enviar el JSON al servidor
-    };
+
   
     const columns: TableColumn<any>[] = [
       {

@@ -8,10 +8,12 @@ import { DataCurso } from '../../types/Curso';
 import { DataSemestre } from '../../types/Semestre';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useData } from '../../contexts/DataContextProps ';
 
 const MySwal = withReactContent(Swal);
 
 const FormAsignacion: React.FC = () => {
+  const { setAsignaciones } = useData(); // Obtiene la función setAsignaciones del contexto
   const [selectedFacultad, setSelectedFacultad] = useState<number | null>(null);
   const [selectedEscuela, setSelectedEscuela] = useState<number | null>(null);
   const [selectedCurso, setSelectedCurso] = useState<number | null>(null);
@@ -94,18 +96,19 @@ const FormAsignacion: React.FC = () => {
     if (selectedEscuela && selectedCurso) {
       try {
         const response = await axiosInstance.get(`/semana/semana-sustentacion-filtrada?escuela_id=${selectedEscuela}&curso_id=${selectedCurso}&tipo_sustitucion=${selectedTipo}`);
-        console.log(response.data.data)
         if (response.data && response.data.data) {
-          const fechas = response.data.data.fecha_inicio+" - "+response.data.data.fecha_fin;
-
-          console.log(response.data.data.compensacion_docente);
+          const fechas = response.data.data.fecha_inicio + " - " + response.data.data.fecha_fin;
           setTipoSustentacion(response.data.data.tipo_sustentacion);
           setSemanas(response.data.data.semanas);
           setRangoFechas(fechas);
           setDuracion(response.data.data.duracion_sustentacion);
           setCompensacion(response.data.data.compensacion_docente);
         } else {
-          // manejar el caso en que no hay datos
+          MySwal.fire({
+            title: 'Error',
+            text: 'No hay datos disponibles para la combinación seleccionada',
+            icon: 'error',
+          });
         }
       } catch (error) {
         console.error('Error fetching datos de sustentacion:', error);
@@ -141,7 +144,7 @@ const FormAsignacion: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-      const endpoint = "/sustentacion/obtener_estructura_data";  // Actualiza con tu endpoint real
+    const endpoint = "/sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
 
     try {
       const response = await axiosInstance({
@@ -156,7 +159,8 @@ const FormAsignacion: React.FC = () => {
           compensacion_docente: compensacion
         },
       });
-      if (response.data.status) {
+      if (response.data) {
+        setAsignaciones(response.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
           text: 'Horario de sustentaciones generado con éxito',
@@ -176,7 +180,7 @@ const FormAsignacion: React.FC = () => {
         icon: 'error',
       });
     }
-  }
+  };
 
   return (
     <div className="flex flex-col w-2/3 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
@@ -187,7 +191,7 @@ const FormAsignacion: React.FC = () => {
 
         <p className='block font-medium text-base leading-6 text-gray-900 mb-4 dark:text-gray-200'>{mostrarSemestre()}</p>
       </div>
-      
+
       <form className="space-y-6" onSubmit={handleSubmit}>
         <Disclosure>
           {({ open }) => (
@@ -227,7 +231,7 @@ const FormAsignacion: React.FC = () => {
                     {filteredEscuelas.map(escuela => (
                       <option key={escuela.escuela_id} value={escuela.escuela_id}>
                         {escuela.escuela}
-                        </option>
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -254,9 +258,9 @@ const FormAsignacion: React.FC = () => {
                     className="mt-2 block w-full p-2 border border-gray-300 rounded-md text-gray-700"
                   >
                     <option value="">Selecciona el tipo de sustentación</option>
-                    {['PARCIAL', 'FINAL'].map(curso => (
-                      <option key={curso} value={curso}>
-                        {curso}
+                    {['PARCIAL', 'FINAL'].map(tipo => (
+                      <option key={tipo} value={tipo}>
+                        {tipo}
                       </option>
                     ))}
                   </select>
