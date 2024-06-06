@@ -31,7 +31,9 @@ const TablaReportes: React.FC = () => {
     }, []);
   
     useEffect(() => {
+      
       setData(asignaciones);
+      console.log(asignaciones);
     }, [asignaciones]);
   
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {

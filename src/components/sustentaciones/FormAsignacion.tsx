@@ -8,7 +8,7 @@ import { DataCurso } from '../../types/Curso';
 import { DataSemestre } from '../../types/Semestre';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useData } from '../../contexts/DataContextProps ';
+import { useData } from '../../contexts/DataContextProps ';// Importa el hook useData
 
 const MySwal = withReactContent(Swal);
 
