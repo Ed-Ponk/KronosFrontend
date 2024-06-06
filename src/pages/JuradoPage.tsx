@@ -6,6 +6,7 @@ import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
 import SidebarJurado from '../components/SidebarJurado';
 import HorarioSeleccionMultiple from '../components/jurado/HorarioSeleccionMultiple ';
+import ReporteJuradoPage from './ReporteJuradoPage';
 
 
 
@@ -37,7 +38,7 @@ const JuradoPage = () =>{
       case 'Horario Jurado':
         return <HorarioSeleccionMultiple />;
         case 'Reportes':
-          return <JuradoComponent />;
+          return <ReporteJuradoPage />;
       default:
         return <JuradoComponent />;
     }
