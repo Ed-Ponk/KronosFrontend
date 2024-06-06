@@ -111,22 +111,31 @@ const FormHomeWSP: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = ""
+    if (!selectedCurso) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Por favor, selecciona un curso antes de continuar.',
+        icon: 'error',
+      });
+      return;
+    }
+
+    const endpoint = "/home/enviar-notificacion";
 
     try {
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
         data: {
+          curso_id: selectedCurso,
         },
       });
       if (response.data.status) {
         MySwal.fire({
           title: 'Éxito',
-          text: selectedFacultad ? 'Facultad actualizada con éxito' : 'Facultad registrada con éxito',
+          text: 'Notificaciones enviadas con éxito.',
           icon: 'success',
         });
-        //fetchData();
       } else {
         MySwal.fire({
           title: 'Error',
@@ -137,12 +146,11 @@ const FormHomeWSP: React.FC = () => {
     } catch (e) {
       MySwal.fire({
         title: 'Error',
-        text: 'Error al generar horario sustentación. Inténtalo de nuevo más tarde.',
+        text: 'Error al enviar las notificaciones. Inténtalo de nuevo más tarde.',
         icon: 'error',
       });
     }
-
-  }
+  };
 
   return (
     <div className="flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
