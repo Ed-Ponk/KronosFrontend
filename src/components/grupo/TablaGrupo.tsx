@@ -15,6 +15,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             selector: (row: DataGrupo) => row.grupo_curso_id,
             sortable: true,
             width: '70px',
+            compact: true,
             center: true,
         },
         {
@@ -23,6 +24,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             sortable: true,
             wrap: true,
             width: '100px',
+            compact: true,
             center: true,
         },
         {
@@ -31,6 +33,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             sortable: true,
             wrap: true,
             center: true,
+            compact: true,
         },
         {
             name: 'Grupo',
@@ -38,6 +41,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             sortable: true,
             wrap: true,
             width: '90px',
+            compact: true,
             center: true,
         },
         {
@@ -45,6 +49,7 @@ const TablaGrupo = ({ setSelectedData, records, fetchData }: { setSelectedData: 
             selector: (row: DataGrupo) => row.docente.name,
             sortable: true,
             wrap: true,
+            compact: true,
             center: true,
         },
         // {

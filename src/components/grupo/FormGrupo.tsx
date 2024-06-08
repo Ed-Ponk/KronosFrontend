@@ -14,13 +14,13 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
 
     const [typeSubmit, setTypeSubmit] = useState(true); //True: Registrar, False: Editar
     const [idGrupoHorario, setIdGrupoHorario] = useState(0);
+    const [semestre, setSemestre] = useState<any>(null);
 
     //Estado para los grupos actuales para la tabla
     const [dataGrupos, setDataGrupos] = useState([]);
 
     //Estados para manejar los datos del combobox
     const [dataLetras, setDataLetras] = useState<Option[]>([]);
-    const [dataSemestre, setDataSemestre] = useState<Option[]>([]);
     const [dataEscuela, setDataEscuela] = useState<Option[]>([]);
     const [dataCurso, setDataCurso] = useState<Option[]>([]);
     const [dataDocente, setDataDocente] = useState<Option[]>([]);
@@ -28,10 +28,24 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
 
     //Estados para controlar los valores seleccionados en los combobox
     const [selectedGrupo, setSelectedGrupo] = useState<Option>();
-    const [selectedSemestre, setSelectedSemestre] = useState<Option>();
     const [selectedEscuela, setSelectedEscuela] = useState<Option>();
     const [selectedCurso, setSelectedCurso] = useState<Option>();
     const [selectedDocente, setSelectedDocente] = useState<Option>();
+
+
+    const fetchSemestre = async () => {
+        try {
+            const response = await axiosInstance.get('semestres/semestre-vigente');
+            const data = response.data;
+            if (data.status) {
+                setSemestre(data.data); // Guarda toda la información del semestre
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching semestre:', error);
+        }
+    };
 
     const fetchGrupos = async () => {
         try {
@@ -54,21 +68,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
             setDataLetras(data);
         } catch (error) {
             console.error('Error fetching letras data:', error);
-        }
-    }
-
-    const fetchSemestres = async () => {
-        try {
-            const response = await axiosInstance.get('semestres');
-            let data: Option[] = [];
-            //Damos el formato
-            for (const item of response.data.data) {
-                let newItem: Option = { id: item.semestre_id, name: item.nombre_semestres, }
-                data.push(newItem);
-            }
-            setDataSemestre(data);
-        } catch (error) {
-            console.error('Error fetching semestre data:', error);
         }
     }
 
@@ -131,12 +130,13 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
                 data: {
                     grupo_curso_id: !typeSubmit ? idGrupoHorario : undefined,
                     grupo_id: selectedGrupo?.id,
-                    semestre_id: selectedSemestre?.id,
+                    semestre_id: semestre?.semestre_id,
                     escuela_id: selectedEscuela?.id,
                     curso_id: selectedCurso?.id,
                     docente_id: selectedDocente?.id
                 },
             });
+            console.log(response.data)
             if (response.data.status) {
                 MySwal.fire({
                     title: 'Éxito',
@@ -167,7 +167,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
         setTypeSubmit(true);
         setIdGrupoHorario(0);
         setSelectedGrupo(null);
-        setSelectedSemestre(null);
         setSelectedEscuela(null);
         setSelectedCurso(null);
         setSelectedDocente(null);
@@ -184,7 +183,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
             setTypeSubmit(false);
             setIdGrupoHorario(selectedData?.grupo_curso_id); //si no tiene dato entonces 0
             setSelectedGrupo(selectedData?.grupo);
-            setSelectedSemestre(selectedData?.nombre_semestre);
             setSelectedEscuela(selectedData?.escuela);
             setSelectedCurso(selectedData?.curso);
             setSelectedDocente(selectedData?.docente);
@@ -192,7 +190,6 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
             setTypeSubmit(true);
             setIdGrupoHorario(0);
             setSelectedGrupo(null);
-            setSelectedSemestre(null);
             setSelectedEscuela(null);
             setSelectedCurso(null);
             setSelectedDocente(null);
@@ -200,31 +197,28 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     }, [selectedData]);
 
     useEffect(() => {
+        fetchSemestre()
         fetchGrupos();
         fetchLetrasGrupos();
-        fetchSemestres();
         fetchEscuelas();
         fetchDocentes();
     }, []);
 
     return (
         <div className="flex flex-col w-11/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-            <h1 className="block font-medium leading-6 text-gray-900 mb-4">
-                {!typeSubmit ? 'Editar Grupo Horario' : 'Registrar Grupo Horario'}
-            </h1>
+            <div className='flex justify-between items-center mb-4'>
+                <h1 className="text-lg  font-medium leading-6 text-gray-900 ">
+                    {!typeSubmit ? 'Editar Grupo Horario' : 'Registrar Grupo Horario'}
+                </h1>
+                <span className="text-sm text-gray-500 dark:text-gray-600">{semestre? semestre.nombre_semestres : 'Sin Semestre'}</span>
+            </div>
+
             <form className="space-y-3 " onSubmit={handleSubmit}>
                 <div className='flex space-x-4'>
                     <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
                         Grupo:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataLetras} data={selectedGrupo} setData={setSelectedGrupo} />
-                </div>
-
-                <div className='flex space-x-4'>
-                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
-                        Semestre:
-                    </label>
-                    <MyCombobox className='w-9/12' data_options={dataSemestre} data={selectedSemestre} setData={setSelectedSemestre} />
                 </div>
 
                 <div className='flex space-x-4'>

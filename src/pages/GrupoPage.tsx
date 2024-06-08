@@ -56,7 +56,7 @@ const GrupoPage: React.FC = () => {
     return (
         <div className='w-full h-auto md:h-full md:w-auto bg-gray-100 dark:bg-slate-900'>
             <div className='flex flex-col md:flex-row'>
-                <div className='w-full md:w-1/2 p-4'>
+                <div className='w-full md:w-2/6 p-4'>
                     <FormGrupo
                         selectedData={selectedData}
                         setSelectedData={setSelectedData}
@@ -64,7 +64,7 @@ const GrupoPage: React.FC = () => {
                     />
 
                 </div>
-                <div className='w-full md:w-1/2 p-4'>
+                <div className='w-full md:w-4/6 p-4'>
                     <TablaGrupo
                         setSelectedData={setSelectedData}
                         records={dataRecords}
