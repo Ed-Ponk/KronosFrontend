@@ -5,7 +5,7 @@ import SelectSemestre from '../semestre/SelectSemestre';
 import SelectEscuela from '../escuela/selectEscuela';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import ModalComponent from '../modal';
+import ModalJurado from './ModalJurado';
 
 const MySwal = withReactContent(Swal);
 
@@ -26,6 +26,7 @@ type JuradoFormState = {
   email: string;
   telefono: string;
   escuela_id: number | string;
+  semestre_id: number | string;
   dedicacion: string;
   hora_asesoria_semanal: number | string;
 };
@@ -35,6 +36,7 @@ const initialFormState: JuradoFormState = {
   email: '',
   telefono: '',
   escuela_id: '',
+  semestre_id: '',
   dedicacion: '',
   hora_asesoria_semanal: '',
 };
@@ -49,6 +51,7 @@ const TablaJurado: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentJurado, setCurrentJurado] = useState<JuradoFormState>(initialFormState);
+  const [semestreMap, setSemestreMap] = useState<{ [key: string]: number }>({});
   const [escuelaMap, setEscuelaMap] = useState<{ [key: string]: number }>({});
 
   const openModal = () => {
@@ -137,12 +140,14 @@ const TablaJurado: React.FC = () => {
   const handleEdit = (jurado: DataItem) => {
     setIsEditing(true);
     const escuelaId = escuelaMap[jurado.escuela] || ''; // Obtener el ID de la escuela a partir del nombre
+    const semestreId = semestreMap[jurado.semestre] || ''; // Obtener el ID del semestre a partir del nombre
     setCurrentJurado({
       jurado_id: jurado.jurado_id,
       nombre_completo: jurado.nombre_completo,
       email: jurado.email,
       telefono: jurado.telefono,
       escuela_id: escuelaId,
+      semestre_id: semestreId,
       dedicacion: jurado.dedicacion,
       hora_asesoria_semanal: jurado.hora_asesoria_semanal,
     });
@@ -150,54 +155,43 @@ const TablaJurado: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await axios.delete(`http://127.0.0.1:5000/jurados/eliminar/${id}`);
-      fetchData(selectedSemestre, selectedEscuela); // Refresh the data
-    } catch (error) {
-      console.error('Error deleting jurado:', error);
-      MySwal.fire({
-        title: 'Error',
-        text: 'Hubo un error al eliminar el jurado',
-        icon: 'error',
-      });
-    }
-  };
+    MySwal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        axios.delete('http://127.0.0.1:5000/jurados/eliminar', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: JSON.stringify({ jurado_id: id })
+        })
+          .then(() => {
+            MySwal.fire(
+              'Eliminado!',
+              'El jurado ha sido eliminado.',
+              'success'
+            );
+            fetchData(selectedSemestre, selectedEscuela); // Refresh the data
+          })
+          .catch(error => {
+            MySwal.fire(
+              'Error!',
+              'Hubo un problema al eliminar el jurado.',
+              'error'
+            );
+          });
 
-  const handleFormChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = event.target;
-    setCurrentJurado({ ...currentJurado, [name]: value });
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      if (isEditing) {
-        // Update the jurado
-        await axios.put(`http://127.0.0.1:5000/jurados/actualizar/${currentJurado.jurado_id}`, currentJurado);
-        MySwal.fire({
-          title: 'Actualización exitosa',
-          text: 'El jurado ha sido actualizado correctamente',
-          icon: 'success',
-        });
-      } else {
-        // Add a new jurado
-        await axios.post('http://127.0.0.1:5000/jurados/agregar', currentJurado);
-        MySwal.fire({
-          title: 'Registro exitoso',
-          text: 'El jurado ha sido agregado correctamente',
-          icon: 'success',
-        });
+        
       }
-      fetchData(selectedSemestre, selectedEscuela); // Refresh the data
-      closeModal();
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      MySwal.fire({
-        title: 'Error',
-        text: 'Hubo un error al enviar el formulario',
-        icon: 'error',
-      });
-    }
+    });
+    
   };
 
   const paginationOptions = {
@@ -294,7 +288,7 @@ const TablaJurado: React.FC = () => {
       <div className='mt-2 flex flex-col md:flex-row md:items-center md:space-x-4'>
         <div className="flex-1">
           <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Semestres</label>
-          <SelectSemestre onChange={handleSemestreChange} />
+          <SelectSemestre onChange={handleSemestreChange} setSemestreMap={setSemestreMap} />
         </div>
         <div className="flex-1">
           <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Escuela</label>
@@ -341,46 +335,14 @@ const TablaJurado: React.FC = () => {
         </>
       )}
 
-      <ModalComponent
+      <ModalJurado
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        title={isEditing ? 'Editar Jurado' : 'Agregar Jurado'}
-      >
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">Nombre Completo</label>
-            <input type="text" name="nombre_completo" value={currentJurado.nombre_completo} onChange={handleFormChange} className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">Email</label>
-            <input type="email" name="email" value={currentJurado.email} onChange={handleFormChange} className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">N° Telefono</label>
-            <input type="number" name="telefono" value={currentJurado.telefono} onChange={handleFormChange} className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">Escuela</label>
-            <SelectEscuela name="escuela_id" value={currentJurado.escuela_id} onChange={handleFormChange} />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">Dedicación</label>
-            <select name="dedicacion" value={currentJurado.dedicacion} onChange={handleFormChange} className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
-              <option value="">Seleccionar Dedicación</option>
-              <option value="TC">Tiempo Completo</option>
-              <option value="TP">Medio Tiempo</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium leading-6 text-gray-900">Horas de Asesoría Semanal</label>
-            <input type="number" name="hora_asesoria_semanal" value={currentJurado.hora_asesoria_semanal} onChange={handleFormChange} className="block p-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
-          </div>
-          <div className="flex justify-end mt-4">
-            <button type="button" onClick={closeModal} className="mr-2 bg-gray-500 text-white px-3 py-1 rounded">Cancelar</button>
-            <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded">{isEditing ? 'Actualizar' : 'Registrar'}</button>
-          </div>
-        </form>
-      </ModalComponent>
+        isEditing={isEditing}
+        jurado={currentJurado}
+        setJurado={setCurrentJurado}
+        fetchData={() => fetchData(selectedSemestre, selectedEscuela)}
+      />
     </div>
   );
 };

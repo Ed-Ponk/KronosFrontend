@@ -9,11 +9,12 @@ type Escuela = {
 type SelectEscuelaProps = {
   name?: string;
   value?: string | number;
+  className?: string;
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   setEscuelaMap?: (map: { [key: string]: number }) => void; // Para pasar el mapeo al componente padre
 };
 
-const SelectEscuela: React.FC<SelectEscuelaProps> = ({ name, value, onChange, setEscuelaMap }) => {
+const SelectEscuela: React.FC<SelectEscuelaProps> = ({ name, value,className, onChange, setEscuelaMap }) => {
   const [data, setData] = useState<Escuela[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -50,7 +51,7 @@ const SelectEscuela: React.FC<SelectEscuelaProps> = ({ name, value, onChange, se
       name={name}
       value={value}
       onChange={onChange}
-      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+      className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${className}`}
     >
       <option value="0">Seleccionar Escuela</option>
       {loading ? (
