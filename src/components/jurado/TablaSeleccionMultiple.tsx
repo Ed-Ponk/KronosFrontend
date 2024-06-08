@@ -78,7 +78,7 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
                 <td
                   key={colIndex}
                   className={`border p-2 dark:bg-gray-800 dark:text-white ${
-                    isCellSelected(rowIndex, colIndex + 1) ? 'bg-blue-500 text-white dark:bg-blue-700' : ''
+                    isCellSelected(rowIndex, colIndex + 1) ? 'bg-blue-500 text-white dark:bg-emerald-500' : ''
                   }`}
                   onMouseDown={() => handleMouseDown(rowIndex, colIndex + 1)}
                   onMouseMove={() => handleMouseMove(rowIndex, colIndex + 1)}

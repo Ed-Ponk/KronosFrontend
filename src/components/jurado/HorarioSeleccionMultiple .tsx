@@ -4,6 +4,7 @@ import SelectSemana from './SelectSemana';
 import axiosInstance from '../../api/axiosConfig';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import WeekSelector from './SelectorSemanas';
 
 const MySwal = withReactContent(Swal);
 
@@ -32,10 +33,10 @@ const HorarioSeleccionMultiple = () => {
         if (horarioArray.length != 6) console.log('distinto')
 
         let horasDisponibles = []
-        horarioArray.forEach((dia, index:number) => {
+        horarioArray.forEach((dia, index: number) => {
           horasDisponibles.push(...Object.keys(dia)
             .filter(key => key.startsWith('hora_') && dia[key] === 'D')
-            .map(key => (Number.parseInt(key.replace('hora_', '')) - 7) + '-' + (index+1)));
+            .map(key => (Number.parseInt(key.replace('hora_', '')) - 7) + '-' + (index + 1)));
         });
 
         console.log(horasDisponibles);
@@ -117,6 +118,22 @@ const HorarioSeleccionMultiple = () => {
 
   }, [])
 
+  //Inicio - Logica para el selector de semanas
+  const weeks = [2, 3, 5, 7, 8, 10, 11];
+  const initialSelectedWeek = 7; // Por ejemplo, la semana 7 es la seleccionada inicialmente
+  const [selectedWeeks, setSelectedWeeks] = useState<number[]>([initialSelectedWeek]);
+
+  const handleSelectionChange = (weeks: number[]) => {
+    setSelectedWeeks(weeks);
+  };
+
+  const handleButtonClick = () => {
+    console.log('Selected weeks:', selectedWeeks);
+    // Aquí puedes manejar el array de semanas seleccionadas, por ejemplo, enviarlas a un servidor.
+  };
+
+  //Fin - Logica para el selector de semanas
+
   return (
     <div className="flex flex-col mt-2 w-3/4 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
       <h1 className='font-medium text-gray-900 dark:text-gray-200'>Registrar Disponibilidad Horaria</h1>
@@ -129,12 +146,21 @@ const HorarioSeleccionMultiple = () => {
       </div>
       <TablaSeleccionMultiple selectedCells={selectedCells} setSelectedCells={setSelectedCells} />
 
-      <div className='mt-2 flex justify-between'>
-        <p className="mr-4 text-gray-500 font-bold">*Puede seleccionar y deseleccionar celdas haciendo clic y arrastrando el mouse sobre ellas.</p>
+      <div className="mt-2 flex flex-col md:flex-row justify-between w-full max-w-4xl p-4 items-center space-y-4 md:space-y-0">
+        <p className="text-gray-500 dark:text-gray-300 font-bold text-center md:text-left flex-1">
+          *Puede seleccionar y deseleccionar celdas haciendo clic y arrastrando el mouse sobre ellas.
+        </p>
+        <div className="flex-1 flex items-center justify-center">
+          <WeekSelector
+            weeks={weeks}
+            initialSelectedWeek={initialSelectedWeek}
+            onSelectionChange={handleSelectionChange}
+          />
+        </div>
         <button
           type="button"
           onClick={handleGuardar}
-          className="flex w-1/4 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="w-32 ml-6 md:w-auto justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Guardar
         </button>
