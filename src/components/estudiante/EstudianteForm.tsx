@@ -207,7 +207,7 @@ export const FormEstudiante: React.FC = () => {
           </div>
         </div>
         {selectedFileName && (
-          <p className="text-sm text-gray-700 mt-2">Archivo seleccionado: {selectedFileName}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-200 mt-2">Archivo seleccionado: {selectedFileName}</p>
         )}
         <div className='mt-5 w-100 flex-auto flex justify-end'>
           <button
