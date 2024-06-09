@@ -19,6 +19,9 @@ const FormHomeWSP: React.FC = () => {
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
   const [cursos, setCursos] = useState<DataCurso[]>([]); 
   const [semestre, setSemestre] = useState<DataSemestre | null>(null); 
+  const [phoneNumbers, setPhoneNumbers] = useState<{ number: string; type: string }[]>([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const [newPhoneType, setNewPhoneType] = useState('');
 
   useEffect(() => {
     const fetchSemestre = async () => {
@@ -27,26 +30,25 @@ const FormHomeWSP: React.FC = () => {
         if (response.data.status) {
           setSemestre(response.data.data);
         } else {
-          setSemestre(null); // Asegurar que semestre es null si no hay datos
+          setSemestre(null); 
         }
       } catch (error) {
         console.error('Error fetching semestre data:', error);
-        setSemestre(null); // Asegurar que semestre es null en caso de error
+        setSemestre(null); 
       }
     };
 
     const fetchFacultades = async () => {
       try {
         const response = await axiosInstance.get('/facultad');
-       
         if (response.data && response.data.data) {
           setFacultades(response.data.data);
         } else {
-          setFacultades([]); // Establecer a un arreglo vacío si no hay datos
+          setFacultades([]); 
         }
       } catch (error) {
         console.error('Error fetching facultades:', error);
-        setFacultades([]); // Asegurar que facultades es un arreglo vacío en caso de error
+        setFacultades([]); 
       }
     };
 
@@ -61,7 +63,7 @@ const FormHomeWSP: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching escuelas:', error);
-        setEscuelas([]); // Asegurar que escuelas es un arreglo vacío en caso de error
+        setEscuelas([]); 
       }
     };
 
@@ -75,7 +77,7 @@ const FormHomeWSP: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching cursos:', error);
-        setCursos([]); // Asegurar que cursos es un arreglo vacío en caso de error
+        setCursos([]); 
       }
     };
 
@@ -89,13 +91,13 @@ const FormHomeWSP: React.FC = () => {
     const facultadId = Number(event.target.value);
     setSelectedFacultad(facultadId);
     setSelectedEscuela(null);
-    setSelectedCurso(null); // Reset the selected curso when changing facultad
+    setSelectedCurso(null); 
   };
 
   const handleEscuelaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const escuelaId = Number(event.target.value);
     setSelectedEscuela(escuelaId);
-    setSelectedCurso(null); // Reset the selected curso when changing escuela
+    setSelectedCurso(null); 
   };
 
   const handleCursoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -103,15 +105,47 @@ const FormHomeWSP: React.FC = () => {
     setSelectedCurso(cursoId);
   };
 
-  // Filtra las escuelas según la facultad seleccionada
-  const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : [];
+  const handleAddPhoneNumber = () => {
+    if (newPhoneNumber && newPhoneType) {
+      const formattedNumber = newPhoneNumber.replace(/\s+/g, ''); // Remove spaces
+      setPhoneNumbers([...phoneNumbers, { number: formattedNumber, type: newPhoneType }]);
+      setNewPhoneNumber('');
+      setNewPhoneType('');
+    }
+  };
 
-  // Filtra los cursos según la escuela seleccionada
+  const handleWhatsappNotify = async () => {
+    try {
+      console.log(phoneNumbers);
+      const response = await axiosInstance.post('/home/enviar-notificacion-prueba', { contactos: phoneNumbers ,withCredentials: true});
+      if (response.data.status) {
+        MySwal.fire({
+          title: 'Éxito',
+          text: 'Notificaciones enviadas con éxito.',
+          icon: 'success',
+        });
+      } else {
+        MySwal.fire({
+          title: 'Error',
+          text: response.data.message,
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Error al enviar las notificaciones. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
+    }
+  };
+
+  const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : [];
   const filteredCursos = selectedEscuela ? cursos.filter(curso => curso.escuela_id === selectedEscuela) : [];
 
   const mostrarSemestre = () => {
     if (semestre) {
-      return semestre.nombre_semestres; // Ajusta el campo según tu estructura
+      return semestre.nombre_semestres; 
     }
     return 'No hay semestre disponible';
   };
@@ -239,6 +273,65 @@ const FormHomeWSP: React.FC = () => {
           Notificar por Whatsapp
         </button>
       </form>
+
+      <div className="mt-6">
+        <h3 className="block font-medium text-lg leading-6 text-gray-900 mb-4 dark:text-gray-200">
+          Agregar Número de Teléfono
+        </h3>
+        <div className="flex space-x-4 mb-4">
+          <input
+            type="text"
+            placeholder="Número de Teléfono"
+            value={newPhoneNumber}
+            onChange={(e) => setNewPhoneNumber(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md text-gray-700"
+          />
+          <select
+            value={newPhoneType}
+            onChange={(e) => setNewPhoneType(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md text-gray-700"
+          >
+            <option value="">Tipo</option>
+            <option value="Estudiante">Estudiante</option>
+            <option value="Docente">Docente</option>
+            <option value="Jurado">Jurado</option>
+          </select>
+          <button
+            onClick={handleAddPhoneNumber}
+            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          >
+            Agregar
+          </button>
+        </div>
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Número de Teléfono
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Tipo
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {phoneNumbers.map((phone, index) => (
+              <tr key={index} className="bg-white dark:bg-gray-800">
+                <td className="px-6 py-4">{phone.number}</td>
+                <td className="px-6 py-4">{phone.type}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={handleWhatsappNotify}
+          className="p-2 bg-green-500 text-white rounded hover:bg-green-700"
+        >
+         Prueba Whatsapp Notificar
+        </button>
+      </div>
     </div>
   );
 }
