@@ -7,29 +7,64 @@ const FilteredTablaReportes: React.FC = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterColumn, setFilterColumn] = useState<string>('estudiante');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:5000/grupos/sustentaciones');
-        if (response.data.status) {
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:5000/grupos/sustentaciones');
+          if (response.data.status) {
           setData(response.data.data);
-          setFilteredData(response.data.data);
+            setFilteredData(response.data.data);
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
     };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, []);
 
+  
   useEffect(() => {
-    const filtered = data.filter(item =>
-      (item[filterColumn] ? item[filterColumn] : '').toString().toLowerCase().includes(filterText.toLowerCase())
-    );
+    const filtered = data.filter(item => {
+      const itemValue = item[filterColumn] ? item[filterColumn].toString().toLowerCase() : '';
+      const filterValue = filterText.toLowerCase();
+      const isTextMatch = itemValue.includes(filterValue);
+      
+      const itemDate = new Date(item.fecha);
+      const isDateInRange = (!startDate || itemDate >= new Date(startDate)) &&
+                            (!endDate || itemDate <= new Date(endDate));
+      
+      return isTextMatch && isDateInRange;
+    });
     setFilteredData(filtered);
-  }, [filterText, filterColumn, data]);
+  }, [filterText, filterColumn, startDate, endDate, data]);
+
+  const handleDownloadExcel = async () => {
+    try {
+      console.log(filteredData);
+      const response = await axios.post('http://127.0.0.1:5000/sustentacion/obtener-excel-sustentaciones', filteredData, {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      // Crear un enlace para descargar el archivo
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'sustentaciones.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading Excel file:', error);
+    }
+  };
 
   const columns: TableColumn<any>[] = [
     {
@@ -70,25 +105,6 @@ const FilteredTablaReportes: React.FC = () => {
     }
   ];
 
-  const handleDownloadExcel = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:5000/grupos/sustentaciones-excel', {
-        responseType: 'blob', // Esto es importante para manejar el archivo correctamente
-      });
-
-      // Crear un enlace para descargar el archivo
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'sustentaciones.xlsx'); // Nombre del archivo
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error('Error downloading Excel file:', error);
-    }
-  };
-
   return (
     <div className="mt-5 flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
       <h1 className="font-medium text-gray-900 dark:text-gray-100">Filtrar Sustentaciones</h1>
@@ -114,9 +130,25 @@ const FilteredTablaReportes: React.FC = () => {
             className="p-2 border border-gray-300 rounded"
           />
         </div>
+        <div className="flex flex-row items-center space-x-2">
+          <input
+            type="date"
+            value={startDate}
+            onChange={e => setStartDate(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            placeholder="Fecha de inicio"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={e => setEndDate(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            placeholder="Fecha de fin"
+          />
+        </div>
         <button
           onClick={handleDownloadExcel}
-          className="mt-3 sm:mt-0 bg-blue-500 text-white p-2 rounded"
+          className="mt-3 sm:mt-0 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded"
         >
           Descargar en Excel
         </button>

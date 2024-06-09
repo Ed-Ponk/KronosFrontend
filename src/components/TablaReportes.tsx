@@ -54,25 +54,53 @@ const TablaReportes: React.FC = () => {
       setData(newData);
     };
 
-    const handleSave = async () => {
+    
+
+      const handleSave = async () => {
+        try {
+            console.log('Datos guardados:', data);
+
+            const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', data);
+
+            if (response.data.status) {
+                MySwal.fire({
+                    title: 'Éxito',
+                    text: 'Datos guardados y descargados correctamente',
+                    icon: 'success',
+                });
+            } else {
+                MySwal.fire({
+                    title: 'Error',
+                    text: response.data.message,
+                    icon: 'error',
+                });
+            }
+        } catch (error) {
+            MySwal.fire({
+                title: 'Error',
+                text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
+                icon: 'error',
+            });
+        }
+    };
+
+    const handleSaveExcel = async () => {
       try {
-          console.log('Datos guardados:', data);
+            const responseExcel = await axiosInstance.post('/sustentacion/obtener_excel_sustentaciones', data, {
+              responseType: 'blob',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              withCredentials: true, // Esto es importante para manejar el archivo correctamente
+            });
+            const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'sustentaciones.xlsx'); // El nombre del archivo que se descargará
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
 
-          const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', data);
-
-          if (response.data.status) {
-              MySwal.fire({
-                  title: 'Éxito',
-                  text: 'Datos guardados y descargados correctamente',
-                  icon: 'success',
-              });
-          } else {
-              MySwal.fire({
-                  title: 'Error',
-                  text: response.data.message,
-                  icon: 'error',
-              });
-          }
       } catch (error) {
           MySwal.fire({
               title: 'Error',
@@ -238,12 +266,19 @@ const TablaReportes: React.FC = () => {
             },
           }}
         />
-        <div className='flex justify-end'>
+        <div className='flex justify-end gap-2'>
+          <button
+            onClick={handleSaveExcel}
+            className="mt-3 w-1/6 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          >
+          Descargar
+          </button>
+
           <button
             onClick={handleSave}
-            className="mt-3 w-1/4 p-2 bg-green-500 text-white rounded hover:bg-green-700"
+            className="mt-3 w-1/6 p-2 bg-green-500 text-white rounded hover:bg-green-700"
           >
-            Guardar y Descargar
+            Guardar
           </button>
         </div>
       </div>
