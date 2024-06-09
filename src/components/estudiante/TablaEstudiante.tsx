@@ -10,8 +10,25 @@ import { Estudiante } from '../../types/Estudiante';
 import { DataFacultad } from '../../types/Facultad';
 import { DataEscuela } from '../../types/Escuela';
 import { DataCurso } from '../../types/Curso';
+import ModalEstudiante from './ModalEstudiante';
+import { EstudianteFormState } from '../../types/EstudianteFormState';
 
 const MySwal = withReactContent(Swal);
+
+const initialFormState: EstudianteFormState = {
+  codigo: '',
+  nombre_completo: '',
+  email: '',
+  telefono: '',
+  escuela_id: '',
+  semestre_id: '',
+  jurado1: '',
+  jurado2: '',
+  jurado3: '',
+  tesis: '',
+  grupo_id: '',
+  curso_id: '',
+};
 
 const TablaEstudiante: React.FC = () => {
   const [data, setData] = useState<Estudiante[]>([]);
@@ -25,6 +42,9 @@ const TablaEstudiante: React.FC = () => {
   const [escuelas, setEscuelas] = useState<DataEscuela[]>([]);
   const [cursos, setCursos] = useState<DataCurso[]>([]); 
   const [showTable, setShowTable] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentEstudiante, setCurrentEstudiante] = useState<EstudianteFormState>(initialFormState);
 
   const fetchFacultades = async () => {
     try {
@@ -32,8 +52,7 @@ const TablaEstudiante: React.FC = () => {
       if (response.data && response.data.data) {
         setFacultades(response.data.data);
       } else {
-        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
-        setFacultades([]); // Establecer a un arreglo vacío si no hay datos
+        setFacultades([]);
       }
     } catch (error) {
       console.error('Error fetching facultades:', error);
@@ -46,8 +65,7 @@ const TablaEstudiante: React.FC = () => {
       if (response.data && response.data.data) {
         setEscuelas(response.data.data);
       } else {
-        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
-        setEscuelas([]); // Establecer a un arreglo vacío si no hay datos
+        setEscuelas([]);
       }
     } catch (error) {
       console.error('Error fetching escuelas:', error);
@@ -60,8 +78,7 @@ const TablaEstudiante: React.FC = () => {
       if (response.data && response.data.data) {
         setCursos(response.data.data);
       } else {
-        // Manejo cuando no hay datos (puedes mostrar un mensaje o manejar como prefieras)
-        setCursos([]); // Establecer a un arreglo vacío si no hay datos
+        setCursos([]);
       }
     } catch (error) {
       console.error('Error fetching cursos:', error);
@@ -82,6 +99,7 @@ const TablaEstudiante: React.FC = () => {
         escuela_id: escuelaId,
         curso_id: cursoId,
       });
+      console.log(response.data)
 
       if (!response.data.status || !response.data) {
         MySwal.fire({
@@ -147,6 +165,36 @@ const TablaEstudiante: React.FC = () => {
 
   const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : escuelas;
 
+  const openAddModal = () => {
+    setCurrentEstudiante(initialFormState);
+    setIsEditing(false);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = async (codigo: string) => {
+    try {
+      const response = await axiosInstance.get(`/estudiantes/obtener-por-id/${codigo}`);
+      if (response.data && response.data.data) {
+        setCurrentEstudiante(response.data.data);
+        setIsEditing(true);
+        setIsModalOpen(true);
+      } else {
+        MySwal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los datos del estudiante',
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching student data:', error);
+      MySwal.fire({
+        title: 'Error',
+        text: 'Hubo un error al obtener los datos del estudiante',
+        icon: 'error',
+      });
+    }
+  };
+
   const paginationOptions = {
     rowsPerPageText: 'Filas por página',
     rangeSeparatorText: 'de',
@@ -209,11 +257,35 @@ const TablaEstudiante: React.FC = () => {
       sortable: true,
       wrap: true,
     },
+    {
+      name: 'Acciones',
+      cell: (row: Estudiante) => (
+        <div>
+          <button
+            className="text-blue-600 hover:text-blue-900 mr-2"
+            onClick={() => openEditModal(row.codigo)}
+          >
+            Editar
+          </button>
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    }
   ];
 
   return (
-    <div className='mt-5 flex flex-col w-11/12  mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de estudiantes</h1>
+    <div className='mt-5 flex flex-col w-11/12 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
+       <div className='mt-4 mb-2 flex justify-between'>
+        <h1 className='font-medium text-gray-900 dark:text-gray-200'>Lista de estudiantes</h1>
+        <button
+          className='rounded-md bg-green-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500'
+          onClick={openAddModal}
+        >
+          Agregar estudiante
+        </button>
+      </div>
       <hr />
       <div className="sm:col-span-3 mt-2 mb-2">
         <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Selecciona el semestres</label>
@@ -322,6 +394,13 @@ const TablaEstudiante: React.FC = () => {
           )}
         </>
       )}
+      <ModalEstudiante
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        initialData={currentEstudiante}
+        title={isEditing ? 'Editar Estudiante' : 'Agregar Estudiante'}
+        isEditing={isEditing}
+      />
     </div>
   );
 };

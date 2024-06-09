@@ -73,7 +73,7 @@ const TablaJurado: React.FC = () => {
       if (escuelaId) params.append('escuela_id', escuelaId.toString());
 
       if (escuelaId || (semestreId && escuelaId)) {
-        url = `http://127.0.0.1:5000/jurados/obtener-jurado-escula-semestre?${params.toString()}`;
+        url = `http://127.0.0.1:5000/jurados/obtener-jurado-escuela-semestre?${params.toString()}`;
       } else if (semestreId) {
         url = `http://127.0.0.1:5000/jurados/obtener-jurado-semestre?${params.toString()}`;
       }
@@ -154,7 +154,7 @@ const TablaJurado: React.FC = () => {
     openModal();
   };
 
-  const handleDelete = async (id: number) => {
+ /* const handleDelete = async (id: number) => {
     MySwal.fire({
       title: '¿Estás seguro?',
       text: "No podrás revertir esto!",
@@ -192,7 +192,7 @@ const TablaJurado: React.FC = () => {
       }
     });
     
-  };
+  };*/
 
   const paginationOptions = {
     rowsPerPageText: 'Filas por página',
@@ -259,12 +259,7 @@ const TablaJurado: React.FC = () => {
           >
             Editar
           </button>
-          <button
-            className="text-red-600 hover:text-red-900"
-            onClick={() => handleDelete(row.jurado_id)}
-          >
-            Eliminar
-          </button>
+         
         </div>
       ),
       ignoreRowClick: true,

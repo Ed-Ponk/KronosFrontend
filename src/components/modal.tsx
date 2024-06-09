@@ -21,7 +21,7 @@ const customStyles = {
     padding: '2rem',
     borderRadius: '0.5rem',
     width: '90%',
-    maxWidth: '500px',
+    maxWidth: '700px',
     zIndex: 50,
   },
   overlay: {
