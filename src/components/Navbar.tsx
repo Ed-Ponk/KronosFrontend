@@ -7,11 +7,16 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ toggleSideMenu }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const isDark = localStorage.getItem('darkMode') === 'true';
     setDarkMode(isDark);
     document.documentElement.classList.toggle('dark', isDark);
+
+    // Obtener el email del sessionStorage
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    setEmail(user.email || null);
   }, []);
 
   const toggleProfileMenu = () => {
@@ -27,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSideMenu }) => {
 
   return (
     <header className="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
-      <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+      <div className="container flex items-center justify-between h-full px-6 mx-auto text-customRed dark:text-purple-300">
         <button
           className="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
           onClick={toggleSideMenu}
@@ -46,6 +51,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSideMenu }) => {
             ></path>
           </svg>
         </button>
+
+        <div className="flex-1 flex justify-center">
+          {email && <span className="text-lg text-black-600 font-bold">{email}</span>}
+        </div>
 
         <ul className="flex items-center flex-shrink-0 space-x-6 ml-auto">
           {/* Theme toggler */}
@@ -83,8 +92,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSideMenu }) => {
             </button>
           </li>
 
-          
-
           {/* Profile menu */}
           <li className="relative">
             <button
@@ -94,27 +101,22 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSideMenu }) => {
               aria-haspopup="true"
             >
               <svg className='h-6 w-6 text-black dark:text-white' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
+                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
             {isProfileMenuOpen && (
               <ul
                 className="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700"
                 aria-label="submenu"
               >
-               
-                
                 <li className="flex">
                   <a
                     className="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                     href="#"
                     onClick={() => {
-                      // Borra la sesión
                       sessionStorage.clear();
                       localStorage.removeItem('currentPage'); // Borra currentPage de localStorage
-
-                      // Redirige a la página de inicio de sesión
                       window.location.href = '/login';
                     }}
                   >
