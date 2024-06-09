@@ -50,7 +50,7 @@ const CursoPage: React.FC = () => {
   }, []);
 
   return (
-    <div className='w-full h-full md:w-auto bg-gray-100'>
+    <div className='w-full h-full md:w-auto bg-gray-100 dark:bg-slate-900'>
       <div className='flex flex-col md:flex-row'>
         <div className='w-full md:w-1/2 p-4'>
           <FormCurso

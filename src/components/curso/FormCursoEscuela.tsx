@@ -121,6 +121,8 @@ const FormCursoEscuela: React.FC = () => {
           title: 'Éxito',
           text: 'Relación creada con éxito',
           icon: 'success',
+        }).then(() => {
+          window.location.reload();
         });
         // Opcional: resetear los estados después de guardar
         setSelectedFacultad(null);

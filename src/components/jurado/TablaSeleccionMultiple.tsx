@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 interface TablaSeleccionMultipleProps {
-  selectedCells: string[];
-  setSelectedCells: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedCells: { disponibles: string[]; ocupadas: string[]; mediasHoras: string[] };
+  setSelectedCells: React.Dispatch<React.SetStateAction<{ disponibles: string[]; ocupadas: string[]; mediasHoras: string[] }>>;
 }
 
 const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selectedCells, setSelectedCells }) => {
@@ -15,9 +15,13 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
   });
 
   const handleMouseDown = (rowIndex: number, colIndex: number) => {
-    setIsSelecting(true);
     const cellId = `${rowIndex}-${colIndex}`;
-    const newToggleMode = selectedCells.includes(cellId) ? 'remove' : 'add';
+    if (selectedCells.ocupadas.includes(cellId) || selectedCells.mediasHoras.includes(cellId)) {
+      return;
+    }
+
+    setIsSelecting(true);
+    const newToggleMode = selectedCells.disponibles.includes(cellId) ? 'remove' : 'add';
     setToggleMode(newToggleMode);
     toggleCellSelection(cellId, newToggleMode);
   };
@@ -30,28 +34,50 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
   const handleMouseMove = (rowIndex: number, colIndex: number) => {
     if (isSelecting) {
       const cellId = `${rowIndex}-${colIndex}`;
+      if (selectedCells.ocupadas.includes(cellId) || selectedCells.mediasHoras.includes(cellId)) {
+        return;
+      }
       toggleCellSelection(cellId, toggleMode);
     }
   };
 
   const toggleCellSelection = (cellId: string, mode: string | null) => {
-    if (mode === 'add') {
-      setSelectedCells((prevSelected) =>
-        prevSelected.includes(cellId) ? prevSelected : [...prevSelected, cellId]
-      );
-    } else if (mode === 'remove') {
-      setSelectedCells((prevSelected) =>
-        prevSelected.includes(cellId) ? prevSelected.filter((id) => id !== cellId) : prevSelected
-      );
-    }
+    setSelectedCells((prevSelected) => {
+      const newSelected = { ...prevSelected };
+      if (mode === 'add') {
+        newSelected.disponibles = newSelected.disponibles.includes(cellId) ? newSelected.disponibles : [...newSelected.disponibles, cellId];
+      } else if (mode === 'remove') {
+        newSelected.disponibles = newSelected.disponibles.filter((id) => id !== cellId);
+      }
+      return newSelected;
+    });
   };
 
-  const isCellSelected = (rowIndex: number, colIndex: number) => {
-    return selectedCells.includes(`${rowIndex}-${colIndex}`);
+  const getCellClass = (rowIndex: number, colIndex: number) => {
+    const cellId = `${rowIndex}-${colIndex}`;
+    if (selectedCells.ocupadas.includes(cellId)) {
+      return 'bg-red-500 text-white';
+    } else if (selectedCells.mediasHoras.includes(cellId)) {
+      return 'bg-yellow-500 text-white';
+    } else if (selectedCells.disponibles.includes(cellId)) {
+      return 'bg-green-500 text-white';
+    } else {
+      return 'bg-white ';
+    }
   };
 
   return (
     <div className="select-none">
+      <div className="mb-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 bg-green-500"></div>
+          <span>Disponible</span>
+          <div className="w-4 h-4 bg-red-500"></div>
+          <span>Ocupada</span>
+          <div className="w-4 h-4 bg-yellow-500"></div>
+          <span>Medias Horas</span>
+        </div>
+      </div>
       <table
         id="horario"
         className="w-full border-collapse mx-auto text-center mt-5"
@@ -77,9 +103,7 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
               {Array.from({ length: 6 }).map((_, colIndex) => (
                 <td
                   key={colIndex}
-                  className={`border p-2 dark:bg-gray-800 dark:text-white ${
-                    isCellSelected(rowIndex, colIndex + 1) ? 'bg-blue-500 text-white dark:bg-emerald-500' : ''
-                  }`}
+                  className={`border p-2 dark:bg-gray-800 dark:text-white ${getCellClass(rowIndex, colIndex + 1)}`}
                   onMouseDown={() => handleMouseDown(rowIndex, colIndex + 1)}
                   onMouseMove={() => handleMouseMove(rowIndex, colIndex + 1)}
                 ></td>

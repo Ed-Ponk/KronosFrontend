@@ -20,16 +20,17 @@ export default function ComboboxCustom({className, data_options, data, setData}:
     return (
         <div className={className}>
             <Combobox value={data} onChange={(value:string) => setData(value)}>
-                <div className="relative">
+                <div className="relative ">
                     <ComboboxInput
                         className={clsx(
-                            'w-full rounded-lg border-none bg-slate-700/5 py-1.5 pr-8 pl-3 text-sm/6 text-black',
+                            'w-full rounded-lg border-none  bg-slate-300/5 py-1.5 pr-8 pl-3 text-sm/6 text-black dark:text-white',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
                         )}
                         displayValue={(option:option) => option?.name}
                         onChange={(event) => setQuery(event.target.value)}
+                        autoComplete='off'
                     />
-                    <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+                    <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5 dark:text-white">
                         ↓
                     </ComboboxButton>
                 </div>

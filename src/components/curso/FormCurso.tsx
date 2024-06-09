@@ -46,9 +46,12 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
           title: 'Éxito',
           text: selectedCurso ? 'Curso actualizado con éxito' : 'Curso registrado con éxito',
           icon: 'success',
+        }).then(() => {
+          window.location.reload();
         });
         handleCancel();
         fetchData();
+
       } else {
         MySwal.fire({
           title: 'Error',
@@ -67,14 +70,14 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
   };
 
   return (
-    <div className="flex flex-col mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="block font-medium leading-6 text-gray-900 mb-4">
+    <div className="flex flex-col mx-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="block font-medium leading-6 mb-4">
         {selectedCurso ? 'Editar Curso' : 'Registrar Curso'}
       </h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className='flex space-x-4'>
           <div className='flex-1'>
-            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="nombre" className="block text-sm font-medium leading-6 ">
               Nombre del Curso
             </label>
             <div className="mt-2">
@@ -85,12 +88,12 @@ const FormCurso: React.FC<FormCursoProps> = ({ selectedCurso, setSelectedCurso, 
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5  p-1 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div className='flex-1'>
-            <label htmlFor="vigente" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="vigente" className="block text-sm font-medium leading-6">
               Vigente
             </label>
             <div className="mt-2 flex items-center">

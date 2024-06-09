@@ -117,14 +117,15 @@ const TablaCurso: React.FC<TablaCursoProps> = ({ setSelectedCurso, records, fetc
   ];
 
   return (
-    <div className='mt-5 flex flex-col mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
+    <div className='mt-5 flex flex-col mx-auto bg-white dark:bg-gray-800 dark:text-gray-200  rounded-xl shadow-md overflow-hidden p-5'>
       <h1 className='font-medium'>Lista de Cursos</h1>
-      <hr></hr>
-      <div className='mt-3 w-100 flex'>
+      <hr className="border-gray-300 dark:border-gray-700" />
+
+      <div className='mt-3 mb-3 w-100 flex'>
          <input
           name='buscar'
           onChange={handleFilter}
-          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 dark:bg-gray-700  shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
           placeholder='Ingresar nombre del curso'
           type='search'
         />

@@ -24,7 +24,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
     const [tipoSustentacion, setTipoSustentacion] = useState<Option>();
     const [fechaInicio, setFechaInicio] = useState('');
     const [fechaFin, setFechaFin] = useState('');
-    const [duracion, setDuracion] = useState(30);
+    const [duracion, setDuracion] = useState<Option>({ id: 30, name: '30' });
     const [compensasion, setCompensasion] = useState<Option>();
     const [escuela, setEscuela] = useState<Option>();
     const [curso, setCurso] = useState<Option>();
@@ -88,7 +88,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
             setFechaFin(selectedSemanaSustentacion.fecha_fin);
             setEscuela(selectedSemanaSustentacion.escuela_curso_id.escuela);
             setCurso(selectedSemanaSustentacion.escuela_curso_id.curso);
-            setDuracion(selectedSemanaSustentacion.duracion_sustentacion)
+            setDuracion({ id: selectedSemanaSustentacion.duracion_sustentacion, name: (selectedSemanaSustentacion.duracion_sustentacion + '') })
 
         } else {
             //Registrar
@@ -101,7 +101,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
             setFechaFin('');
             setEscuela(null);
             setCurso(null);
-            setDuracion(30);
+            setDuracion({ id: 30, name: '30' });
         }
 
     }, [selectedSemanaSustentacion]);
@@ -117,7 +117,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
         setFechaFin('');
         setEscuela(null);
         setCurso(null);
-        setDuracion(30);
+        setDuracion({ id: 30, name: '30' });
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -133,10 +133,10 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
                 url: endpoint,
                 data: {
                     rango_fecha_sustentacion_id: !typeSubmit ? idFechaSustentacion : undefined,
-                    tipo_sustentacion: tipoSustentacion?.id, 
+                    tipo_sustentacion: tipoSustentacion?.id,
                     fecha_inicio: fechaInicio,
                     fecha_fin: fechaFin,
-                    duracion_sustentacion: duracion,
+                    duracion_sustentacion: duracion.id,
                     compensacion_docente: compensasion?.id,
                     escuela_id: escuela?.id,
                     curso_id: curso?.id
@@ -172,6 +172,31 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
                 {selectedSemanaSustentacion ? 'Editar Fechas de Sustentación' : 'Registrar Fechas de Sustentación'}
             </h1>
             <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="flex space-x-4">
+                    <div className="flex-1">
+                        <label htmlFor="fecha_inicio" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Escuela
+                        </label>
+                        <div className="mt-2">
+                            <ComboboxCustom
+                                data_options={dataEscuela}
+                                data={escuela}
+                                setData={setEscuela} />
+                        </div>
+                    </div>
+
+                    <div className="flex-1">
+                        <label htmlFor="fecha_fin" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Curso
+                        </label>
+                        <div className="mt-2">
+                            <ComboboxCustom
+                                data_options={dataCurso}
+                                data={curso}
+                                setData={setCurso} />
+                        </div>
+                    </div>
+                </div>
 
                 <div className="flex space-x-4">
                     <div className="flex-1">
@@ -197,6 +222,19 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
                                 setData={setCompensasion} />
                         </div>
                     </div>
+
+                    <div className='flex-1'>
+                        <label htmlFor="nombre_semana_sustentacion" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Duración de la sustentación (min)
+                        </label>
+                        <div className="mt-2">
+                            <ComboboxCustom
+                                data_options={[{ id: 30, name: '30' }, { id: 60, name: '60' }]}
+                                data={duracion}
+                                setData={setDuracion} />
+                        </div>
+                    </div>
+
                 </div>
 
                 <div className="flex space-x-4">
@@ -236,54 +274,7 @@ export const FormSemanaSustentacion: React.FC<FormSemanaSustentacionProps> = ({ 
                     </div>
                 </div>
 
-                <div className="flex space-x-4">
-                    <div className="flex-1">
-                        <label htmlFor="fecha_inicio" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
-                            Escuela
-                        </label>
-                        <div className="mt-2">
-                            <ComboboxCustom
-                                data_options={dataEscuela}
-                                data={escuela}
-                                setData={setEscuela} />
-                        </div>
-                    </div>
 
-                    <div className="flex-1">
-                        <label htmlFor="fecha_fin" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
-                            Curso
-                        </label>
-                        <div className="mt-2">
-                            <ComboboxCustom
-                                data_options={dataCurso}
-                                data={curso}
-                                setData={setCurso} />
-                        </div>
-                    </div>
-                </div>
-
-                <div className='flex space-x-4'>
-                    <div className='flex-1'>
-                        <label htmlFor="nombre_semana_sustentacion" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
-                            Duración de la sustentación (min)
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="duracion"
-                                name="duracion"
-                                type="number"
-                                step={10}
-                                min={20}
-                                max={100}
-                                required
-                                value={duracion}
-                                onChange={(e) => setDuracion(Number.parseInt(e.target.value))}
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 dark:bg-gray-700 p-1 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-
-                </div>
 
                 <div className="flex justify-between items-center">
                     <button

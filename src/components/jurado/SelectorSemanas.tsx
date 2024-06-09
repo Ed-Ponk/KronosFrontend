@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 interface WeekSelectorProps {
   weeks: number[];
-  initialSelectedWeek: number;
+  initialSelectedWeek: number[];
   onSelectionChange: (selectedWeeks: number[]) => void;
 }
 
 const WeekSelector: React.FC<WeekSelectorProps> = ({ weeks, initialSelectedWeek, onSelectionChange }) => {
-  const [selectedWeeks, setSelectedWeeks] = useState<number[]>([initialSelectedWeek]);
+  const [selectedWeeks, setSelectedWeeks] = useState<number[]>(initialSelectedWeek);
 
   const toggleWeekSelection = (week: number) => {
     setSelectedWeeks(prev => {
@@ -20,6 +20,10 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({ weeks, initialSelectedWeek,
   useEffect(() => {
     onSelectionChange(selectedWeeks);
   }, []);
+
+  useEffect(() => {
+    setSelectedWeeks(initialSelectedWeek);
+  }, [initialSelectedWeek])
 
   return (
     <div className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
