@@ -38,6 +38,7 @@ const FormHomeWSP: React.FC = () => {
     const fetchFacultades = async () => {
       try {
         const response = await axiosInstance.get('/facultad');
+       
         if (response.data && response.data.data) {
           setFacultades(response.data.data);
         } else {
@@ -52,6 +53,7 @@ const FormHomeWSP: React.FC = () => {
     const fetchEscuelas = async () => {
       try {
         const response = await axiosInstance.get('/escuela');
+        console.log(response)
         if (response.data && response.data.data) {
           setEscuelas(response.data.data);
         } else {
@@ -87,11 +89,13 @@ const FormHomeWSP: React.FC = () => {
     const facultadId = Number(event.target.value);
     setSelectedFacultad(facultadId);
     setSelectedEscuela(null);
+    setSelectedCurso(null); // Reset the selected curso when changing facultad
   };
 
   const handleEscuelaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const escuelaId = Number(event.target.value);
     setSelectedEscuela(escuelaId);
+    setSelectedCurso(null); // Reset the selected curso when changing escuela
   };
 
   const handleCursoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -99,7 +103,11 @@ const FormHomeWSP: React.FC = () => {
     setSelectedCurso(cursoId);
   };
 
-  const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : escuelas;
+  // Filtra las escuelas según la facultad seleccionada
+  const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : [];
+
+  // Filtra los cursos según la escuela seleccionada
+  const filteredCursos = selectedEscuela ? cursos.filter(curso => curso.escuela_id === selectedEscuela) : [];
 
   const mostrarSemestre = () => {
     if (semestre) {
@@ -213,7 +221,7 @@ const FormHomeWSP: React.FC = () => {
                     className="mt-2 block w-full p-2 border border-gray-300 rounded-md text-gray-700"
                   >
                     <option value="">Selecciona un curso</option>
-                    {cursos.map(curso => (
+                    {filteredCursos.map(curso => (
                       <option key={curso.curso_id} value={curso.curso_id}>
                         {curso.curso}
                       </option>
@@ -225,10 +233,10 @@ const FormHomeWSP: React.FC = () => {
           )}
         </Disclosure>
         <button
-            type="submit"
-            className="flex justify-center float-end rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-          >
-           Notificar por Whatsapp
+          type="submit"
+          className="flex justify-center float-end rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+        >
+          Notificar por Whatsapp
         </button>
       </form>
     </div>

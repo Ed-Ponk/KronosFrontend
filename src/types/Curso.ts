@@ -2,6 +2,7 @@ export type DataCurso = {
   curso_id: number;
   curso: string;
   vigente: number;
+  escuela_id?: number;
 };
 
 export interface TablaCursoProps {

@@ -164,12 +164,15 @@ const TablaEstudiante: React.FC = () => {
   };
 
   const filteredEscuelas = selectedFacultad ? escuelas.filter(escuela => escuela.facultad_id === selectedFacultad) : escuelas;
+  const filteredCursos = selectedEscuela ? cursos.filter(curso => curso.escuela_id === selectedEscuela) : [];
+
 
   const openAddModal = () => {
     setCurrentEstudiante(initialFormState);
     setIsEditing(false);
     setIsModalOpen(true);
   };
+
 
   const openEditModal = async (codigo: string) => {
     try {
@@ -355,7 +358,7 @@ const TablaEstudiante: React.FC = () => {
                   className="mt-2 block w-full p-2 border border-gray-300 rounded-md"
                 >
                   <option value="">Selecciona un curso</option>
-                  {cursos.map(curso => (
+                  {filteredCursos.map(curso => (
                     <option key={curso.curso_id} value={curso.curso_id}>
                       {curso.curso}
                     </option>
