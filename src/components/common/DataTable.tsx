@@ -60,14 +60,14 @@ const TablaGenerica = <T extends object>({ records, columns, setSelectedRecord, 
   };
 
   return (
-    <div className='flex flex-col w-11/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5'>
-      <h1 className='font-medium'>Lista de Registros</h1>
-      <hr></hr>
-      <div className='mt-3 w-100 flex'>
+    <div className='flex flex-col w-11/12 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5'>
+      <h1 className='font-medium dark:text-gray-200'>Lista de Registros</h1>
+      <hr className="border-gray-300 dark:border-gray-700" />
+      <div className='my-3 w-100 flex'>
         <input
           name='buscar'
           onChange={handleFilter}
-          className='block px-1.5 w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+          className='block px-1.5 w-1/2 rounded-md dark:bg-gray-800 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
           placeholder={'Buscar por ' + (filterKey as string) } 
           type='search'
         />

@@ -23,7 +23,7 @@ export default function ComboboxCustom({className, data_options, data, setData}:
                 <div className="relative ">
                     <ComboboxInput
                         className={clsx(
-                            'w-full rounded-lg border-none  bg-slate-300/5 py-1.5 pr-8 pl-3 text-sm/6 text-black dark:text-white',
+                            'w-full rounded-lg border-none bg-slate-800/5 dark:bg-slate-300/5 py-1.5 pr-8 pl-3 text-sm/6 text-black dark:text-white',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
                         )}
                         displayValue={(option:option) => option?.name}

@@ -205,9 +205,9 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
     }, []);
 
     return (
-        <div className="flex flex-col w-11/12 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5">
+        <div className="flex flex-col w-11/12 mx-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl shadow-md overflow-hidden p-5">
             <div className='flex justify-between items-center mb-4'>
-                <h1 className="text-lg  font-medium leading-6 text-gray-900 ">
+                <h1 className="text-lg  font-medium leading-6  ">
                     {!typeSubmit ? 'Editar Grupo Horario' : 'Registrar Grupo Horario'}
                 </h1>
                 <span className="text-sm text-gray-500 dark:text-gray-600">{semestre? semestre.nombre_semestres : 'Sin Semestre'}</span>
@@ -215,28 +215,28 @@ const FormEscuela = ({ selectedData, setSelectedData, fetchData }: { selectedDat
 
             <form className="space-y-3 " onSubmit={handleSubmit}>
                 <div className='flex space-x-4'>
-                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
+                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6">
                         Grupo:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataLetras} data={selectedGrupo} setData={setSelectedGrupo} />
                 </div>
 
                 <div className='flex space-x-4'>
-                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
+                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6">
                         Escuela:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataEscuela} data={selectedEscuela} setData={setSelectedEscuela} />
                 </div>
 
                 <div className='flex space-x-4'>
-                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
+                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6">
                         Curso:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataCurso} data={selectedCurso} setData={setSelectedCurso} />
                 </div>
 
                 <div className='flex space-x-4'>
-                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6 text-gray-900">
+                    <label htmlFor="nombre" className="w-2/12 block text-sm place-self-center font-medium leading-6">
                         Docente:
                     </label>
                     <MyCombobox className='w-9/12' data_options={dataDocente} data={selectedDocente} setData={setSelectedDocente} />

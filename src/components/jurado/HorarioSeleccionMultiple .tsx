@@ -96,15 +96,17 @@ const HorarioSeleccionMultiple = () => {
     const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const horasSeleccionadas: { [key: number]: { hora_inicio: string; hora_fin: string }[] } = {};
 
-    selectedCells.disponibles.forEach((cellId) => {
-      const [rowIndex, colIndex] = cellId.split('-').map(Number);
-      const hour_1 = `${7 + rowIndex}:00`;
-      const hour_2 = `${8 + rowIndex}:00`;
-      if (!horasSeleccionadas[colIndex]) {
-        horasSeleccionadas[colIndex] = [];
-      }
-      horasSeleccionadas[colIndex].push({ hora_inicio: hour_1, hora_fin: hour_2 });
-    });
+    for (const key in selectedCells) {
+      selectedCells[key].forEach((cellId) => {
+        const [rowIndex, colIndex] = cellId.split('-').map(Number);
+        const hour_1 = `${7 + rowIndex}:00`;
+        const hour_2 = `${8 + rowIndex}:00`;
+        if (!horasSeleccionadas[colIndex]) {
+          horasSeleccionadas[colIndex] = [];
+        }
+        horasSeleccionadas[colIndex].push({ hora_inicio: hour_1, hora_fin: hour_2 });
+      });
+    }
 
     try {
       const response = await axiosInstance({
@@ -145,7 +147,7 @@ const HorarioSeleccionMultiple = () => {
   const [semanasFuturas, setSemanasFuturas] = useState<number[]>([]);
   const fetchSemanasFuturas = async () => {
     try {
-      const response = await axiosInstance.get('disponibilidadHoraria/semanas/disponibles');
+      const response = await axiosInstance.get('disponibilidadHoraria/semanas' + (!modeTest ? '/disponibles' : ''));
       if (response.data && response.data.data) {
         setSemanasFuturas(response.data.data);
       } else {
@@ -160,6 +162,13 @@ const HorarioSeleccionMultiple = () => {
     setSelectedWeeks(weeks);
   };
 
+  //Logica para activar el modo test para permitir registrar en semanas pasadas
+  const [modeTest, setModeTest] = useState(false)
+
+  useEffect(() => {
+    fetchSemanasFuturas()
+  }, [modeTest])
+
   return (
     <div className="flex flex-col mt-2 w-3/4 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-5 dark:bg-gray-800">
       <h1 className="font-medium text-gray-900 dark:text-gray-200">Registrar Disponibilidad Horaria</h1>
@@ -169,6 +178,16 @@ const HorarioSeleccionMultiple = () => {
           N° Semana:
         </label>
         <SelectSemana onChange={handleSemestreChange} />
+
+        <label htmlFor="vigente" className="block ml-36 mr-2 text-sm font-medium self-center leading-6 dark:text-gray-200">
+          Modo Test:
+        </label>
+        <input
+          type="checkbox"
+          checked={modeTest}
+          onChange={(e) => setModeTest(e.target.checked)}
+          className="rounded-md border-0 text-indigo-600 shadow-sm focus:ring-2 focus:ring-indigo-600" />
+
       </div>
       <TablaSeleccionMultiple selectedCells={selectedCells} setSelectedCells={setSelectedCells} />
 

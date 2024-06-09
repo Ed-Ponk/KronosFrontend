@@ -56,20 +56,20 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
   const getCellClass = (rowIndex: number, colIndex: number) => {
     const cellId = `${rowIndex}-${colIndex}`;
     if (selectedCells.ocupadas.includes(cellId)) {
-      return 'bg-red-500 text-white';
+      return 'bg-red-500 dark:bg-red-600 text-white';
     } else if (selectedCells.mediasHoras.includes(cellId)) {
-      return 'bg-yellow-500 text-white';
+      return 'bg-yellow-500 dark:bg-yellow-600 text-white';
     } else if (selectedCells.disponibles.includes(cellId)) {
-      return 'bg-green-500 text-white';
+      return 'bg-green-500 dark:bg-green-600 text-white';
     } else {
-      return 'bg-white ';
+      return 'bg-white dark:bg-gray-800';
     }
   };
 
   return (
     <div className="select-none">
       <div className="mb-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 dark:text-white">
           <div className="w-4 h-4 bg-green-500"></div>
           <span>Disponible</span>
           <div className="w-4 h-4 bg-red-500"></div>
@@ -103,7 +103,7 @@ const TablaSeleccionMultiple: React.FC<TablaSeleccionMultipleProps> = ({ selecte
               {Array.from({ length: 6 }).map((_, colIndex) => (
                 <td
                   key={colIndex}
-                  className={`border p-2 dark:bg-gray-800 dark:text-white ${getCellClass(rowIndex, colIndex + 1)}`}
+                  className={`border p-2 dark:text-white ${getCellClass(rowIndex, colIndex + 1)}`}
                   onMouseDown={() => handleMouseDown(rowIndex, colIndex + 1)}
                   onMouseMove={() => handleMouseMove(rowIndex, colIndex + 1)}
                 ></td>
