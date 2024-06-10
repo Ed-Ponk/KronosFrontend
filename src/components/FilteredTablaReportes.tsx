@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 
 const FilteredTablaReportes: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
@@ -15,6 +19,7 @@ const FilteredTablaReportes: React.FC = () => {
         try {
           const response = await axios.get('http://127.0.0.1:5000/grupos/sustentaciones');
           if (response.data.status) {
+            console.log(response.data.data)
           setData(response.data.data);
             setFilteredData(response.data.data);
           }
@@ -43,8 +48,17 @@ const FilteredTablaReportes: React.FC = () => {
   }, [filterText, filterColumn, startDate, endDate, data]);
 
   const handleDownloadExcel = async () => {
+    // Verificar si hay datos para descargar
+    if (filteredData.length === 0) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'No hay datos para descargar.',
+        icon: 'error',
+      });
+      return;
+    }
+  
     try {
-      console.log(filteredData);
       const response = await axios.post('http://127.0.0.1:5000/sustentacion/obtener-excel-sustentaciones', filteredData, {
         responseType: 'blob',
         headers: {
@@ -52,7 +66,7 @@ const FilteredTablaReportes: React.FC = () => {
         },
         withCredentials: true,
       });
-
+  
       // Crear un enlace para descargar el archivo
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');

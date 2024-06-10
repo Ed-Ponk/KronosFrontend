@@ -111,6 +111,13 @@ const FormHomeWSP: React.FC = () => {
       setPhoneNumbers([...phoneNumbers, { number: formattedNumber, type: newPhoneType }]);
       setNewPhoneNumber('');
       setNewPhoneType('');
+    }else {
+      // Mostrar un mensaje de error si el tipo de teléfono no está seleccionado
+      MySwal.fire({
+        title: 'Error',
+        text: 'Por favor, selecciona un tipo de persona antes de agregarlo.',
+        icon: 'error',
+      });
     }
   };
 

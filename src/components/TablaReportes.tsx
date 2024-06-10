@@ -9,280 +9,344 @@ import { useData } from '../contexts/DataContextProps '; // Importa el hook useD
 const MySwal = withReactContent(Swal);
 
 const TablaReportes: React.FC = () => {
-    const { asignaciones } = useData(); // Obtiene los datos de asignaciones del contexto
-    const [data, setData] = useState<any[]>(asignaciones);
-    const [dataJurados, setDataJurados] = useState<any[]>([]);
-  
-    useEffect(() => {
-      const fetchJurados = async () => {
-        try {
-          const response = await axiosInstance.get('jurados');
-          const juradosData = response.data.data.map((item: any) => ({
-            id: item.jurado_id,
-            name: item.nombre_completo
-          }));
-          setDataJurados(juradosData);
-        } catch (error) {
-          console.error('Error fetching jurado data:', error);
-        }
-      };
-  
-      fetchJurados();
-    }, []);
-  
-    useEffect(() => {
-      
-      setData(asignaciones);
-      console.log(asignaciones);
-    }, [asignaciones]);
-  
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {
-      const newData = [...data];
-      newData[rowIndex][column] = e.target.value;
-      setData(newData);
-    };
-  
-    const handleJuradosChange = (selectedOption: any, rowIndex: number, juradoIndex: number) => {
-      const newData = [...data];
-      const jurados = [...newData[rowIndex].jurados_asignados];
-      if (jurados[juradoIndex]) {
-        jurados[juradoIndex].nombre = selectedOption.name;
-      } else {
-        jurados[juradoIndex] = { nombre: selectedOption.name, semestre_jurado_id: selectedOption.id };
-      }
-      newData[rowIndex].jurados_asignados = jurados;
-      setData(newData);
-    };
+  const { asignaciones } = useData(); // Obtiene los datos de asignaciones del contexto
+  const [data, setData] = useState<any[]>(asignaciones);
+  const [filteredData, setFilteredData] = useState<any[]>(asignaciones);
+  const [dataJurados, setDataJurados] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-    
-
-      const handleSave = async () => {
-        try {
-            console.log('Datos guardados:', data);
-
-            const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', data);
-
-            if (response.data.status) {
-                MySwal.fire({
-                    title: 'Éxito',
-                    text: 'Datos guardados y descargados correctamente',
-                    icon: 'success',
-                });
-            } else {
-                MySwal.fire({
-                    title: 'Error',
-                    text: response.data.message,
-                    icon: 'error',
-                });
-            }
-        } catch (error) {
-            MySwal.fire({
-                title: 'Error',
-                text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
-                icon: 'error',
-            });
-        }
-    };
-
-    const handleSaveExcel = async () => {
+  useEffect(() => {
+    const fetchJurados = async () => {
       try {
-            const responseExcel = await axiosInstance.post('/sustentacion/obtener_excel_sustentaciones', data, {
-              responseType: 'blob',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              withCredentials: true, // Esto es importante para manejar el archivo correctamente
-            });
-            const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'sustentaciones.xlsx'); // El nombre del archivo que se descargará
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-
+        const response = await axiosInstance.get('jurados');
+        const juradosData = response.data.data.map((item: any) => ({
+          id: item.jurado_id,
+          name: item.nombre_completo,
+        }));
+        setDataJurados(juradosData);
       } catch (error) {
-          MySwal.fire({
-              title: 'Error',
-              text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
-              icon: 'error',
-          });
+        console.error('Error fetching jurado data:', error);
       }
-  };
-  
-
-  
-    const columns: TableColumn<any>[] = [
-      {
-        name: 'Alumno',
-        selector: row => row.alumno_nombre,
-        cell: (row, rowIndex) => (
-          <input
-            type="text"
-            value={row.alumno_nombre}
-            onChange={(e) => handleInputChange(e, rowIndex, 'alumno_nombre')}
-            className="w-full p-1 border border-gray-300 rounded"
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      },
-      {
-        name: 'Fecha',
-        selector: row => row.horario.split(' ')[0] || '',
-        cell: (row, rowIndex) => (
-          <input
-            type="date"
-            value={row.horario.split(' ')[0] || ''}
-            onChange={(e) => {
-              const newData = [...data];
-              newData[rowIndex].horario = `${e.target.value} ${row.horario.split(' ')[1] || ''}`;
-              setData(newData);
-            }}
-            className="w-full p-1 border border-gray-300 rounded"
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      },
-      {
-        name: 'Hora',
-        selector: row => row.horario.split(' ')[1] || '',
-        cell: (row, rowIndex) => (
-          <input
-            type="time"
-            value={row.horario.split(' ')[1] || ''}
-            onChange={(e) => {
-              const newData = [...data];
-              newData[rowIndex].horario = `${row.horario.split(' ')[0] || ''} ${e.target.value}`;
-              setData(newData);
-            }}
-            className="w-full p-1 border border-gray-300 rounded"
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      },
-      {
-        name: 'Jurado 1',
-        selector: row => row.jurados_asignados[0]?.nombre || '',
-        cell: (row, rowIndex) => (
-          <ComboboxCustom2
-          className="w-full"
-            data_options={dataJurados}
-            data={{ id: row.jurados_asignados[0]?.semestre_jurado_id, name: row.jurados_asignados[0]?.nombre }}
-            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 0)}
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      },
-      {
-        name: 'Jurado 2',
-        selector: row => row.jurados_asignados[1]?.nombre || '',
-        cell: (row, rowIndex) => (
-          <ComboboxCustom2
-          className="w-full"
-            data_options={dataJurados}
-            data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
-            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      },
-      {
-        name: 'Asesor',
-        selector: row => row.jurados_asignados[2]?.nombre || row.asesor,
-        cell: (row, rowIndex) => (
-          <ComboboxCustom2
-          className="w-full"
-            data_options={dataJurados}
-            data={{ id: row.jurados_asignados[2]?.semestre_jurado_id, name: row.jurados_asignados[2]?.nombre || row.asesor }}
-            setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 2)}
-          />
-        ),
-        sortable: true,
-        wrap: true,
-      }
-    ];
-  
-    const paginationOptions = {
-      rowsPerPageText: 'Filas por página',
-      rangeSeparatorText: 'de',
-      selectAllRowsItem: true,
-      selectAllRowsItemText: 'Todos',
     };
-  
-    return (
-      <div className="mt-5 flex flex-col w-4/5 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
-        <h1 className="font-medium text-gray-900 dark:text-gray-100">Lista de Sustentaciones</h1>
-        <hr />
-        <DataTable
-          className="text-gray-900 dark:text-gray-100"
-          columns={columns}
-          data={data}
-          fixedHeader
-          pagination
-          paginationComponentOptions={paginationOptions}
-          noDataComponent={<p className="text-gray-900 dark:text-gray-100">No hay registros para mostrar</p>}
-          responsive
-          fixedHeaderScrollHeight="400px"
-          customStyles={{
-            headCells: {
-              style: {
-                backgroundColor: 'var(--color-bg-head)',
-                color: 'var(--color-text-head)',
-              },
-            },
-            cells: {
-              style: {
-                backgroundColor: 'var(--color-bg-cell)',
-                color: 'var(--color-text-cell)',
-              },
-            },
-            rows: {
-              style: {
-                '&:nth-child(even)': {
-                  backgroundColor: 'var(--color-bg-row)',
-                },
-              },
-            },
-            pagination: {
-              style: {
-                backgroundColor: 'var(--color-bg-pagination)',
-                color: 'var(--color-text-pagination)',
-              },
-              pageButtonsStyle: {
-                fill: 'var(--color-text-pagination)', // Cambia el color de las flechas de navegación
-                '&:hover:not(:disabled)': {
-                  backgroundColor: 'var(--color-bg-pagination-hover)',
-                },
-                '&:focus': {
-                  outline: 'none',
-                  backgroundColor: 'var(--color-bg-pagination-hover)',
-                },
-              },
-            },
-          }}
-        />
-        <div className='flex justify-end gap-2'>
-          <button
-            onClick={handleSaveExcel}
-            className="mt-3 w-1/6 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-          >
-          Descargar
-          </button>
 
-          <button
-            onClick={handleSave}
-            className="mt-3 w-1/6 p-2 bg-green-500 text-white rounded hover:bg-green-700"
-          >
-            Guardar
-          </button>
-        </div>
-      </div>
-    );
+    fetchJurados();
+  }, []);
+
+  useEffect(() => {
+    setData(asignaciones);
+    setFilteredData(asignaciones);
+  }, [asignaciones]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [startDate, endDate, searchTerm]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {
+    const newData = [...data];
+    newData[rowIndex][column] = e.target.value;
+    setData(newData);
   };
+
+  const handleJuradosChange = (selectedOption: any, rowIndex: number, juradoIndex: number) => {
+    const newData = [...data];
+    const jurados = [...newData[rowIndex].jurados_asignados];
+    if (jurados[juradoIndex]) {
+      jurados[juradoIndex].nombre = selectedOption.name;
+    } else {
+      jurados[juradoIndex] = { nombre: selectedOption.name, semestre_jurado_id: selectedOption.id };
+    }
+    newData[rowIndex].jurados_asignados = jurados;
+    setData(newData);
+  };
+
+  const handleSave = async () => {
+    try {
+      console.log('Datos guardados:', data);
+
+      const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', filteredData);
+
+      if (response.data.status) {
+        MySwal.fire({
+          title: 'Éxito',
+          text: 'Datos guardados correctamente',
+          icon: 'success',
+        });
+
+        location.reload();
+      } else {
+        MySwal.fire({
+          title: 'Error',
+          text: response.data.message,
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
+    }
+  };
+
+  const handleSaveExcel = async () => {
+    // Verificar si hay datos para descargar
+    if (filteredData.length === 0) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'No hay datos para descargar.',
+        icon: 'error',
+      });
+      return;
+    }
   
-  export default TablaReportes;
+    try {
+      const responseExcel = await axiosInstance.post('/disponibilidadHoraria/generate_excel', filteredData, {
+        responseType: 'blob',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true, // Esto es importante para manejar el archivo correctamente
+      });
+      const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'sustentaciones.xlsx'); // El nombre del archivo que se descargará
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Hubo un error al guardar los datos. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
+    }
+  };
+
+  const applyFilters = () => {
+    let filtered = data;
+
+    if (startDate && endDate) {
+      filtered = filtered.filter((item) => {
+        const date = new Date(item.horario.split(' ')[0]);
+        return date >= new Date(startDate) && date <= new Date(endDate);
+      });
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter((item) =>
+        item.alumno_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.jurados_asignados.some((jurado) =>
+          jurado.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+
+    setFilteredData(filtered);
+  };
+
+  const columns: TableColumn<any>[] = [
+    {
+      name: 'Alumno',
+      selector: (row) => row.alumno_nombre,
+      cell: (row, rowIndex) => (
+        <input
+          type="text"
+          value={row.alumno_nombre}
+          onChange={(e) => handleInputChange(e, rowIndex, 'alumno_nombre')}
+          className="w-full p-1 border border-gray-300 rounded"
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: 'Fecha',
+      selector: (row) => row.horario.split(' ')[0] || '',
+      cell: (row, rowIndex) => (
+        <input
+          type="date"
+          value={row.horario.split(' ')[0] || ''}
+          onChange={(e) => {
+            const newData = [...data];
+            newData[rowIndex].horario = `${e.target.value} ${row.horario.split(' ')[1] || ''}`;
+            setData(newData);
+          }}
+          className="w-full p-1 border border-gray-300 rounded"
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: 'Hora',
+      selector: (row) => row.horario.split(' ')[1] || '',
+      cell: (row, rowIndex) => (
+        <input
+          type="time"
+          value={row.horario.split(' ')[1] || ''}
+          onChange={(e) => {
+            const newData = [...data];
+            newData[rowIndex].horario = `${row.horario.split(' ')[0] || ''} ${e.target.value}`;
+            setData(newData);
+          }}
+          className="w-full p-1 border border-gray-300 rounded"
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: 'Jurado 1',
+      selector: (row) => row.jurados_asignados[1]?.nombre || '',
+      cell: (row, rowIndex) => (
+        <ComboboxCustom2
+          className="w-full"
+          data_options={dataJurados}
+          data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: 'Jurado 2',
+      selector: (row) => row.jurados_asignados[2]?.nombre || '',
+      cell: (row, rowIndex) => (
+        <ComboboxCustom2
+          className="w-full"
+          data_options={dataJurados}
+          data={{ id: row.jurados_asignados[2]?.semestre_jurado_id, name: row.jurados_asignados[2]?.nombre }}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 2)}
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: 'Asesor',
+      selector: (row) => row.jurados_asignados[0]?.nombre || row.asesor,
+      cell: (row, rowIndex) => (
+        <ComboboxCustom2
+          className="w-full"
+          data_options={dataJurados}
+          data={{ id: row.jurados_asignados[0]?.semestre_jurado_id, name: row.jurados_asignados[0]?.nombre || row.asesor }}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 0)}
+        />
+      ),
+      sortable: true,
+      wrap: true,
+    },
+  ];
+
+  const paginationOptions = {
+    rowsPerPageText: 'Filas por página',
+    rangeSeparatorText: 'de',
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'Todos',
+  };
+
+  return (
+    <div className="mt-5 flex flex-col w-11/12 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
+      <h1 className="font-medium text-gray-900 dark:text-gray-100">Lista de Sustentaciones</h1>
+      
+      <hr />
+      <div className="flex justify-between gap-2 mb-2 mt-2">
+      <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar por alumno o jurado"
+          className="p-2 w-1/3 border border-gray-300 rounded"
+        />
+
+
+       <div className='flex gap-2'>
+       <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+       </div>
+       
+      </div>
+      <hr />
+      <DataTable
+        className="text-gray-900 dark:text-gray-100"
+        columns={columns}
+        data={filteredData}
+        fixedHeader
+        pagination
+        paginationComponentOptions={paginationOptions}
+        noDataComponent={<p className="text-gray-900 dark:text-gray-100">No hay registros para mostrar</p>}
+        responsive
+        fixedHeaderScrollHeight="500px"
+        customStyles={{
+          headCells: {
+            style: {
+              backgroundColor: 'var(--color-bg-head)',
+              color: 'var(--color-text-head)',
+            },
+          },
+          cells: {
+            style: {
+              backgroundColor: 'var(--color-bg-cell)',
+              color: 'var(--color-text-cell)',
+            },
+          },
+          rows: {
+            style: {
+              '&:nth-child(even)': {
+                backgroundColor: 'var(--color-bg-row)',
+              },
+            },
+          },
+          pagination: {
+            style: {
+              backgroundColor: 'var(--color-bg-pagination)',
+              color: 'var(--color-text-pagination)',
+            },
+            pageButtonsStyle: {
+              fill: 'var(--color-text-pagination)', // Cambia el color de las flechas de navegación
+              '&:hover:not(:disabled)': {
+                backgroundColor: 'var(--color-bg-pagination-hover)',
+              },
+              '&:focus': {
+                outline: 'none',
+                backgroundColor: 'var(--color-bg-pagination-hover)',
+              },
+            },
+          },
+        }}
+      />
+      <div className='flex justify-end gap-2'>
+        <button
+          onClick={handleSaveExcel}
+          className="mt-3 w-1/6 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        >
+          Descargar
+        </button>
+
+        <button
+          onClick={handleSave}
+          className="mt-3 w-1/6 p-2 bg-green-500 text-white rounded hover:bg-green-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default TablaReportes;

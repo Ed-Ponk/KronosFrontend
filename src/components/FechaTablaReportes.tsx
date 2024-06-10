@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 
 const FechaTablaReportes: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
@@ -49,6 +53,16 @@ const FechaTablaReportes: React.FC = () => {
   }, [filterText, startDate, endDate, data]);
 
   const downloadExcel = async () => {
+
+    if (filteredData.length === 0) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'No hay datos para descargar.',
+        icon: 'error',
+      });
+      return;
+    }
+
     try {
       const response = await axios.post(`http://127.0.0.1:5000/sustentacion/obtener-excel-sustentaciones`, filteredData, {
         responseType: 'blob',

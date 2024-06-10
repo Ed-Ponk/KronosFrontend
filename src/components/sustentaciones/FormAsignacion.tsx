@@ -162,7 +162,7 @@ const FormAsignacion: React.FC = () => {
       });
     
       if (response.data) {
-        
+        console.log(response.data)
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
