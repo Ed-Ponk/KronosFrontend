@@ -63,7 +63,6 @@ const TablaReportes: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      console.log('Datos guardados:', data);
 
       const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', filteredData);
 
@@ -157,7 +156,7 @@ const TablaReportes: React.FC = () => {
           type="text"
           value={row.alumno_nombre}
           onChange={(e) => handleInputChange(e, rowIndex, 'alumno_nombre')}
-          className="w-full p-1 border border-gray-300 rounded"
+          className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
       sortable: true,
@@ -175,7 +174,7 @@ const TablaReportes: React.FC = () => {
             newData[rowIndex].horario = `${e.target.value} ${row.horario.split(' ')[1] || ''}`;
             setData(newData);
           }}
-          className="w-full p-1 border border-gray-300 rounded"
+          className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
       sortable: true,
@@ -193,7 +192,7 @@ const TablaReportes: React.FC = () => {
             newData[rowIndex].horario = `${row.horario.split(' ')[0] || ''} ${e.target.value}`;
             setData(newData);
           }}
-          className="w-full p-1 border border-gray-300 rounded"
+          className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
       sortable: true,
@@ -204,7 +203,7 @@ const TablaReportes: React.FC = () => {
       selector: (row) => row.jurados_asignados[1]?.nombre || '',
       cell: (row, rowIndex) => (
         <ComboboxCustom2
-          className="w-full"
+          className="w-full "
           data_options={dataJurados}
           data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}

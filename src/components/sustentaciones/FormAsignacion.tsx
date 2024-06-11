@@ -144,25 +144,27 @@ const FormAsignacion: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const endpoint = "/sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
+    const endpoint = "sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
 
     try {
-  
+      let data = {
+        escuela_id: selectedEscuela,
+        curso_id: selectedCurso,
+        tipo_sustentacion: tipoSustentacion.toUpperCase(),
+        rango_fechas: rangoFechas,
+        duracion_sustentacion: duracion,
+        compensacion_docente: compensacion.toUpperCase()
+      }
+      console.log('datos enviados', data)
+
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
-        data: {
-          escuela_id: selectedEscuela,
-          curso_id: selectedCurso,
-          tipo_sustentacion: tipoSustentacion,
-          rango_fechas: rangoFechas,
-          duracion_sustentacion: duracion,
-          compensacion_docente: compensacion
-        },
+        data: data,
       });
     
       if (response.data) {
-        console.log(response.data)
+        console.log('respos', response.data.data)
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.fire({
           title: 'Éxito',
