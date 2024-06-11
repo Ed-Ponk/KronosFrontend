@@ -84,20 +84,20 @@ const TablaReporteAdmin: React.FC = () => {
   };
 
   const columns: TableColumn<DataItem>[] = [
-    { name: 'Semestre', selector: row => row.Semestre, sortable: true, width: '150px' },
-    { name: 'Tipo de Sustentación', selector: row => row.TipoSustentacion, sortable: true, width: '150px' },
-    { name: 'Curso', selector: row => row.Curso, sortable: true, width: '200px' },
-    { name: 'Grupo Horario', selector: row => row.Grupo_Horario, sortable: true, width: '150px' },
-    { name: 'Código Universitario', selector: row => row.Codigo_Universitario, sortable: true, width: '200px' },
-    { name: 'Apellidos y Nombres', selector: row => row.Apellidos_y_Nombres, sortable: true, width: '200px' },
-    { name: 'Email', selector: row => row.Email, sortable: true, width: '200px' },
-    { name: 'Teléfono', selector: row => row.Telefono, sortable: true, width: '150px' },
-    { name: 'Jurado 1', selector: row => row.Jurado_1, sortable: true, width: '200px' },
-    { name: 'Jurado 2', selector: row => row.Jurado_2, sortable: true, width: '200px' },
-    { name: 'Asesor', selector: row => row.Asesor, sortable: true, width: '200px' },
-    { name: 'Fecha', selector: row => row.Fecha, sortable: true, width: '150px' },
-    { name: 'Hora Inicio', selector: row => row.hora_inicio, sortable: true, width: '150px' },
-    { name: 'Título', selector: row => row.Titulo, sortable: true, width: '250px' }
+    { name: 'Semestre', selector: row => row.Semestre, sortable: true,wrap: true, width: '70px' },
+    { name: 'Tipo de Sustentación', selector: row => row.TipoSustentacion, sortable: true,wrap: true },
+    { name: 'Curso', selector: row => row.Curso, sortable: true,wrap: true },
+    { name: 'Grupo Horario', selector: row => row.Grupo_Horario, sortable: true ,wrap: true},
+    { name: 'Código Universitario', selector: row => row.Codigo_Universitario, sortable: true,wrap: true },
+    { name: 'Apellidos y Nombres', selector: row => row.Apellidos_y_Nombres, sortable: true ,wrap: true},
+    { name: 'Email', selector: row => row.Email, sortable: true, wrap: true},
+    { name: 'Teléfono', selector: row => row.Telefono, sortable: true,wrap: true },
+    { name: 'Jurado 1', selector: row => row.Jurado_1, sortable: true ,wrap: true},
+    { name: 'Jurado 2', selector: row => row.Jurado_2, sortable: true ,wrap: true},
+    { name: 'Asesor', selector: row => row.Asesor, sortable: true,wrap: true },
+    { name: 'Fecha', selector: row => row.Fecha, sortable: true ,wrap: true},
+    { name: 'Hora Inicio', selector: row => row.hora_inicio, sortable: true,wrap: true},
+    { name: 'Título', selector: row => row.Titulo, sortable: true ,wrap: true}
   ];
 
   const paginationOptions = {
@@ -108,7 +108,7 @@ const TablaReporteAdmin: React.FC = () => {
   };
 
   return (
-    <div className="mt-5 mb-5 flex flex-col w-1/2 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
+    <div className="mt-5 flex flex-col w-3/4 mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-5">
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-4">
           <div>
@@ -136,18 +136,19 @@ const TablaReporteAdmin: React.FC = () => {
       ) : loading ? (
         <p className="text-gray-900 dark:text-gray-200">Cargando...</p>
       ) : (
-        <div className="overflow-x-auto">
-          <DataTable
-            className="text-gray-900 dark:text-gray-200"
-            columns={columns}
-            data={filteredData}
-            fixedHeader
-            pagination
-            paginationComponentOptions={paginationOptions}
-            noDataComponent={<p className="text-gray-900 dark:text-gray-200">No hay registros para mostrar</p>}
-            responsive
-            fixedHeaderScrollHeight="400px"
-          />
+        <div className="overflow-auto">
+          <div className="min-w-full">
+            <DataTable
+              className="text-gray-900 dark:text-gray-200"
+              columns={columns}
+              data={filteredData}
+              fixedHeader
+              pagination
+              paginationComponentOptions={paginationOptions}
+              noDataComponent={<p className="text-gray-900 dark:text-gray-200">No hay registros para mostrar</p>}
+              responsive
+            />
+          </div>
         </div>
       )}
     </div>
