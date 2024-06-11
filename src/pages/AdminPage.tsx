@@ -13,6 +13,8 @@ import HomePage from './HomePage';
 
 import { useUser } from '../contexts/UserContext';
 import JuradoComponent from '../components/jurado/JuradoComponent';
+import PageReportAdmin from '../components/PageReportAdmin';
+import AdminReports from './AdminReports';
 
 
 const AdminPage: React.FC = () => {
@@ -58,7 +60,8 @@ const AdminPage: React.FC = () => {
         return <GrupoPage />;
       case 'Semanas':
         return <SemanasSustentacionPage />
-
+      case 'Reportes':
+          return <AdminReports/>
       default:
         return <UsuariosPage />;
     }
