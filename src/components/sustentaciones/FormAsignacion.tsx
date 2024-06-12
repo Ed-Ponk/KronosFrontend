@@ -103,6 +103,16 @@ const FormAsignacion: React.FC = () => {
           setRangoFechas(fechas);
           setDuracion(response.data.data.duracion_sustentacion);
           setCompensacion(response.data.data.compensacion_docente);
+
+          const datos = {
+            escuela_id: selectedEscuela,
+            curso_id: selectedCurso,
+            tipo_sustentacion: response.data.data.tipo_sustentacion,
+            rango_fechas: fechas,
+            duracion_sustentacion: response.data.data.duracion_sustentacion,
+            compensacion_docente: response.data.data.compensacion_docente
+          };
+          localStorage.setItem('datosSustentacion', JSON.stringify(datos));
         } else {
           MySwal.fire({
             title: 'Error',
@@ -145,6 +155,8 @@ const FormAsignacion: React.FC = () => {
     event.preventDefault();
 
     const endpoint = "sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
+
+    
 
     try {
       let data = {

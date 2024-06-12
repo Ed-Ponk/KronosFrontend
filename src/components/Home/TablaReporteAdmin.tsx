@@ -129,7 +129,7 @@ const TablaReporteAdmin: React.FC = () => {
             </select>
           </div>
         </div>
-        <button onClick={exportToExcel} className="bg-blue-500 text-white px-4 py-2 rounded">Exportar a Excel</button>
+        <button onClick={exportToExcel} className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">Exportar a Excel</button>
       </div>
       {error ? (
         <p className="text-red-500">{error}</p>

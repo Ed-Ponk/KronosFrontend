@@ -4,12 +4,12 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axiosInstance from '../api/axiosConfig';
 import ComboboxCustom2 from './common/Combobox2';
-import { useData } from '../contexts/DataContextProps '; // Importa el hook useData
+import { useData } from '../contexts/DataContextProps ';
 
 const MySwal = withReactContent(Swal);
 
 const TablaReportes: React.FC = () => {
-  const { asignaciones } = useData(); // Obtiene los datos de asignaciones del contexto
+  const { asignaciones } = useData();
   const [data, setData] = useState<any[]>(asignaciones);
   const [filteredData, setFilteredData] = useState<any[]>(asignaciones);
   const [dataJurados, setDataJurados] = useState<any[]>([]);
@@ -63,7 +63,6 @@ const TablaReportes: React.FC = () => {
 
   const handleSave = async () => {
     try {
-
       const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', filteredData);
 
       if (response.data.status) {
@@ -91,7 +90,6 @@ const TablaReportes: React.FC = () => {
   };
 
   const handleSaveExcel = async () => {
-    // Verificar si hay datos para descargar
     if (filteredData.length === 0) {
       MySwal.fire({
         title: 'Error',
@@ -100,19 +98,19 @@ const TablaReportes: React.FC = () => {
       });
       return;
     }
-  
+
     try {
       const responseExcel = await axiosInstance.post('/disponibilidadHoraria/generate_excel', filteredData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'application/json',
         },
-        withCredentials: true, // Esto es importante para manejar el archivo correctamente
+        withCredentials: true,
       });
       const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'sustentaciones.xlsx'); // El nombre del archivo que se descargará
+      link.setAttribute('download', 'sustentaciones.xlsx');
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -147,6 +145,43 @@ const TablaReportes: React.FC = () => {
     setFilteredData(filtered);
   };
 
+  const handleViewDisponibles = async () => {
+    try {
+      // Obtener los datos almacenados en localStorage
+      const storedData = JSON.parse(localStorage.getItem('datosSustentacion') || '{}');
+  
+      // Verificar que los datos existan en localStorage
+      if (!storedData || Object.keys(storedData).length === 0) {
+        MySwal.fire({
+          title: 'Error',
+          text: 'No hay datos guardados para enviar.',
+          icon: 'error',
+        });
+        return;
+      }
+  
+     // Realizar la solicitud POST con los datos obtenidos de localStorage
+     const response = await axiosInstance.post('/sustentacion/obtener_disponibilidad', storedData);
+
+     // Obtener los datos de disponibilidad de la respuesta
+     const disponiblesData = response.data;
+     console.log(disponiblesData);
+ 
+     // Guardar los datos de disponibilidad en localStorage
+     localStorage.setItem('disponiblesData', JSON.stringify(disponiblesData));
+ 
+     // Abrir la nueva página en una pestaña nueva
+     const url = `/nueva-pagina`;
+     window.open(url, '_blank');
+    } catch (error) {
+      console.error('Error fetching disponibles data:', error);
+      MySwal.fire({
+        title: 'Error',
+        text: 'Hubo un error al obtener la disponibilidad. Inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
+    }
+  };
   const columns: TableColumn<any>[] = [
     {
       name: 'Alumno',
@@ -203,7 +238,7 @@ const TablaReportes: React.FC = () => {
       selector: (row) => row.jurados_asignados[1]?.nombre || '',
       cell: (row, rowIndex) => (
         <ComboboxCustom2
-          className="w-full "
+          className="w-full"
           data_options={dataJurados}
           data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
@@ -251,34 +286,33 @@ const TablaReportes: React.FC = () => {
 
   return (
     <div className="mt-5 flex flex-col w-11/12 mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden p-5">
-      <h1 className="font-medium text-gray-900 dark:text-gray-100">Lista de Sustentaciones</h1>
-      
+      <div className='flex mb-2 justify-between'>
+        <h1 className="font-medium text-gray-900 dark:text-gray-100">Lista de Sustentaciones</h1>
+        <button onClick={handleViewDisponibles} className="bg-blue-500 text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">Ver Disponibles</button>
+      </div>
       <hr />
       <div className="flex justify-between gap-2 mb-2 mt-2">
-      <input
+        <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Buscar por alumno o jurado"
           className="p-2 w-1/3 border border-gray-300 rounded"
         />
-
-
-       <div className='flex gap-2'>
-       <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
-        />
-       </div>
-       
+        <div className='flex gap-2'>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+          />
+        </div>
       </div>
       <hr />
       <DataTable
@@ -317,7 +351,7 @@ const TablaReportes: React.FC = () => {
               color: 'var(--color-text-pagination)',
             },
             pageButtonsStyle: {
-              fill: 'var(--color-text-pagination)', // Cambia el color de las flechas de navegación
+              fill: 'var(--color-text-pagination)',
               '&:hover:not(:disabled)': {
                 backgroundColor: 'var(--color-bg-pagination-hover)',
               },
@@ -336,7 +370,6 @@ const TablaReportes: React.FC = () => {
         >
           Descargar
         </button>
-
         <button
           onClick={handleSave}
           className="mt-3 w-1/6 p-2 bg-green-500 text-white rounded hover:bg-green-700"
