@@ -20,6 +20,7 @@ const ReporteHorasJurado: React.FC = () => {
         const response = await axios.get(
           `http://127.0.0.1:5000/jurados/obtener_horas_compensacion/${user.id}`
         );
+        console.log(response.data)
         setData(response.data);
         setLoading(false);
       } catch (error) {
