@@ -67,9 +67,9 @@ const TablaReportes: React.FC = () => {
       const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', {
         extra: {
           'duracion_sustentacion': asignaciones.duracion_sustentacion,
-          'tipo_sustentacion': asignaciones.tipo_sustentacion,
+          'tipo_sustentacion': asignaciones.tipo_sustentacion == 'PARCIAL' ? 'P' : 'F', // P o F
         },
-        data: filteredData
+        sustentaciones: filteredData
       });
 
       if (response.data.status) {
@@ -87,7 +87,7 @@ const TablaReportes: React.FC = () => {
         MySwal.fire({
           title: 'Error',
           text: response.data.message,
-          icon: 'error',
+          icon: 'warning',
         });
       }
     } catch (error) {
@@ -205,7 +205,6 @@ const TablaReportes: React.FC = () => {
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
-      sortable: true,
       wrap: true,
     },
     {
@@ -223,7 +222,6 @@ const TablaReportes: React.FC = () => {
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
-      sortable: true,
       wrap: true,
     },
     {
@@ -241,7 +239,6 @@ const TablaReportes: React.FC = () => {
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
-      sortable: true,
       wrap: true,
     },
     {
@@ -255,7 +252,6 @@ const TablaReportes: React.FC = () => {
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
         />
       ),
-      sortable: true,
       wrap: true,
     },
     {
@@ -269,7 +265,6 @@ const TablaReportes: React.FC = () => {
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 2)}
         />
       ),
-      sortable: true,
       wrap: true,
     },
     {
@@ -283,7 +278,6 @@ const TablaReportes: React.FC = () => {
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 0)}
         />
       ),
-      sortable: true,
       wrap: true,
     },
   ];
