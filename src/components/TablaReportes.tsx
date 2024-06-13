@@ -35,7 +35,6 @@ const TablaReportes: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('dataa . ',asignaciones.estructura_data)
     setData(asignaciones.estructura_data);
     setFilteredData(asignaciones.estructura_data);
   }, [asignaciones]);
@@ -147,7 +146,7 @@ const TablaReportes: React.FC = () => {
       filtered = filtered.filter((item) =>
         item.alumno_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.jurados_asignados.some((jurado) =>
-          jurado.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          jurado && jurado.nombre !== null ? jurado.nombre.toLowerCase().includes(searchTerm.toLowerCase()) : null
         )
       );
     }
