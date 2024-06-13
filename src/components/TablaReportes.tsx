@@ -10,8 +10,8 @@ const MySwal = withReactContent(Swal);
 
 const TablaReportes: React.FC = () => {
   const { asignaciones } = useData();
-  const [data, setData] = useState<any[]>(asignaciones);
-  const [filteredData, setFilteredData] = useState<any[]>(asignaciones);
+  const [data, setData] = useState<any[]>(asignaciones.estructura_data);
+  const [filteredData, setFilteredData] = useState<any[]>(asignaciones.estructura_data);
   const [dataJurados, setDataJurados] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
@@ -35,8 +35,9 @@ const TablaReportes: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setData(asignaciones);
-    setFilteredData(asignaciones);
+    console.log('dataa . ',asignaciones.estructura_data)
+    setData(asignaciones.estructura_data);
+    setFilteredData(asignaciones.estructura_data);
   }, [asignaciones]);
 
   useEffect(() => {
@@ -63,7 +64,13 @@ const TablaReportes: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', filteredData);
+      const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', {
+        extra: {
+          'duracion_sustentacion': asignaciones.duracion_sustentacion,
+          'tipo_sustentacion': asignaciones.tipo_sustentacion,
+        },
+        data: filteredData
+      });
 
       if (response.data.status) {
         MySwal.fire({
