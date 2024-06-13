@@ -55,7 +55,7 @@ const HorarioSeleccionMultiple = () => {
         horarioArray.forEach((dia, index: number) => {
           horasMedias.push(
             ...Object.keys(dia)
-              .filter((key) => key.startsWith('hora_') && dia[key] === 'M')
+              .filter((key) => key.startsWith('hora_') && (dia[key] === 'P' || dia[key] === 'S') )
               .map((key) => (Number.parseInt(key.replace('hora_', '')) - 7) + '-' + (index + 1))
           );
         });
