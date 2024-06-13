@@ -8,6 +8,8 @@ import { useData } from '../contexts/DataContextProps ';
 
 const MySwal = withReactContent(Swal);
 
+
+
 const TablaReportes: React.FC = () => {
   const { asignaciones } = useData();
   const [data, setData] = useState<any[]>(asignaciones.estructura_data);
@@ -229,6 +231,7 @@ const TablaReportes: React.FC = () => {
       cell: (row, rowIndex) => (
         <input
           type="time"
+          min= '19:00'
           value={row.horario.split(' ')[1] || ''}
           onChange={(e) => {
             const newData = [...data];
