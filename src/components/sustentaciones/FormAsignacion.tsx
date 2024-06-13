@@ -169,6 +169,18 @@ const FormAsignacion: React.FC = () => {
       }
       console.log('datos enviados', data)
 
+            // Mostrar alerta de carga
+        MySwal.fire({
+          title: 'Cargando',
+          text: 'Generando horario de sustentaciones...',
+          icon: 'info',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            MySwal.showLoading();
+          }
+        });
+
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
@@ -178,12 +190,14 @@ const FormAsignacion: React.FC = () => {
       if (response.data) {
         console.log('respos', response.data.data)
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
+        MySwal.close();
         MySwal.fire({
           title: 'Éxito',
           text: 'Horario de sustentaciones generado con éxito',
           icon: 'success',
         });
       } else {
+        MySwal.close();
         MySwal.fire({
           title: 'Error',
           text: response.data.message,
@@ -191,6 +205,7 @@ const FormAsignacion: React.FC = () => {
         });
       }
     } catch (e) {
+      MySwal.close();
       MySwal.fire({
         title: 'Error',
         text: 'Error al generar horario sustentación. Inténtalo de nuevo más tarde.',

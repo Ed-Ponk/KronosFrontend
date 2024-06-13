@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 
+interface JuradoAsignado {
+  nombre: string | null; // Permitir que el nombre sea null
+  semestre_jurado_id: number;
+}
+
+interface SustentacionAsignada {
+  alumno_nombre: string;
+  asesor: string;
+  grupo_sustentacion_id: number;
+  horario: string;
+  jurados_asignados: JuradoAsignado[];
+}
+
 interface Disponibilidad {
   fecha: string;
   hora_inicio: string;
@@ -21,6 +34,30 @@ interface DisponibilidadGrouped {
   asesores: string[];
 }
 
+const eliminarCoincidencias = (data1: SustentacionAsignada[], data2: DisponibilidadData[]): DisponibilidadData[] => {
+  data1.forEach(entry => {
+    const horario = entry.horario;
+    const [fecha, hora] = horario.split(' ');
+
+    entry.jurados_asignados.forEach(jurado => {
+      // Validar que jurado y jurado.nombre no sean null
+      if (jurado && jurado.nombre !== null) {
+        const nombreJurado = jurado.nombre;
+        data2.forEach(asesor => {
+          if (asesor.nombre_completo === nombreJurado) {
+            asesor.disponibilidad = asesor.disponibilidad.filter(disp => {
+              return !(disp.fecha === fecha && disp.hora_inicio <= hora && disp.hora_fin >= hora);
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Filtramos los asesores sin disponibilidad
+  return data2.filter(asesor => asesor.disponibilidad.length > 0);
+};
+
 const NuevaPage: React.FC = () => {
   const [disponiblesData, setDisponiblesData] = useState<DisponibilidadData[]>([]);
   const [filteredData, setFilteredData] = useState<DisponibilidadGrouped[]>([]);
@@ -29,19 +66,36 @@ const NuevaPage: React.FC = () => {
   const [horaInicioFilter, setHoraInicioFilter] = useState<string>('');
   const [horaFinFilter, setHoraFinFilter] = useState<string>('');
 
+  // Cargar y procesar los datos iniciales
   useEffect(() => {
-    const storedDisponiblesData = JSON.parse(localStorage.getItem('disponiblesData') || '[]');
-    const groupedData = groupData(storedDisponiblesData);
-    setDisponiblesData(storedDisponiblesData);
-    setFilteredData(groupedData);
+    const storedDatosSustentacionAsignada = JSON.parse(localStorage.getItem('datosSustentacionAsignada') || '[]') as SustentacionAsignada[];
+    const storedDisponiblesData = JSON.parse(localStorage.getItem('disponiblesData') || '[]') as DisponibilidadData[];
+
+    console.log('Datos Sustentacion Asignada:', storedDatosSustentacionAsignada);
+    console.log('Disponibles Data:', storedDisponiblesData);
+
+    // Aplicar eliminación de coincidencias y agrupar los datos
+    const processedData = eliminarCoincidencias(storedDatosSustentacionAsignada, storedDisponiblesData);
+    console.log('Datos Filtrados:', processedData);
+
+    const groupedData = groupData(processedData);
+    console.log('Datos Agrupados:', groupedData);
+
+    setDisponiblesData(processedData);
+    setFilteredData(groupedData); // Aquí se agrupan y establecen los datos filtrados
   }, []);
 
+  // Aplicar filtros cuando los filtros cambien
   useEffect(() => {
-    applyFilters();
+    if (disponiblesData.length > 0) {
+      applyFilters();
+    }
   }, [nombreFilter, fechaFilter, horaInicioFilter, horaFinFilter]);
 
   const applyFilters = () => {
+    console.log('Aplicando filtros con:', { nombreFilter, fechaFilter, horaInicioFilter, horaFinFilter });
     let filtered = groupData(disponiblesData);
+    console.log('Datos agrupados para aplicar filtros:', filtered);
 
     if (nombreFilter) {
       filtered = filtered.filter((item) =>
@@ -62,11 +116,14 @@ const NuevaPage: React.FC = () => {
       );
     }
 
+    console.log('Datos después de aplicar filtros:', filtered);
     setFilteredData(filtered);
   };
 
   const groupData = (data: DisponibilidadData[]): DisponibilidadGrouped[] => {
     const grouped: { [key: string]: DisponibilidadGrouped } = {};
+
+    console.log('Data recibida para agrupar:', data);
 
     data.forEach((item) => {
       item.disponibilidad.forEach((disp) => {
@@ -82,6 +139,8 @@ const NuevaPage: React.FC = () => {
         grouped[key].asesores.push(item.nombre_completo);
       });
     });
+
+    console.log('Datos agrupados antes de convertir a array:', grouped);
 
     return Object.values(grouped);
   };

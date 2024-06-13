@@ -72,6 +72,9 @@ const TablaReportes: React.FC = () => {
           icon: 'success',
         });
 
+        localStorage.removeItem('datosSustentacion');
+        localStorage.removeItem('disponiblesData');
+        localStorage.removeItem('datosSustentacionAsignada');
         location.reload();
       } else {
         MySwal.fire({
@@ -149,6 +152,7 @@ const TablaReportes: React.FC = () => {
     try {
       // Obtener los datos almacenados en localStorage
       const storedData = JSON.parse(localStorage.getItem('datosSustentacion') || '{}');
+      localStorage.setItem('datosSustentacionAsignada', JSON.stringify(data));
   
       // Verificar que los datos existan en localStorage
       if (!storedData || Object.keys(storedData).length === 0) {
