@@ -8,8 +8,6 @@ import { useData } from '../contexts/DataContextProps ';
 
 const MySwal = withReactContent(Swal);
 
-
-
 const TablaReportes: React.FC = () => {
   const { asignaciones } = useData();
   const [data, setData] = useState<any[]>(asignaciones.estructura_data);
@@ -42,25 +40,51 @@ const TablaReportes: React.FC = () => {
   }, [asignaciones]);
 
   useEffect(() => {
-    applyFilters();
+    if (data) applyFilters();
   }, [startDate, endDate, searchTerm]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, column: string) => {
-    const newData = [...data];
-    newData[rowIndex][column] = e.target.value;
+  const updateData = (groupId: number, updateCallback: (item: any) => any) => {
+    const newData = data.map((item) => {
+      if (item.grupo_sustentacion_id === groupId) {
+        return updateCallback(item);
+      }
+      return item;
+    });
+    console.log('mod data', newData)
     setData(newData);
+    setFilteredData(newData.filter(item => applyFiltersToItem(item, startDate, endDate, searchTerm)));
   };
 
-  const handleJuradosChange = (selectedOption: any, rowIndex: number, juradoIndex: number) => {
-    const newData = [...data];
-    const jurados = [...newData[rowIndex].jurados_asignados];
-    if (jurados[juradoIndex]) {
-      jurados[juradoIndex].nombre = selectedOption.name;
-    } else {
-      jurados[juradoIndex] = { nombre: selectedOption.name, semestre_jurado_id: selectedOption.id };
-    }
-    newData[rowIndex].jurados_asignados = jurados;
-    setData(newData);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, groupId: number, column: string) => {
+    updateData(groupId, (item) => ({ ...item, [column]: e.target.value }));
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, groupId: number) => {
+    const newDate = e.target.value;
+    updateData(groupId, (item) => {
+      const [currentDate, currentTime] = item.horario.split(' ');
+      return { ...item, horario: `${newDate} ${currentTime || ''}` };
+    });
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>, groupId: number) => {
+    const newTime = e.target.value;
+    updateData(groupId, (item) => {
+      const [currentDate, currentTime] = item.horario.split(' ');
+      return { ...item, horario: `${currentDate || ''} ${newTime}` };
+    });
+  };
+
+  const handleJuradosChange = (selectedOption: any, groupId: number, juradoIndex: number) => {
+    updateData(groupId, (item) => {
+      const jurados = [...item.jurados_asignados];
+      if (jurados[juradoIndex]) {
+        jurados[juradoIndex].nombre = selectedOption.name;
+      } else {
+        jurados[juradoIndex] = { nombre: selectedOption.name, semestre_jurado_id: selectedOption.id };
+      }
+      return { ...item, jurados_asignados: jurados };
+    });
   };
 
   const handleSave = async () => {
@@ -68,7 +92,7 @@ const TablaReportes: React.FC = () => {
       const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', {
         extra: {
           'duracion_sustentacion': asignaciones.duracion_sustentacion,
-          'tipo_sustentacion': asignaciones.tipo_sustentacion == 'PARCIAL' ? 'P' : 'F', // P o F
+          'tipo_sustentacion': asignaciones.tipo_sustentacion === 'PARCIAL' ? 'P' : 'F',
         },
         sustentaciones: filteredData
       });
@@ -134,35 +158,35 @@ const TablaReportes: React.FC = () => {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = data;
-
+  const applyFiltersToItem = (item, startDate, endDate, searchTerm) => {
+    let isDateInRange = true;
     if (startDate && endDate) {
-      filtered = filtered.filter((item) => {
-        const date = new Date(item.horario.split(' ')[0]);
-        return date >= new Date(startDate) && date <= new Date(endDate);
-      });
+      const date = new Date(item.horario.split(' ')[0]);
+      isDateInRange = date >= new Date(startDate) && date <= new Date(endDate);
     }
 
+    let isSearchTermMatching = true;
     if (searchTerm) {
-      filtered = filtered.filter((item) =>
-        item.alumno_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      isSearchTermMatching = item.alumno_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.jurados_asignados.some((jurado) =>
-          jurado && jurado.nombre !== null ? jurado.nombre.toLowerCase().includes(searchTerm.toLowerCase()) : null
-        )
-      );
+          jurado && jurado.nombre ? jurado.nombre.toLowerCase().includes(searchTerm.toLowerCase()) : null
+        );
     }
 
+    return isDateInRange && isSearchTermMatching;
+  }
+
+  const applyFilters = () => {
+    console.log('data filter', data)
+    const filtered = data.filter(item => applyFiltersToItem(item, startDate, endDate, searchTerm));
     setFilteredData(filtered);
   };
 
   const handleViewDisponibles = async () => {
     try {
-      // Obtener los datos almacenados en localStorage
       const storedData = JSON.parse(localStorage.getItem('datosSustentacion') || '{}');
       localStorage.setItem('datosSustentacionAsignada', JSON.stringify(data));
-  
-      // Verificar que los datos existan en localStorage
+
       if (!storedData || Object.keys(storedData).length === 0) {
         MySwal.fire({
           title: 'Error',
@@ -171,20 +195,11 @@ const TablaReportes: React.FC = () => {
         });
         return;
       }
-  
-     // Realizar la solicitud POST con los datos obtenidos de localStorage
-     const response = await axiosInstance.post('/sustentacion/obtener_disponibilidad', storedData);
 
-     // Obtener los datos de disponibilidad de la respuesta
-     const disponiblesData = response.data;
-     console.log(disponiblesData);
- 
-     // Guardar los datos de disponibilidad en localStorage
-     localStorage.setItem('disponiblesData', JSON.stringify(disponiblesData));
- 
-     // Abrir la nueva página en una pestaña nueva
-     const url = `/nueva-pagina`;
-     window.open(url, '_blank');
+      const response = await axiosInstance.post('/sustentacion/obtener_disponibilidad', storedData);
+      const disponiblesData = response.data;
+      localStorage.setItem('disponiblesData', JSON.stringify(disponiblesData));
+      window.open(`/nueva-pagina`, '_blank');
     } catch (error) {
       console.error('Error fetching disponibles data:', error);
       MySwal.fire({
@@ -194,15 +209,16 @@ const TablaReportes: React.FC = () => {
       });
     }
   };
+
   const columns: TableColumn<any>[] = [
     {
       name: 'Alumno',
       selector: (row) => row.alumno_nombre,
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <input
           type="text"
           value={row.alumno_nombre}
-          onChange={(e) => handleInputChange(e, rowIndex, 'alumno_nombre')}
+          onChange={(e) => handleInputChange(e, row.grupo_sustentacion_id, 'alumno_nombre')}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
@@ -211,15 +227,11 @@ const TablaReportes: React.FC = () => {
     {
       name: 'Fecha',
       selector: (row) => row.horario.split(' ')[0] || '',
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <input
           type="date"
           value={row.horario.split(' ')[0] || ''}
-          onChange={(e) => {
-            const newData = [...data];
-            newData[rowIndex].horario = `${e.target.value} ${row.horario.split(' ')[1] || ''}`;
-            setData(newData);
-          }}
+          onChange={(e) => handleDateChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
@@ -228,16 +240,12 @@ const TablaReportes: React.FC = () => {
     {
       name: 'Hora',
       selector: (row) => row.horario.split(' ')[1] || '',
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <input
           type="time"
-          min= '19:00'
+          min='19:00'
           value={row.horario.split(' ')[1] || ''}
-          onChange={(e) => {
-            const newData = [...data];
-            newData[rowIndex].horario = `${row.horario.split(' ')[0] || ''} ${e.target.value}`;
-            setData(newData);
-          }}
+          onChange={(e) => handleTimeChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
       ),
@@ -246,12 +254,12 @@ const TablaReportes: React.FC = () => {
     {
       name: 'Jurado 1',
       selector: (row) => row.jurados_asignados[1]?.nombre || '',
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
           data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
-          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 1)}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 1)}
         />
       ),
       wrap: true,
@@ -259,12 +267,12 @@ const TablaReportes: React.FC = () => {
     {
       name: 'Jurado 2',
       selector: (row) => row.jurados_asignados[2]?.nombre || '',
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
           data={{ id: row.jurados_asignados[2]?.semestre_jurado_id, name: row.jurados_asignados[2]?.nombre }}
-          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 2)}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 2)}
         />
       ),
       wrap: true,
@@ -272,12 +280,12 @@ const TablaReportes: React.FC = () => {
     {
       name: 'Asesor',
       selector: (row) => row.jurados_asignados[0]?.nombre || row.asesor,
-      cell: (row, rowIndex) => (
+      cell: (row) => (
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
           data={{ id: row.jurados_asignados[0]?.semestre_jurado_id, name: row.jurados_asignados[0]?.nombre || row.asesor }}
-          setData={(selectedOption: any) => handleJuradosChange(selectedOption, rowIndex, 0)}
+          setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 0)}
         />
       ),
       wrap: true,
