@@ -187,7 +187,9 @@ const FormAsignacion: React.FC = () => {
         data: data,
       });
     
-      if (response.data) {
+      console.log("Antes del response")
+      console.log(response.data)
+      if (response.data.status) {
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.close();
         MySwal.fire({
