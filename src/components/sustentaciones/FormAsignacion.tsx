@@ -151,6 +151,22 @@ const FormAsignacion: React.FC = () => {
     return 'No hay semestre disponible';
   };
 
+  const actualizarEstructuraData = (estructuraData) => {
+    return estructuraData.map(item => {
+      if (item.horario === "") {
+        item.jurados_asignados = [
+          {
+            nombre: item.asesor,
+            semestre_jurado_id: item.semestre_jurado_id
+          },
+          null,
+          null
+        ];
+      }
+      return item;
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
   
@@ -189,7 +205,14 @@ const FormAsignacion: React.FC = () => {
   
       if (response.data.status) {
         //agregar función
-        setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
+
+        const respuesta = response.data.data
+        if (response.data.data.tipo_algoritmo=="PP" && response.data.data.tipo_sustentacion=="PARCIAL"){
+          const updatedData = actualizarEstructuraData(response.data.data.estructura_data);  
+          respuesta.estructura_data = updatedData
+        }
+
+        setAsignaciones(respuesta);  // Asigna los datos a la variable de estado
         MySwal.close();
         MySwal.fire({
           title: 'Éxito',
