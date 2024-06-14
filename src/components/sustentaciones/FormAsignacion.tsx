@@ -153,11 +153,9 @@ const FormAsignacion: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+  
     const endpoint = "sustentacion/obtener_asignación";  // Actualiza con tu endpoint real
-
-    
-
+  
     try {
       let data = {
         escuela_id: selectedEscuela,
@@ -166,30 +164,31 @@ const FormAsignacion: React.FC = () => {
         rango_fechas: rangoFechas,
         duracion_sustentacion: duracion,
         compensacion_docente: compensacion.toUpperCase()
-      }
-      console.log('datos enviados', data)
-
-            // Mostrar alerta de carga
-        MySwal.fire({
-          title: 'Cargando',
-          text: 'Generando horario de sustentaciones...',
-          icon: 'info',
-          allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            MySwal.showLoading();
-          }
-        });
-
+      };
+  
+      console.log('datos enviados', data);
+  
+      // Mostrar alerta de carga
+      MySwal.fire({
+        title: 'Cargando',
+        text: 'Generando horario de sustentaciones...',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          MySwal.showLoading();
+        }
+      });
+  
       const response = await axiosInstance({
         method: 'POST',
         url: endpoint,
         data: data,
       });
-    
-      console.log("Antes del response")
-      console.log(response.data)
+  
+  
       if (response.data.status) {
+        //agregar función
         setAsignaciones(response.data.data);  // Asigna los datos a la variable de estado
         MySwal.close();
         MySwal.fire({
@@ -199,9 +198,22 @@ const FormAsignacion: React.FC = () => {
         });
       } else {
         MySwal.close();
+        let errorMessage = response.data.message || 'Error al generar horario de sustentación.';
+        
+        // Verificar si hay datos adicionales para mostrar
+        if (Array.isArray(response.data.data) && response.data.data.length > 0) {
+          let detalles = '';
+          response.data.data.forEach((item, index) => {
+            detalles += `[${index + 1}] Nombre Completo: ${item.nombre_completo}, no tiene ninguna disponibilidad registrada\n`;
+          });
+          alert(detalles);
+        } else {
+          errorMessage += '\n\nNo se recibieron datos o la respuesta está vacía.';
+        }
+  
         MySwal.fire({
           title: 'Error',
-          text: response.data.message,
+          text: errorMessage,
           icon: 'error',
         });
       }
