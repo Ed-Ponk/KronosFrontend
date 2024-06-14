@@ -95,6 +95,7 @@ const TablaReportes: React.FC = () => {
         extra: {
           'duracion_sustentacion': asignaciones.duracion_sustentacion,
           'tipo_sustentacion': asignaciones.tipo_sustentacion === 'PARCIAL' ? 'P' : 'F',
+          'tipo_algoritmo': asignaciones.tipo_algoritmo,
         },
         sustentaciones: filteredData
       };
@@ -223,6 +224,7 @@ const TablaReportes: React.FC = () => {
         <input
           type="text"
           value={row.alumno_nombre}
+          disabled={row.alumno_nombre != null}
           onChange={(e) => handleInputChange(e, row.grupo_sustentacion_id, 'alumno_nombre')}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
@@ -236,6 +238,7 @@ const TablaReportes: React.FC = () => {
         <input
           type="date"
           value={row.horario ? row.horario.split(' ')[0] : ''}
+          disabled={row.horario != ""}
           onChange={(e) => handleDateChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
@@ -250,6 +253,7 @@ const TablaReportes: React.FC = () => {
           type="time"
           min='19:00'
           value={row.horario ? row.horario.split(' ')[1] : ''}
+          disabled={row.horario != ""}
           onChange={(e) => handleTimeChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
@@ -263,6 +267,7 @@ const TablaReportes: React.FC = () => {
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
+          isDisable = {row.jurados_asignados[1] != null}
           data={{ id: row.jurados_asignados[1]?.semestre_jurado_id, name: row.jurados_asignados[1]?.nombre }}
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 1)}
         />
@@ -276,6 +281,7 @@ const TablaReportes: React.FC = () => {
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
+          isDisable = {row.jurados_asignados[2] != null}
           data={{ id: row.jurados_asignados[2]?.semestre_jurado_id, name: row.jurados_asignados[2]?.nombre }}
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 2)}
         />
@@ -289,6 +295,7 @@ const TablaReportes: React.FC = () => {
         <ComboboxCustom2
           className="w-full"
           data_options={dataJurados}
+          isDisable = {row.jurados_asignados[0] != null}
           data={{ id: row.jurados_asignados[0]?.semestre_jurado_id, name: row.jurados_asignados[0]?.nombre || row.asesor }}
           setData={(selectedOption: any) => handleJuradosChange(selectedOption, row.grupo_sustentacion_id, 0)}
         />

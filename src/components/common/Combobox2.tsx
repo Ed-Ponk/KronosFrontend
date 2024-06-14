@@ -12,9 +12,10 @@ interface ComboboxCustomProps {
     data_options: Option[];
     data: Option | null;
     setData: React.Dispatch<React.SetStateAction<Option | null>>;
+    isDisable: boolean;
 }
 
-export default function ComboboxCustom2({ className, data_options, data, setData }: ComboboxCustomProps) {
+export default function ComboboxCustom2({ className, data_options, data, setData, isDisable }: ComboboxCustomProps) {
     const [query, setQuery] = useState('');
 
     const filtereddata_options = query === ''
@@ -25,9 +26,10 @@ export default function ComboboxCustom2({ className, data_options, data, setData
 
     return (
         <div className={className}>
-            <Combobox value={data} onChange={setData}>
+            <Combobox value={data} onChange={setData} disabled={isDisable}>
                 <div className="relative">
                     <ComboboxInput
+                        
                         className={clsx(
                             'w-full rounded-lg border-none bg-slate-300/5 py-1.5 pr-8 pl-3 text-sm/6 text-black dark:text-white',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
