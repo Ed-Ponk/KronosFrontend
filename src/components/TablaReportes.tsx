@@ -35,6 +35,7 @@ const TablaReportes: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    console.log('asignaciones', asignaciones.estructura_data)
     setData(asignaciones.estructura_data);
     setFilteredData(asignaciones.estructura_data);
   }, [asignaciones]);
@@ -230,7 +231,7 @@ const TablaReportes: React.FC = () => {
       cell: (row) => (
         <input
           type="date"
-          value={row.horario.split(' ')[0] || ''}
+          value={row.horario ? row.horario.split(' ')[0] : ''}
           onChange={(e) => handleDateChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
@@ -244,7 +245,7 @@ const TablaReportes: React.FC = () => {
         <input
           type="time"
           min='19:00'
-          value={row.horario.split(' ')[1] || ''}
+          value={row.horario ? row.horario.split(' ')[1] : ''}
           onChange={(e) => handleTimeChange(e, row.grupo_sustentacion_id)}
           className="w-full p-1 border border-gray-300 dark:text-black rounded"
         />
