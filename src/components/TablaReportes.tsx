@@ -63,6 +63,7 @@ const TablaReportes: React.FC = () => {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, groupId: number) => {
     const newDate = e.target.value;
     updateData(groupId, (item) => {
+      item.horario = item.horario ? item.horario : ""
       const [currentDate, currentTime] = item.horario.split(' ');
       return { ...item, horario: `${newDate} ${currentTime || ''}` };
     });
@@ -90,26 +91,29 @@ const TablaReportes: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', {
+      let dataEnvio = {
         extra: {
           'duracion_sustentacion': asignaciones.duracion_sustentacion,
           'tipo_sustentacion': asignaciones.tipo_sustentacion === 'PARCIAL' ? 'P' : 'F',
         },
         sustentaciones: filteredData
-      });
+      };
 
+      const response = await axiosInstance.post('/sustentacion/actualizar_sustentaciones', dataEnvio);
+      console.log(dataEnvio)
       if (response.data.status) {
         MySwal.fire({
           title: 'Éxito',
           text: 'Datos guardados correctamente',
           icon: 'success',
+        }).then(() => {
+          localStorage.removeItem('datosSustentacion');
+          localStorage.removeItem('disponiblesData');
+          localStorage.removeItem('datosSustentacionAsignada');
+          location.reload();
         });
-
-        localStorage.removeItem('datosSustentacion');
-        localStorage.removeItem('disponiblesData');
-        localStorage.removeItem('datosSustentacionAsignada');
-        location.reload();
       } else {
+
         MySwal.fire({
           title: 'Error',
           text: response.data.message,
